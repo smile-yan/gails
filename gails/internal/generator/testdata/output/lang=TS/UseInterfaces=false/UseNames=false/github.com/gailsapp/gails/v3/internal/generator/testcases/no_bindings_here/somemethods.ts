@@ -18,7 +18,7 @@ import * as $models from "./models.js";
  * LikeThisOne is an example method that does nothing.
  */
 export function LikeThisOne(): $CancellablePromise<[$models.Person, $models.HowDifferent<boolean>, $models.PrivatePerson]> {
-    return $Call.ByID(2124352079).then(($result: any) => {
+    return $Call.ByID(3391335951).then(($result: any) => {
         $result[0] = $$createType0($result[0]);
         $result[1] = $$createType1($result[1]);
         $result[2] = $$createType2($result[2]);
@@ -30,7 +30,7 @@ export function LikeThisOne(): $CancellablePromise<[$models.Person, $models.HowD
  * LikeThisOtherOne does nothing as well, but is different.
  */
 export function LikeThisOtherOne(): $CancellablePromise<void> {
-    return $Call.ByID(4281222271);
+    return $Call.ByID(3539708223);
 }
 
 // Private type creation functions

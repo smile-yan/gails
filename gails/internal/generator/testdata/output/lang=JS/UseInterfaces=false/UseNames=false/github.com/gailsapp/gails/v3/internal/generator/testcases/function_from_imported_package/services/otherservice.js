@@ -21,7 +21,7 @@ import * as $models from "./models.js";
  * @returns {$CancellablePromise<$models.Address | null>}
  */
 export function Yay() {
-    return $Call.ByID(2007737399).then(/** @type {($result: any) => any} */(($result) => {
+    return $Call.ByID(1967509367).then(/** @type {($result: any) => any} */(($result) => {
         return $$createType1($result);
     }));
 }

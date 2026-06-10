@@ -14,7 +14,7 @@ func TestBinaryNameNormalization(t *testing.T) {
 		projectName string
 		expected    string
 	}{
-		{"Wails", "gails"},
+		{"Gails", "gails"},
 		{"MyApp", "myapp"},
 		{"Hello World", "hello-world"},
 		{"Test-App", "test-app"},

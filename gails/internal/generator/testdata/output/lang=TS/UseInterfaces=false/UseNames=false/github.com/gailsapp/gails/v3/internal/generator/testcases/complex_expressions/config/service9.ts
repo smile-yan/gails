@@ -6,5 +6,5 @@
 import { Call as $Call, CancellablePromise as $CancellablePromise, Create as $Create } from "/gails/runtime.js";
 
 export function TestMethod2(): $CancellablePromise<void> {
-    return $Call.ByID(1556848345);
+    return $Call.ByID(3474869017);
 }

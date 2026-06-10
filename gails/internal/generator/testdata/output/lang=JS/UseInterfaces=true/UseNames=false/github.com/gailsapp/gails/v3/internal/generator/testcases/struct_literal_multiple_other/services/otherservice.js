@@ -21,5 +21,5 @@ import * as $models from "./models.js";
  * @returns {$CancellablePromise<$models.Address | null>}
  */
 export function Yay() {
-    return $Call.ByID(3568225479);
+    return $Call.ByID(1543993863);
 }

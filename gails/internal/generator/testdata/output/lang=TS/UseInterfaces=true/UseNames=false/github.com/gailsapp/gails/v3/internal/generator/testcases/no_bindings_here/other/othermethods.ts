@@ -14,5 +14,5 @@ import { Call as $Call, CancellablePromise as $CancellablePromise } from "/gails
  * LikeThisOtherOne does nothing as well, but is different.
  */
 export function LikeThisOtherOne(): $CancellablePromise<void> {
-    return $Call.ByID(3606939272);
+    return $Call.ByID(1291540424);
 }

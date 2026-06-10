@@ -19,7 +19,7 @@ import * as $models from "./models.js";
  * Yay does this and that
  */
 export function Yay(): $CancellablePromise<$models.Address | null> {
-    return $Call.ByID(2447353446).then(($result: any) => {
+    return $Call.ByID(641515046).then(($result: any) => {
         return $$createType1($result);
     });
 }

@@ -20,7 +20,7 @@ import * as $models from "./models.js";
  * @returns {$CancellablePromise<[$models.Person, $models.HowDifferent<boolean>, $models.PrivatePerson]>}
  */
 export function LikeThisOne() {
-    return $Call.ByID(2124352079).then(/** @type {($result: any) => any} */(($result) => {
+    return $Call.ByID(3391335951).then(/** @type {($result: any) => any} */(($result) => {
         $result[0] = $$createType0($result[0]);
         $result[1] = $$createType1($result[1]);
         $result[2] = $$createType2($result[2]);
@@ -33,7 +33,7 @@ export function LikeThisOne() {
  * @returns {$CancellablePromise<void>}
  */
 export function LikeThisOtherOne() {
-    return $Call.ByID(4281222271);
+    return $Call.ByID(3539708223);
 }
 
 // Private type creation functions

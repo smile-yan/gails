@@ -18,12 +18,12 @@ import * as $models from "./models.js";
  * LikeThisOne is an example method that does nothing.
  */
 export function LikeThisOne(): $CancellablePromise<[$models.Person, $models.HowDifferent<boolean>, $models.PrivatePerson]> {
-    return $Call.ByID(2124352079);
+    return $Call.ByID(3391335951);
 }
 
 /**
  * LikeThisOtherOne does nothing as well, but is different.
  */
 export function LikeThisOtherOne(): $CancellablePromise<void> {
-    return $Call.ByID(4281222271);
+    return $Call.ByID(3539708223);
 }

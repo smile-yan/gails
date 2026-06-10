@@ -10,5 +10,5 @@ import { Call as $Call, CancellablePromise as $CancellablePromise, Create as $Cr
  * @returns {$CancellablePromise<void>}
  */
 export function TestMethod() {
-    return $Call.ByID(2241101727);
+    return $Call.ByID(1941348191);
 }
