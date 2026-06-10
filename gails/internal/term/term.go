@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/generator/config"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/generator/config"
+	"github.com/gailsapp/gails/internal/version"
 	"golang.org/x/term"
 )
 

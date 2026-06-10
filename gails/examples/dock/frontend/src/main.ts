@@ -1,4 +1,4 @@
-import { DockService } from "../bindings/github.com/gailsapp/gails/v3/pkg/services/dock"
+import { DockService } from "../bindings/github.com/gailsapp/gails/pkg/services/dock"
 
 const showButton = document.getElementById('show')! as HTMLButtonElement;
 const hideButton = document.getElementById('hide')! as HTMLButtonElement;

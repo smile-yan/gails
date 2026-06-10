@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
-	"github.com/gailsapp/gails/v3/pkg/updater/providers/keygen"
+	"github.com/gailsapp/gails/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater/providers/keygen"
 )
 
 // TestLive_KeygenIntegration drives the keygen.sh provider against the real

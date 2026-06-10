@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater"
 )
 
 // TestIntegration_FeedToInstall stands up a real HTTP server serving a

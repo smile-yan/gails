@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/gailsapp/gails/v3/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater"
 )
 
 // updaterHost adapts the application's EventManager and window factory to

@@ -5,9 +5,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/term"
-	"github.com/gailsapp/gails/v3/internal/wake"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/term"
+	"github.com/gailsapp/gails/internal/wake"
 )
 
 // runTaskFunc is a variable to allow mocking in tests

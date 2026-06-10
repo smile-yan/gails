@@ -197,7 +197,7 @@ jobs:
           cd test-gails-app
 
           # Update replace directive to use absolute path (gails init adds relative path)
-          sed -i 's|replace github.com/gailsapp/gails/v3 => .*|replace github.com/gailsapp/gails/v3 => ${{ github.workspace }}/v3|' go.mod
+          sed -i 's|replace github.com/gailsapp/gails => .*|replace github.com/gailsapp/gails => ${{ github.workspace }}/v3|' go.mod
 
       - name: Cross-compile ${{ matrix.os }}/${{ matrix.arch }} via task
         run: |

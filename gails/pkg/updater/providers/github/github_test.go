@@ -13,8 +13,8 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
-	"github.com/gailsapp/gails/v3/pkg/updater/providers/github"
+	"github.com/gailsapp/gails/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater/providers/github"
 )
 
 const sampleReleaseJSON = `{

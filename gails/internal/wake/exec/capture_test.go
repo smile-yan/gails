@@ -3,7 +3,7 @@ package exec
 import (
 	"testing"
 
-	"github.com/gailsapp/gails/v3/internal/report"
+	"github.com/gailsapp/gails/internal/report"
 )
 
 type recordingReporter struct {

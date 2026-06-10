@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // GreetService is a service that demonstrates bound methods over WebSocket transport

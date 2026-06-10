@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // This example demonstrates how to create a Spotlight-like launcher window

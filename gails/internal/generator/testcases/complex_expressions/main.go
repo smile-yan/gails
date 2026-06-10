@@ -4,8 +4,8 @@ import (
 	"log"
 	"slices"
 
-	"github.com/gailsapp/gails/v3/internal/generator/testcases/complex_expressions/config"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/internal/generator/testcases/complex_expressions/config"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 type Service1 struct{}

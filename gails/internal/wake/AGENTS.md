@@ -2,7 +2,7 @@
 
 ## Overview
 
-Wake is a Go-native Taskfile executor embedded in `gailsapp/gails/v3/internal/wake/`. It replaces the external `task` CLI dependency, executing `Taskfile.yml` files directly in Go. Enabled via `WAILS_USE_WAKE=true` env var; falls back to `task` CLI when unset or unsupported features are used.
+Wake is a Go-native Taskfile executor embedded in `gailsapp/gails/internal/wake/`. It replaces the external `task` CLI dependency, executing `Taskfile.yml` files directly in Go. Enabled via `WAILS_USE_WAKE=true` env var; falls back to `task` CLI when unset or unsupported features are used.
 
 ## Architecture
 

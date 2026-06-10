@@ -24,7 +24,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater"
 )
 
 func removeAllOS(p string) error { return os.RemoveAll(p) }

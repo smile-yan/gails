@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 type TestService struct {
@@ -166,7 +166,7 @@ func TestBoundMethodCall(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			callOptions := &application.CallOptions{
-				MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.TestService." + tt.method,
+				MethodName: "github.com/gailsapp/gails/pkg/application_test.TestService." + tt.method,
 			}
 
 			method := bindings.Get(callOptions)

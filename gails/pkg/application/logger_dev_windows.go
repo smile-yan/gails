@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/tint"
+	"github.com/gailsapp/gails/internal/tint"
 	"github.com/mattn/go-colorable"
 	"github.com/mattn/go-isatty"
 )

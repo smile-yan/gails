@@ -3,11 +3,11 @@ package main
 import (
 	"embed"
 
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/events"
 	"log"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // Wails uses Go's `embed` package to embed the frontend files into the binary.

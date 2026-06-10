@@ -3,7 +3,7 @@ package generator
 import (
 	"path/filepath"
 
-	"github.com/gailsapp/gails/v3/internal/generator/collect"
+	"github.com/gailsapp/gails/internal/generator/collect"
 )
 
 func (generator *Generator) generateEvents(events *collect.EventMap) {

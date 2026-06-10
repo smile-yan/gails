@@ -1,8 +1,8 @@
 package render
 
 import (
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/generator/collect"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/generator/collect"
 	"golang.org/x/tools/go/types/typeutil"
 )
 

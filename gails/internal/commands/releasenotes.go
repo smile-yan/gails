@@ -1,9 +1,9 @@
 package commands
 
 import (
-	"github.com/gailsapp/gails/v3/internal/github"
-	"github.com/gailsapp/gails/v3/internal/term"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/github"
+	"github.com/gailsapp/gails/internal/term"
+	"github.com/gailsapp/gails/internal/version"
 )
 
 type ReleaseNotesOptions struct {

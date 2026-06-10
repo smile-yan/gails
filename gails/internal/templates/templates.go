@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/buildinfo"
-	"github.com/gailsapp/gails/v3/internal/s"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/buildinfo"
+	"github.com/gailsapp/gails/internal/s"
+	"github.com/gailsapp/gails/internal/version"
 	"gopkg.in/yaml.v3"
 
 	"errors"
@@ -20,13 +20,13 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/debug"
+	"github.com/gailsapp/gails/internal/debug"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 
-	"github.com/gailsapp/gails/v3/internal/gosod"
+	"github.com/gailsapp/gails/internal/gosod"
 
-	"github.com/gailsapp/gails/v3/internal/lo"
+	"github.com/gailsapp/gails/internal/lo"
 )
 
 //go:embed *

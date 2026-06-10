@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/report"
+	"github.com/gailsapp/gails/internal/report"
 )
 
 // osGetwd is a tiny indirection so highlightBody's cwd-resolution can be

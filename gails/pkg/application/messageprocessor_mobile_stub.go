@@ -3,7 +3,7 @@
 package application
 
 import (
-	"github.com/gailsapp/gails/v3/pkg/errs"
+	"github.com/gailsapp/gails/pkg/errs"
 )
 
 // Empty method name maps for logging on non-mobile platforms

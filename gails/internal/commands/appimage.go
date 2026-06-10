@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
-	"github.com/gailsapp/gails/v3/internal/term"
+	"github.com/gailsapp/gails/internal/term"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -12,7 +12,7 @@ import (
 	"sync"
 
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/s"
+	"github.com/gailsapp/gails/internal/s"
 )
 
 //go:embed linuxdeploy-plugin-gtk.sh

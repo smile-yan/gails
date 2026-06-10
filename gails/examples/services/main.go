@@ -7,12 +7,12 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/gailsapp/gails/v3/examples/services/hashes"
-	"github.com/gailsapp/gails/v3/pkg/application"
-	"github.com/gailsapp/gails/v3/pkg/services/fileserver"
-	"github.com/gailsapp/gails/v3/pkg/services/kvstore"
-	"github.com/gailsapp/gails/v3/pkg/services/log"
-	"github.com/gailsapp/gails/v3/pkg/services/sqlite"
+	"github.com/gailsapp/gails/examples/services/hashes"
+	"github.com/gailsapp/gails/pkg/application"
+	"github.com/gailsapp/gails/pkg/services/fileserver"
+	"github.com/gailsapp/gails/pkg/services/kvstore"
+	"github.com/gailsapp/gails/pkg/services/log"
+	"github.com/gailsapp/gails/pkg/services/sqlite"
 )
 
 //go:embed assets/*

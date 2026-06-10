@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 )
 
 func TestBindingIDMetadataSourceSinglePackage(t *testing.T) {
@@ -40,7 +40,7 @@ func TestBindingIDMetadataSourceSinglePackage(t *testing.T) {
 package main
 
 import (
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 
 	demo "example.com/app/services/demo"
 )

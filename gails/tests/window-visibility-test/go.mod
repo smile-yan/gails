@@ -2,9 +2,9 @@ module window-visibility-test
 
 go 1.25.0
 
-replace github.com/gailsapp/gails/v3 => ../../
+replace github.com/gailsapp/gails => ../../
 
-require github.com/gailsapp/gails/v3 v3.0.0-alpha.62
+require github.com/gailsapp/gails v3.0.0-alpha.62
 
 require (
 	dario.cat/mergo v1.0.2 // indirect

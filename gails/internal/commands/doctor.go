@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/gailsapp/gails/v3/internal/doctor"
+	"github.com/gailsapp/gails/internal/doctor"
 )
 
 type DoctorOptions struct{}

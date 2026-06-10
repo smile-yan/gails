@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/report"
-	"github.com/gailsapp/gails/v3/internal/report/pulse/ansi"
+	"github.com/gailsapp/gails/internal/report"
+	"github.com/gailsapp/gails/internal/report/pulse/ansi"
 )
 
 // repaintLocked rebuilds the pinned region from current state and atomically

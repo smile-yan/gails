@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/lo"
+	"github.com/gailsapp/gails/internal/lo"
 	"github.com/wailsapp/wails/webview2/webviewloader"
 )
 

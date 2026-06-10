@@ -4,7 +4,7 @@ import (
 	"context"
 	"image/color"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 type platformDock interface {
@@ -39,7 +39,7 @@ type BadgeOptions struct {
 
 // ServiceName returns the name of the service.
 func (d *DockService) ServiceName() string {
-	return "github.com/gailsapp/gails/v3/pkg/services/dock"
+	return "github.com/gailsapp/gails/pkg/services/dock"
 }
 
 // ServiceStartup is called when the service is loaded.

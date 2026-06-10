@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/gailsapp/gails/v3/internal/lo"
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/lo"
+	"github.com/gailsapp/gails/internal/operatingsystem"
+	"github.com/gailsapp/gails/internal/version"
 )
 
 type Doctor struct {
@@ -79,7 +79,7 @@ func (d *Doctor) collectBuildInfo() error {
 
 	gailsVersion := strings.TrimSpace(version.String())
 	gailsPackage, found := lo.Find(buildInfo.Deps, func(dep *debug.Module) bool {
-		return dep.Path == "github.com/gailsapp/gails/v3"
+		return dep.Path == "github.com/gailsapp/gails"
 	})
 
 	if found && gailsPackage != nil && gailsPackage.Replace != nil {

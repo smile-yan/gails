@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // Wails uses Go's `embed` package to embed the frontend files into the binary.

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/generator/collect"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/generator/collect"
 )
 
 // Renderer holds the template set for a given configuration.

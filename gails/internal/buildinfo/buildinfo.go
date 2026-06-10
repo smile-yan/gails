@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	wdebug "github.com/gailsapp/gails/v3/internal/debug"
-	"github.com/gailsapp/gails/v3/internal/lo"
+	wdebug "github.com/gailsapp/gails/internal/debug"
+	"github.com/gailsapp/gails/internal/lo"
 )
 
 type Info struct {
@@ -20,7 +20,7 @@ type Info struct {
 	// including release artefacts produced by CI. A user running a
 	// tagged `gails.exe` on Windows would therefore see Development=true
 	// even though the Wails source tree is nowhere on their machine.
-	// The downstream effect was a malformed `replace github.com/gailsapp/gails/v3
+	// The downstream effect was a malformed `replace github.com/gailsapp/gails
 	// => /v3` directive in scaffolded projects, breaking `gails init`
 	// outright.
 	//

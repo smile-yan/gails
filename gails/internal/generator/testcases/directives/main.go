@@ -13,8 +13,8 @@ package main
 import (
 	"log"
 
-	"github.com/gailsapp/gails/v3/internal/generator/testcases/directives/otherpackage"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/internal/generator/testcases/directives/otherpackage"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 type IgnoredType struct {

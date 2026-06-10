@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 //go:embed test-assets/*

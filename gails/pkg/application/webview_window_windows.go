@@ -13,17 +13,17 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gailsapp/gails/v3/internal/debounce"
+	"github.com/gailsapp/gails/internal/debounce"
 	"github.com/wailsapp/wails/webview2/webviewloader"
-	"github.com/gailsapp/gails/v3/internal/assetserver"
-	"github.com/gailsapp/gails/v3/internal/assetserver/webview"
-	"github.com/gailsapp/gails/v3/internal/capabilities"
-	"github.com/gailsapp/gails/v3/internal/runtime"
-	"github.com/gailsapp/gails/v3/internal/sliceutil"
+	"github.com/gailsapp/gails/internal/assetserver"
+	"github.com/gailsapp/gails/internal/assetserver/webview"
+	"github.com/gailsapp/gails/internal/capabilities"
+	"github.com/gailsapp/gails/internal/runtime"
+	"github.com/gailsapp/gails/internal/sliceutil"
 
 	"github.com/wailsapp/wails/webview2/pkg/edge"
-	"github.com/gailsapp/gails/v3/pkg/events"
-	"github.com/gailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/pkg/events"
+	"github.com/gailsapp/gails/pkg/w32"
 )
 
 var edgeMap = map[string]uintptr{

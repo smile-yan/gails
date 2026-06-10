@@ -2,7 +2,7 @@ package version
 
 import (
 	_ "embed"
-	"github.com/gailsapp/gails/v3/internal/debug"
+	"github.com/gailsapp/gails/internal/debug"
 )
 
 //go:embed version.txt

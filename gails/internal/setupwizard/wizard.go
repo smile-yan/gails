@@ -16,9 +16,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/browser"
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/browser"
+	"github.com/gailsapp/gails/internal/operatingsystem"
+	"github.com/gailsapp/gails/internal/version"
 	"gopkg.in/yaml.v3"
 )
 

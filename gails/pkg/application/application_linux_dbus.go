@@ -4,7 +4,7 @@ package application
 
 import (
 	"github.com/godbus/dbus/v5"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 func (a *linuxApp) monitorThemeChanges() {

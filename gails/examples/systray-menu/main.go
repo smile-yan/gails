@@ -2,13 +2,13 @@ package main
 
 import (
 	_ "embed"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/events"
 	"log"
 	"runtime"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
-	"github.com/gailsapp/gails/v3/pkg/icons"
+	"github.com/gailsapp/gails/pkg/application"
+	"github.com/gailsapp/gails/pkg/icons"
 )
 
 //go:embed logo-dark-xsmall.png

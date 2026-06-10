@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/gailsapp/gails/v3/internal/templates"
+	"github.com/gailsapp/gails/internal/templates"
 )
 
 func GenerateTemplate(options *templates.BaseTemplate) error {

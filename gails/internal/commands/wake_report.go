@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/gailsapp/gails/v3/internal/report"
+	"github.com/gailsapp/gails/internal/report"
 )
 
 // underWake reports whether this process was spawned by a wake build. When true,

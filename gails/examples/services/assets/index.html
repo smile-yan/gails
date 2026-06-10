@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="/style.css">
     <script type="module" src="/gails/runtime.js"></script>
     <script type="module">
-        import { Service as sqlite } from './bindings/github.com/gailsapp/gails/v3/pkg/services/sqlite/index.js';
-        import { Service as kvstore } from './bindings/github.com/gailsapp/gails/v3/pkg/services/kvstore/index.js';
-        import { Service as logger } from './bindings/github.com/gailsapp/gails/v3/pkg/services/log/index.js';
-        import { Service as hash } from './bindings/github.com/gailsapp/gails/v3/examples/services/hashes/index.js';
+        import { Service as sqlite } from './bindings/github.com/gailsapp/gails/pkg/services/sqlite/index.js';
+        import { Service as kvstore } from './bindings/github.com/gailsapp/gails/pkg/services/kvstore/index.js';
+        import { Service as logger } from './bindings/github.com/gailsapp/gails/pkg/services/log/index.js';
+        import { Service as hash } from './bindings/github.com/gailsapp/gails/examples/services/hashes/index.js';
 
         function runHash() {
             let hashstring = document.getElementById("hashstring").value;

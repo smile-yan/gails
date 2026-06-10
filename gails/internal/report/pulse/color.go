@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/report/pulse/ansi"
+	"github.com/gailsapp/gails/internal/report/pulse/ansi"
 )
 
 // Profile is what the terminal can render. We fall through TrueColor → 256 →

@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/gosod"
+	"github.com/gailsapp/gails/internal/gosod"
 	"gopkg.in/yaml.v3"
 	"howett.net/plist"
 )

@@ -2,7 +2,7 @@
 
 package application
 
-import "github.com/gailsapp/gails/v3/pkg/events"
+import "github.com/gailsapp/gails/pkg/events"
 
 var commonApplicationEventMap = map[events.ApplicationEventType]events.ApplicationEventType{
 	events.Mac.ApplicationDidFinishLaunching: events.Common.ApplicationStarted,

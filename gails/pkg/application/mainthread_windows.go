@@ -7,7 +7,7 @@ import (
 	"sort"
 	"unsafe"
 
-	"github.com/gailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/pkg/w32"
 )
 
 var (

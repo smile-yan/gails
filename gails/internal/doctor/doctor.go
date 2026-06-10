@@ -12,16 +12,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/term"
+	"github.com/gailsapp/gails/internal/term"
 
-	"github.com/gailsapp/gails/v3/internal/buildinfo"
+	"github.com/gailsapp/gails/internal/buildinfo"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/jaypipes/ghw"
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/lo"
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/lo"
+	"github.com/gailsapp/gails/internal/operatingsystem"
+	"github.com/gailsapp/gails/internal/version"
 )
 
 func Run() (err error) {
@@ -71,7 +71,7 @@ func Run() (err error) {
 	/** Gails **/
 
 	gailsPackage, _ := lo.Find(BuildInfo.Deps, func(dep *debug.Module) bool {
-		return dep.Path == "github.com/gailsapp/gails/v3"
+		return dep.Path == "github.com/gailsapp/gails"
 	})
 
 	gailsVersion := strings.TrimSpace(version.String())

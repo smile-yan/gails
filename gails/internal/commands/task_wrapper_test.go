@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 )
 
 func TestWrapTask(t *testing.T) {

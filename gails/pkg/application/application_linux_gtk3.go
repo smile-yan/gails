@@ -23,8 +23,8 @@ import (
 
 	"path/filepath"
 
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/internal/operatingsystem"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 // sanitizeAppName sanitizes the application name to be a valid GTK/D-Bus application ID.

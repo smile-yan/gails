@@ -13,12 +13,12 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/generator/config"
-	"github.com/gailsapp/gails/v3/internal/generator/render"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/generator/config"
+	"github.com/gailsapp/gails/internal/generator/render"
 )
 
-const testcases = "github.com/gailsapp/gails/v3/internal/generator/testcases/..."
+const testcases = "github.com/gailsapp/gails/internal/generator/testcases/..."
 
 type testParams struct {
 	name      string

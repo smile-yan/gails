@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 )
 
 func TestToolPackage(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"slices"
 	"sync"
 
-	"github.com/gailsapp/gails/v3/internal/generator/config"
+	"github.com/gailsapp/gails/internal/generator/config"
 )
 
 // ErrNoContextPackage indicates that

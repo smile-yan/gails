@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-	"github.com/gailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/pkg/w32"
 )
 
 // Regression tests for the Windows systray SetMenu crash family.

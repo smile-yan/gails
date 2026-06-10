@@ -1,6 +1,6 @@
 package other
 
-import "github.com/gailsapp/gails/v3/pkg/application"
+import "github.com/gailsapp/gails/pkg/application"
 
 func CustomNewService[T any](srv T) application.Service {
 	return application.NewService(&srv)

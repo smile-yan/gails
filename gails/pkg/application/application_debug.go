@@ -4,8 +4,8 @@ package application
 
 import (
 	"github.com/go-git/go-git/v5"
-	"github.com/gailsapp/gails/v3/internal/lo"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/lo"
+	"github.com/gailsapp/gails/internal/version"
 	"path/filepath"
 	"runtime/debug"
 )
@@ -46,7 +46,7 @@ func (a *App) logStartup() {
 	}
 
 	gailsPackage, _ := lo.Find(BuildInfo.Deps, func(dep *debug.Module) bool {
-		return dep.Path == "github.com/gailsapp/gails/v3"
+		return dep.Path == "github.com/gailsapp/gails"
 	})
 
 	gailsVersion := version.String()

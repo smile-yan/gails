@@ -16,9 +16,9 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/godbus/dbus/v5/introspect"
 	"github.com/godbus/dbus/v5/prop"
-	"github.com/gailsapp/gails/v3/internal/dbus/menu"
-	"github.com/gailsapp/gails/v3/internal/dbus/notifier"
-	"github.com/gailsapp/gails/v3/pkg/icons"
+	"github.com/gailsapp/gails/internal/dbus/menu"
+	"github.com/gailsapp/gails/internal/dbus/notifier"
+	"github.com/gailsapp/gails/pkg/icons"
 )
 
 const (

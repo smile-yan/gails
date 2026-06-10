@@ -1,6 +1,6 @@
 package other
 
-import "github.com/gailsapp/gails/v3/pkg/application"
+import "github.com/gailsapp/gails/pkg/application"
 
 // OtherService is a struct
 // that does things

@@ -8,11 +8,11 @@ import (
 
 	"unsafe"
 
-	"github.com/gailsapp/gails/v3/internal/debounce"
-	"github.com/gailsapp/gails/v3/internal/assetserver"
-	"github.com/gailsapp/gails/v3/internal/capabilities"
-	"github.com/gailsapp/gails/v3/internal/runtime"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/internal/debounce"
+	"github.com/gailsapp/gails/internal/assetserver"
+	"github.com/gailsapp/gails/internal/capabilities"
+	"github.com/gailsapp/gails/internal/runtime"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 func init() {

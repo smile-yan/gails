@@ -15,9 +15,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
-	"github.com/gailsapp/gails/v3/pkg/updater"
-	"github.com/gailsapp/gails/v3/pkg/updater/providers/github"
+	"github.com/gailsapp/gails/pkg/application"
+	"github.com/gailsapp/gails/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater/providers/github"
 )
 
 // A deliberately minimal custom UI that looks NOTHING like the builtin

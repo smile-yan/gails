@@ -16,10 +16,10 @@ import (
 
 	"github.com/wailsapp/wails/webview2/webviewloader"
 
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
+	"github.com/gailsapp/gails/internal/operatingsystem"
 
-	"github.com/gailsapp/gails/v3/pkg/events"
-	"github.com/gailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/pkg/events"
+	"github.com/gailsapp/gails/pkg/w32"
 )
 
 var (

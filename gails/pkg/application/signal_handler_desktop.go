@@ -5,7 +5,7 @@ package application
 import (
 	"os"
 
-	"github.com/gailsapp/gails/v3/internal/signal"
+	"github.com/gailsapp/gails/internal/signal"
 )
 
 // setupSignalHandler sets up signal handling for desktop platforms

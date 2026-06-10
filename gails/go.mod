@@ -1,4 +1,4 @@
-module github.com/gailsapp/gails/v3
+module github.com/gailsapp/gails
 
 go 1.25.0
 

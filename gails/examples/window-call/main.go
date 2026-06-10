@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"embed"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 	"log"
 	"math/rand"
 	"runtime"

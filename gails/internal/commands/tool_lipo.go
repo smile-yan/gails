@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/konoui/lipo/pkg/lipo"
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 )
 
 func ToolLipo(options *flags.Lipo) error {

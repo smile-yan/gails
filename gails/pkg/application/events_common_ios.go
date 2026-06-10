@@ -2,7 +2,7 @@
 
 package application
 
-import "github.com/gailsapp/gails/v3/pkg/events"
+import "github.com/gailsapp/gails/pkg/events"
 
 // Map platform events → common events (same pattern as macOS & others)
 var commonApplicationEventMap = map[events.ApplicationEventType]events.ApplicationEventType{

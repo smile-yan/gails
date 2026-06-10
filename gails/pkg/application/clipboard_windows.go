@@ -3,7 +3,7 @@
 package application
 
 import (
-	"github.com/gailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/pkg/w32"
 	"sync"
 )
 

@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/generator"
-	"github.com/gailsapp/gails/v3/internal/generator/config"
-	"github.com/gailsapp/gails/v3/internal/term"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/generator"
+	"github.com/gailsapp/gails/internal/generator/config"
+	"github.com/gailsapp/gails/internal/term"
 )
 
 func GenerateBindings(options *flags.GenerateBindingsOptions, patterns []string) error {

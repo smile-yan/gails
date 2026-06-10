@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/gailsapp/gails/v3/internal/wake/ast"
+	"github.com/gailsapp/gails/internal/wake/ast"
 )
 
 type DAG struct {

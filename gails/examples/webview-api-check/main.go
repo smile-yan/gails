@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 var autorun = flag.Bool("autorun", false, "Automatically run tests and save report")

@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
-	"github.com/gailsapp/gails/v3/pkg/events"
-	"github.com/gailsapp/gails/v3/pkg/icons"
+	"github.com/gailsapp/gails/pkg/application"
+	"github.com/gailsapp/gails/pkg/events"
+	"github.com/gailsapp/gails/pkg/icons"
 )
 
 // Manual reproduction harness for #4424.

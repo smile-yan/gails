@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/internal/hash"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/internal/hash"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // BenchmarkService provides methods with varying complexity for benchmarking
@@ -118,7 +118,7 @@ func BenchmarkMethodLookupByID(b *testing.B) {
 
 	// Get a valid method ID
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.StringArg",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.StringArg",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {
@@ -139,7 +139,7 @@ func BenchmarkMethodLookupByName(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.StringArg",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.StringArg",
 	}
 
 	b.ResetTimer()
@@ -155,7 +155,7 @@ func BenchmarkSimpleCall(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.StringArg",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.StringArg",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {
@@ -178,7 +178,7 @@ func BenchmarkComplexCall(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.ComplexStruct",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.ComplexStruct",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {
@@ -208,7 +208,7 @@ func BenchmarkVariadicCall(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.VariadicArg",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.VariadicArg",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {
@@ -231,7 +231,7 @@ func BenchmarkCallWithContext(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.WithContext",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.WithContext",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {
@@ -292,7 +292,7 @@ func BenchmarkHashComputation(b *testing.B) {
 	}{
 		{"Short", "pkg.Service.Method"},
 		{"Medium", "github.com/user/project/pkg.Service.Method"},
-		{"Long", "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.ComplexStruct"},
+		{"Long", "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.ComplexStruct"},
 	}
 
 	for _, tc := range testCases {
@@ -353,7 +353,7 @@ func BenchmarkMethodLookupWithAliases(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.StringArg",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.StringArg",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {
@@ -386,7 +386,7 @@ func BenchmarkReflectValueCall(b *testing.B) {
 
 	b.Run("NoArgs", func(b *testing.B) {
 		callOptions := &application.CallOptions{
-			MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.NoArgs",
+			MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.NoArgs",
 		}
 		method := bindings.Get(callOptions)
 		if method == nil {
@@ -400,7 +400,7 @@ func BenchmarkReflectValueCall(b *testing.B) {
 
 	b.Run("MultipleArgs", func(b *testing.B) {
 		callOptions := &application.CallOptions{
-			MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.MultipleArgs",
+			MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.MultipleArgs",
 		}
 		method := bindings.Get(callOptions)
 		if method == nil {
@@ -423,11 +423,11 @@ func BenchmarkBindingsScaling(b *testing.B) {
 
 	// Generate method names for lookup
 	methodNames := []string{
-		"github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.NoArgs",
-		"github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.StringArg",
-		"github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.IntArg",
-		"github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.MultipleArgs",
-		"github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.StructArg",
+		"github.com/gailsapp/gails/pkg/application_test.BenchmarkService.NoArgs",
+		"github.com/gailsapp/gails/pkg/application_test.BenchmarkService.StringArg",
+		"github.com/gailsapp/gails/pkg/application_test.BenchmarkService.IntArg",
+		"github.com/gailsapp/gails/pkg/application_test.BenchmarkService.MultipleArgs",
+		"github.com/gailsapp/gails/pkg/application_test.BenchmarkService.StructArg",
 	}
 
 	b.Run("SequentialLookup", func(b *testing.B) {
@@ -446,7 +446,7 @@ func BenchmarkCallErrorPath(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.StringArg",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.StringArg",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {
@@ -477,7 +477,7 @@ func BenchmarkSliceArgSizes(b *testing.B) {
 	_ = bindings.Add(application.NewService(&BenchmarkService{}))
 
 	callOptions := &application.CallOptions{
-		MethodName: "github.com/gailsapp/gails/v3/pkg/application_test.BenchmarkService.SliceArg",
+		MethodName: "github.com/gailsapp/gails/pkg/application_test.BenchmarkService.SliceArg",
 	}
 	method := bindings.Get(callOptions)
 	if method == nil {

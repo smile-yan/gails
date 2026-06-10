@@ -4,9 +4,9 @@ import (
 	"encoding"
 	"log"
 
-	"github.com/gailsapp/gails/v3/internal/generator/testcases/aliases/subpkg"
-	nobindingshere "github.com/gailsapp/gails/v3/internal/generator/testcases/no_bindings_here"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/internal/generator/testcases/aliases/subpkg"
+	nobindingshere "github.com/gailsapp/gails/internal/generator/testcases/no_bindings_here"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // GreetService is great

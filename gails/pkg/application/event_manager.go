@@ -3,7 +3,7 @@ package application
 import (
 	"slices"
 
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 // EventManager manages event-related operations

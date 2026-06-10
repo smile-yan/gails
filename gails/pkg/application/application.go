@@ -15,11 +15,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gailsapp/gails/v3/internal/assetserver"
-	"github.com/gailsapp/gails/v3/internal/assetserver/bundledassets"
-	"github.com/gailsapp/gails/v3/internal/assetserver/webview"
-	"github.com/gailsapp/gails/v3/internal/capabilities"
-	"github.com/gailsapp/gails/v3/pkg/updater"
+	"github.com/gailsapp/gails/internal/assetserver"
+	"github.com/gailsapp/gails/internal/assetserver/bundledassets"
+	"github.com/gailsapp/gails/internal/assetserver/webview"
+	"github.com/gailsapp/gails/internal/capabilities"
+	"github.com/gailsapp/gails/pkg/updater"
 )
 
 //go:embed assets/*

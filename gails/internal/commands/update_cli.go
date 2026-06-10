@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/debug"
-	"github.com/gailsapp/gails/v3/internal/github"
-	"github.com/gailsapp/gails/v3/internal/term"
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/debug"
+	"github.com/gailsapp/gails/internal/github"
+	"github.com/gailsapp/gails/internal/term"
+	"github.com/gailsapp/gails/internal/version"
 )
 
 type UpdateCLIOptions struct {
@@ -161,7 +161,7 @@ func updateToVersion(targetVersion *github.SemanticVersion, force bool, currentV
 		return fmt.Errorf("cannot find home directory: %w", err)
 	}
 
-	cmd := exec.Command("go", "install", "github.com/gailsapp/gails/v3/cmd/gails@"+desiredVersion)
+	cmd := exec.Command("go", "install", "github.com/gailsapp/gails/cmd/gails@"+desiredVersion)
 	cmd.Dir = homeDir
 	sout, serr := cmd.CombinedOutput()
 	if err := cmd.Run(); err != nil {
@@ -171,7 +171,7 @@ func updateToVersion(targetVersion *github.SemanticVersion, force bool, currentV
 	}
 	pterm.Println("Done.")
 	pterm.Println("\nMake sure you update your project go.mod file to use " + desiredVersion + ":")
-	pterm.Println("  require github.com/gailsapp/gails/v3 " + desiredVersion)
+	pterm.Println("  require github.com/gailsapp/gails " + desiredVersion)
 	pterm.Println("\nTo view the release notes, please run `gails releasenotes`")
 
 	return nil

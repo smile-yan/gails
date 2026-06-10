@@ -3,7 +3,7 @@ package pulse
 import (
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/report/pulse/ansi"
+	"github.com/gailsapp/gails/internal/report/pulse/ansi"
 )
 
 // styler binds a Profile so call sites can paint without naming the profile

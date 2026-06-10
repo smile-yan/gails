@@ -12,8 +12,8 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
-	"github.com/gailsapp/gails/v3/pkg/updater/providers/keygen"
+	"github.com/gailsapp/gails/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater/providers/keygen"
 )
 
 const sampleUpgradeOK = `{

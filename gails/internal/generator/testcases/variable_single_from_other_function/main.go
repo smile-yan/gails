@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/gailsapp/gails/v3/internal/generator/testcases/variable_single_from_other_function/services"
+	"github.com/gailsapp/gails/internal/generator/testcases/variable_single_from_other_function/services"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // GreetService is great

@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/gailsapp/gails/v3/internal/setupwizard"
+	"github.com/gailsapp/gails/internal/setupwizard"
 )
 
 type SetupOptions struct{}

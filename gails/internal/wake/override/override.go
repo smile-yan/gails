@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gailsapp/gails/v3/internal/wake/ast"
-	"github.com/gailsapp/gails/v3/internal/wake/parse"
+	"github.com/gailsapp/gails/internal/wake/ast"
+	"github.com/gailsapp/gails/internal/wake/parse"
 )
 
 // layers lists the local override layers in increasing precedence order: a

@@ -1,6 +1,6 @@
 package config
 
-import "github.com/gailsapp/gails/v3/pkg/application"
+import "github.com/gailsapp/gails/pkg/application"
 
 type Service7 struct{}
 type Service8 struct{}

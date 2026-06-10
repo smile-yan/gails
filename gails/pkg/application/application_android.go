@@ -150,7 +150,7 @@ import (
 
 	"encoding/json"
 
-	"github.com/gailsapp/gails/v3/internal/runtime"
+	"github.com/gailsapp/gails/internal/runtime"
 )
 
 var (

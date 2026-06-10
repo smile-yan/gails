@@ -6,10 +6,10 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
-	apptest "github.com/gailsapp/gails/v3/pkg/application/internal/tests"
-	svctest "github.com/gailsapp/gails/v3/pkg/application/internal/tests/services"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/application"
+	apptest "github.com/gailsapp/gails/pkg/application/internal/tests"
+	svctest "github.com/gailsapp/gails/pkg/application/internal/tests/services"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 func TestMain(m *testing.M) {

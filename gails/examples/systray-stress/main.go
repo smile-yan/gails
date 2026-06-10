@@ -14,8 +14,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/application"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 // systray-stress is a test harness that exercises SystemTray.SetMenu and

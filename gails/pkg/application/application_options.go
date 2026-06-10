@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/assetserver"
+	"github.com/gailsapp/gails/internal/assetserver"
 )
 
 // Options contains the options for the application

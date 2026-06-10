@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/gailsapp/gails/v3/internal/generator/testcases/enum_from_imported_package/services"
+	"github.com/gailsapp/gails/internal/generator/testcases/enum_from_imported_package/services"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // GreetService is great

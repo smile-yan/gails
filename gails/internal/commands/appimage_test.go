@@ -3,8 +3,8 @@
 package commands_test
 
 import (
-	"github.com/gailsapp/gails/v3/internal/commands"
-	"github.com/gailsapp/gails/v3/internal/s"
+	"github.com/gailsapp/gails/internal/commands"
+	"github.com/gailsapp/gails/internal/s"
 	"testing"
 )
 

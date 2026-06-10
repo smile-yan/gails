@@ -1,6 +1,6 @@
 package other
 
-import "github.com/gailsapp/gails/v3/pkg/application"
+import "github.com/gailsapp/gails/pkg/application"
 
 type Factory[T any, U any] struct {
 	simpleFactory[T]

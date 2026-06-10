@@ -3,8 +3,8 @@ package events_only
 import (
 	"fmt"
 
-	nobindingshere "github.com/gailsapp/gails/v3/internal/generator/testcases/no_bindings_here"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	nobindingshere "github.com/gailsapp/gails/internal/generator/testcases/no_bindings_here"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // SomeClass renders as a TS class.

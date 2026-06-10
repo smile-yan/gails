@@ -23,8 +23,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
-	"github.com/gailsapp/gails/v3/pkg/updater/internal/semver"
+	"github.com/gailsapp/gails/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater/internal/semver"
 )
 
 // Config configures the AppCast provider.

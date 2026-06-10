@@ -4,7 +4,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/report/pulse/ansi"
+	"github.com/gailsapp/gails/internal/report/pulse/ansi"
 )
 
 // liveRegion is a re-paintable bottom-of-terminal pane that sits *below* the

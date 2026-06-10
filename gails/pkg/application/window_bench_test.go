@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 // Note: This file uses internal package access to benchmark window internals

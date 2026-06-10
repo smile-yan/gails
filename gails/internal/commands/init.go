@@ -10,13 +10,13 @@ import (
 	"strings"
 
 	"github.com/go-git/go-git/v5/config"
-	"github.com/gailsapp/gails/v3/internal/defaults"
-	"github.com/gailsapp/gails/v3/internal/term"
+	"github.com/gailsapp/gails/internal/defaults"
+	"github.com/gailsapp/gails/internal/term"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/templates"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/templates"
 )
 
 var DisableFooter bool

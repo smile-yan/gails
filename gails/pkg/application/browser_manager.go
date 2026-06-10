@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/gailsapp/gails/v3/internal/browser"
+	"github.com/gailsapp/gails/internal/browser"
 )
 
 // BrowserManager manages browser-related operations

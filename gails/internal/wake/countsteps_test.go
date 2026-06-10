@@ -3,7 +3,7 @@ package wake
 import (
 	"testing"
 
-	"github.com/gailsapp/gails/v3/internal/wake/ast"
+	"github.com/gailsapp/gails/internal/wake/ast"
 )
 
 // countSteps must count only tasks that run a real command, following both deps

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
-	"github.com/gailsapp/gails/v3/pkg/doctor-ng/packagemanager"
+	"github.com/gailsapp/gails/internal/operatingsystem"
+	"github.com/gailsapp/gails/pkg/doctor-ng/packagemanager"
 )
 
 func collectPlatformExtras() map[string]string {

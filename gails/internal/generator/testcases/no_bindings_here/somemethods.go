@@ -1,6 +1,6 @@
 package nobindingshere
 
-import "github.com/gailsapp/gails/v3/internal/generator/testcases/no_bindings_here/other"
+import "github.com/gailsapp/gails/internal/generator/testcases/no_bindings_here/other"
 
 // SomeMethods exports some methods.
 type SomeMethods struct {

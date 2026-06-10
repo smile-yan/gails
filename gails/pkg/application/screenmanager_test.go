@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 type ScreenDef struct {

@@ -13,7 +13,7 @@ import (
 
 	"encoding/json"
 
-	"github.com/gailsapp/gails/v3/pkg/errs"
+	"github.com/gailsapp/gails/pkg/errs"
 )
 
 // bufferPool reduces allocations for reading request bodies.

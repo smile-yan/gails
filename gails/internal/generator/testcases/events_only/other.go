@@ -1,8 +1,8 @@
 package events_only
 
 import (
-	"github.com/gailsapp/gails/v3/internal/generator/testcases/no_bindings_here/more"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/internal/generator/testcases/no_bindings_here/more"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 const eventPrefix = "events_only" + `:`

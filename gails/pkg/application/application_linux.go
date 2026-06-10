@@ -22,8 +22,8 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus/v5"
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/internal/operatingsystem"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 var invalidAppNameChars = regexp.MustCompile(`[^a-zA-Z0-9_-]`)

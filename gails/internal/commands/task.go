@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/term"
-	"github.com/gailsapp/gails/v3/internal/wake"
+	"github.com/gailsapp/gails/internal/term"
+	"github.com/gailsapp/gails/internal/wake"
 
 	"github.com/wailsapp/task/v3"
 	"github.com/wailsapp/task/v3/taskfile/ast"

@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	nobindingshere "github.com/gailsapp/gails/v3/internal/generator/testcases/no_bindings_here"
-	"github.com/gailsapp/gails/v3/internal/generator/testcases/no_bindings_here/other"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	nobindingshere "github.com/gailsapp/gails/internal/generator/testcases/no_bindings_here"
+	"github.com/gailsapp/gails/internal/generator/testcases/no_bindings_here/other"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 // GreetService is great

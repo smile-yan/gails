@@ -4,7 +4,7 @@ package operatingsystem
 
 import (
 	"fmt"
-	"github.com/gailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/pkg/w32"
 
 	"golang.org/x/sys/windows/registry"
 )

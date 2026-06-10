@@ -4,7 +4,7 @@ package doctor
 
 import (
 	"bytes"
-	"github.com/gailsapp/gails/v3/internal/lo"
+	"github.com/gailsapp/gails/internal/lo"
 	"os/exec"
 	"strings"
 	"syscall"

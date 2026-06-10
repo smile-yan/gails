@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
-	"github.com/gailsapp/gails/v3/pkg/icons"
+	"github.com/gailsapp/gails/pkg/application"
+	"github.com/gailsapp/gails/pkg/icons"
 )
 
 func main() {

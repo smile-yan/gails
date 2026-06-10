@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"strings"
 
-	// "github.com/gailsapp/gails/v3/internal/commands/dmg" // TODO: Missing package
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/packager"
+	// "github.com/gailsapp/gails/internal/commands/dmg" // TODO: Missing package
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/packager"
 )
 
 // ToolPackage generates a package in the specified format

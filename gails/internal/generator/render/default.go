@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/gailsapp/gails/v3/internal/generator/collect"
+	"github.com/gailsapp/gails/internal/generator/collect"
 )
 
 // JSDefault renders the Javascript representation

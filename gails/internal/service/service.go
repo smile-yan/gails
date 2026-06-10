@@ -7,11 +7,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 
-	"github.com/gailsapp/gails/v3/internal/gosod"
+	"github.com/gailsapp/gails/internal/gosod"
 
-	"github.com/gailsapp/gails/v3/internal/lo"
+	"github.com/gailsapp/gails/internal/lo"
 )
 
 //go:embed template

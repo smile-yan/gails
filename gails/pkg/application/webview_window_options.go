@@ -1,8 +1,8 @@
 package application
 
 import (
-	"github.com/gailsapp/gails/v3/internal/optional"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/internal/optional"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 type WindowState int

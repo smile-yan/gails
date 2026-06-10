@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"text/template"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 )
 
 //go:embed build_assets/windows/msix/*

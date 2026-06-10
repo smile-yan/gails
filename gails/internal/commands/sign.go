@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/keychain"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/keychain"
 )
 
 // Sign signs a binary or package

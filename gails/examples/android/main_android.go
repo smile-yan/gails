@@ -2,7 +2,7 @@
 
 package main
 
-import "github.com/gailsapp/gails/v3/pkg/application"
+import "github.com/gailsapp/gails/pkg/application"
 
 func init() {
 	// Register main function to be called when the Android app initializes

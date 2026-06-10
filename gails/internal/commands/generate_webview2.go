@@ -3,7 +3,7 @@ package commands
 import (
 	_ "embed"
 	"fmt"
-	"github.com/gailsapp/gails/v3/internal/term"
+	"github.com/gailsapp/gails/internal/term"
 	"os"
 	"path/filepath"
 )

@@ -3,7 +3,7 @@ package commands
 import (
 	"os"
 
-	"github.com/gailsapp/gails/v3/internal/generator"
+	"github.com/gailsapp/gails/internal/generator"
 )
 
 type GenerateConstantsOptions struct {

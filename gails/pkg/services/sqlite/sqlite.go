@@ -10,7 +10,7 @@ import (
 	"sync/atomic"
 
 	"errors"
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 	_ "modernc.org/sqlite"
 )
 
@@ -83,7 +83,7 @@ func NewWithConfig(config *Config) *SQLiteService {
 // ServiceName returns the name of the plugin.
 // You should use the go module format e.g. github.com/myuser/myplugin
 func (s *SQLiteService) ServiceName() string {
-	return "github.com/gailsapp/gails/v3/plugins/sqlite"
+	return "github.com/gailsapp/gails/plugins/sqlite"
 }
 
 // ServiceStartup opens the database connection.

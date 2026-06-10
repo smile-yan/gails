@@ -1,8 +1,8 @@
-module github.com/gailsapp/gails/v3/examples/server
+module github.com/gailsapp/gails/examples/server
 
 go 1.25.0
 
-require github.com/gailsapp/gails/v3 v3.0.0-alpha.62
+require github.com/gailsapp/gails v3.0.0-alpha.62
 
 require (
 	dario.cat/mergo v1.0.2 // indirect
@@ -47,4 +47,4 @@ require (
 )
 
 // For local development - remove this line before publishing
-replace github.com/gailsapp/gails/v3 => ../..
+replace github.com/gailsapp/gails => ../..

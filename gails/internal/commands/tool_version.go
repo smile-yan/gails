@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/github"
+	"github.com/gailsapp/gails/internal/github"
 )
 
 type ToolVersionOptions struct {

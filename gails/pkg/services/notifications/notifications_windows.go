@@ -15,9 +15,9 @@ import (
 
 	"git.sr.ht/~jackmordaunt/go-toast/v2"
 	wintoast "git.sr.ht/~jackmordaunt/go-toast/v2/wintoast"
-	"github.com/gailsapp/gails/v3/internal/uuid"
-	"github.com/gailsapp/gails/v3/pkg/application"
-	"github.com/gailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/internal/uuid"
+	"github.com/gailsapp/gails/pkg/application"
+	"github.com/gailsapp/gails/pkg/w32"
 	"golang.org/x/sys/windows/registry"
 )
 

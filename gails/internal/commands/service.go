@@ -1,9 +1,9 @@
 package commands
 
 import (
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/service"
-	"github.com/gailsapp/gails/v3/internal/term"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/service"
+	"github.com/gailsapp/gails/internal/term"
 	"strings"
 )
 

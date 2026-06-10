@@ -2,7 +2,7 @@ module changeme
 
 go 1.25.0
 
-require github.com/gailsapp/gails/v3 v3.0.0-dev
+require github.com/gailsapp/gails v3.0.0-dev
 
 require (
 	dario.cat/mergo v1.0.2 // indirect
@@ -46,4 +46,4 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
 
-replace github.com/gailsapp/gails/v3 => ../../
+replace github.com/gailsapp/gails => ../../

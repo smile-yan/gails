@@ -944,10 +944,10 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/gailsapp/gails/v3/internal/assetserver"
-	"github.com/gailsapp/gails/v3/internal/runtime"
+	"github.com/gailsapp/gails/internal/assetserver"
+	"github.com/gailsapp/gails/internal/runtime"
 
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 type macosWebviewWindow struct {

@@ -1,7 +1,7 @@
 package assetserver
 
 import (
-	"github.com/gailsapp/gails/v3/internal/assetserver/bundledassets"
+	"github.com/gailsapp/gails/internal/assetserver/bundledassets"
 	"io/fs"
 	"net/http"
 	"strings"

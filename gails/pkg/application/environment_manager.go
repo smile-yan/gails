@@ -3,8 +3,8 @@ package application
 import (
 	"runtime"
 
-	"github.com/gailsapp/gails/v3/internal/fileexplorer"
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
+	"github.com/gailsapp/gails/internal/fileexplorer"
+	"github.com/gailsapp/gails/internal/operatingsystem"
 )
 
 // EnvironmentManager manages environment-related operations

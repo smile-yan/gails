@@ -1,5 +1,5 @@
 import {Events} from "@gailsio/runtime";
-import {SetBadge, RemoveBadge, SetCustomBadge} from "../bindings/github.com/gailsapp/gails/v3/pkg/services/dock/dockservice";
+import {SetBadge, RemoveBadge, SetCustomBadge} from "../bindings/github.com/gailsapp/gails/pkg/services/dock/dockservice";
 import { RGBA } from "../bindings/image/color/models";
 
 const setCustomButton = document.getElementById('set-custom')! as HTMLButtonElement;

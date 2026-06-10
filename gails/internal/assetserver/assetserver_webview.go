@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gailsapp/gails/v3/internal/assetserver/webview"
+	"github.com/gailsapp/gails/internal/assetserver/webview"
 )
 
 type assetServerWebView struct {

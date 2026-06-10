@@ -6,7 +6,7 @@ import (
 	"go/types"
 	"iter"
 
-	"github.com/gailsapp/gails/v3/internal/generator/config"
+	"github.com/gailsapp/gails/internal/generator/config"
 	"golang.org/x/tools/go/packages"
 )
 

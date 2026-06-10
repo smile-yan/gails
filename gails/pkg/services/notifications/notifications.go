@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/pkg/application"
 )
 
 type platformNotifier interface {
@@ -109,7 +109,7 @@ type NotificationResult struct {
 
 // ServiceName returns the name of the service.
 func (ns *NotificationService) ServiceName() string {
-	return "github.com/gailsapp/gails/v3/services/notifications"
+	return "github.com/gailsapp/gails/services/notifications"
 }
 
 // OnNotificationResponse registers a callback function that will be called when

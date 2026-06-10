@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/gailsapp/gails/v3/internal/lo"
+	"github.com/gailsapp/gails/internal/lo"
 )
 
 type macPackageManager int

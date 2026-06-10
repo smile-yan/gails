@@ -1,7 +1,7 @@
 package resolve
 
 import (
-	"github.com/gailsapp/gails/v3/internal/wake/ast"
+	"github.com/gailsapp/gails/internal/wake/ast"
 )
 
 // MergeTaskfile layers a local taskfile over a base one with local-wins

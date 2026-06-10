@@ -3,7 +3,7 @@ package resolve
 import (
 	"testing"
 
-	"github.com/gailsapp/gails/v3/internal/wake/ast"
+	"github.com/gailsapp/gails/internal/wake/ast"
 )
 
 func TestMergeTaskReplacesCmds(t *testing.T) {

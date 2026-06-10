@@ -1,7 +1,7 @@
 package setupwizard
 
 import (
-	"github.com/gailsapp/gails/v3/internal/defaults"
+	"github.com/gailsapp/gails/internal/defaults"
 )
 
 // Re-export types for convenience

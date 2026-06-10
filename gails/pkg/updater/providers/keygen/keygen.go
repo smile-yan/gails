@@ -24,7 +24,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater"
 )
 
 const (

@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
+	"github.com/gailsapp/gails/internal/flags"
 )
 
 const defaultVitePort = 9245

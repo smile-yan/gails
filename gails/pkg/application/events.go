@@ -9,7 +9,7 @@ import (
 
 	"encoding/json"
 
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 type ApplicationEvent struct {

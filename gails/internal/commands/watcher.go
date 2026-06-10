@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/atterpac/refresh/engine"
-	"github.com/gailsapp/gails/v3/internal/signal"
+	"github.com/gailsapp/gails/internal/signal"
 	"gopkg.in/yaml.v3"
 )
 

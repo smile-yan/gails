@@ -1,6 +1,6 @@
 package application
 
-import "github.com/gailsapp/gails/v3/internal/operatingsystem"
+import "github.com/gailsapp/gails/internal/operatingsystem"
 
 // EnvironmentInfo represents information about the current environment.
 //

@@ -3,7 +3,7 @@ package main
 import (
 	"strconv"
 
-	"github.com/gailsapp/gails/v3/examples/binding/data"
+	"github.com/gailsapp/gails/examples/binding/data"
 )
 
 // GreetService is a service that greets people

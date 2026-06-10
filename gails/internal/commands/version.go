@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/gailsapp/gails/v3/internal/version"
+	"github.com/gailsapp/gails/internal/version"
 )
 
 type VersionOptions struct{}

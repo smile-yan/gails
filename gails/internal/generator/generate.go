@@ -11,10 +11,10 @@ import (
 
 	"golang.org/x/tools/go/packages"
 
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/generator/collect"
-	"github.com/gailsapp/gails/v3/internal/generator/config"
-	"github.com/gailsapp/gails/v3/internal/generator/render"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/generator/collect"
+	"github.com/gailsapp/gails/internal/generator/config"
+	"github.com/gailsapp/gails/internal/generator/render"
 )
 
 // Generator wraps all bookkeeping data structures that are needed

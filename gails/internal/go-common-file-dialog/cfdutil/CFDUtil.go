@@ -1,7 +1,7 @@
 package cfdutil
 
 import (
-	"github.com/gailsapp/gails/v3/internal/go-common-file-dialog/cfd"
+	"github.com/gailsapp/gails/internal/go-common-file-dialog/cfd"
 )
 
 // TODO doc

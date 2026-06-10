@@ -2,7 +2,7 @@ package commands
 
 import (
 	"fmt"
-	"github.com/gailsapp/gails/v3/internal/buildinfo"
+	"github.com/gailsapp/gails/internal/buildinfo"
 )
 
 type BuildInfoOptions struct{}

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/doctor/packagemanager"
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
+	"github.com/gailsapp/gails/internal/doctor/packagemanager"
+	"github.com/gailsapp/gails/internal/operatingsystem"
 )
 
 func getInfo() (map[string]string, bool) {

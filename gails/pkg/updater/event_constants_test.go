@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gailsapp/gails/v3/pkg/updater"
+	"github.com/gailsapp/gails/pkg/updater"
 )
 
 // TestEventConstants_MatchRuntimeTS guards against drift between the

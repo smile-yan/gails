@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/internal/doctor/packagemanager"
-	"github.com/gailsapp/gails/v3/internal/operatingsystem"
+	"github.com/gailsapp/gails/internal/doctor/packagemanager"
+	"github.com/gailsapp/gails/internal/operatingsystem"
 )
 
 func (w *Wizard) checkAllDependencies() []DependencyStatus {

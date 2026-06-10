@@ -13,11 +13,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/report"
-	"github.com/gailsapp/gails/v3/internal/wake/ast"
-	"github.com/gailsapp/gails/v3/internal/wake/cmds"
-	"github.com/gailsapp/gails/v3/internal/wake/parse"
-	wakeplatform "github.com/gailsapp/gails/v3/internal/wake/platform"
+	"github.com/gailsapp/gails/internal/report"
+	"github.com/gailsapp/gails/internal/wake/ast"
+	"github.com/gailsapp/gails/internal/wake/cmds"
+	"github.com/gailsapp/gails/internal/wake/parse"
+	wakeplatform "github.com/gailsapp/gails/internal/wake/platform"
 )
 
 type Executor struct {

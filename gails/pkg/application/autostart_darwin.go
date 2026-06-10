@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gailsapp/gails/v3/pkg/mac"
+	"github.com/gailsapp/gails/pkg/mac"
 )
 
 type darwinAutostart struct {

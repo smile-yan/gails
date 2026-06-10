@@ -2,7 +2,7 @@
 
 package main
 
-import "github.com/gailsapp/gails/v3/pkg/w32"
+import "github.com/gailsapp/gails/pkg/w32"
 
 func init() {
 	getExStyle = func() int {

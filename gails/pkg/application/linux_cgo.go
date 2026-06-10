@@ -9,8 +9,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gailsapp/gails/v3/internal/assetserver/webview"
-	"github.com/gailsapp/gails/v3/pkg/events"
+	"github.com/gailsapp/gails/internal/assetserver/webview"
+	"github.com/gailsapp/gails/pkg/events"
 )
 
 /*

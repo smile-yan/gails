@@ -10,14 +10,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gailsapp/gails/v3/internal/report"
-	"github.com/gailsapp/gails/v3/internal/report/pulse"
-	"github.com/gailsapp/gails/v3/internal/wake/ast"
-	"github.com/gailsapp/gails/v3/internal/wake/exec"
-	"github.com/gailsapp/gails/v3/internal/wake/fallback"
-	"github.com/gailsapp/gails/v3/internal/wake/override"
-	"github.com/gailsapp/gails/v3/internal/wake/parse"
-	"github.com/gailsapp/gails/v3/internal/wake/resolve"
+	"github.com/gailsapp/gails/internal/report"
+	"github.com/gailsapp/gails/internal/report/pulse"
+	"github.com/gailsapp/gails/internal/wake/ast"
+	"github.com/gailsapp/gails/internal/wake/exec"
+	"github.com/gailsapp/gails/internal/wake/fallback"
+	"github.com/gailsapp/gails/internal/wake/override"
+	"github.com/gailsapp/gails/internal/wake/parse"
+	"github.com/gailsapp/gails/internal/wake/resolve"
 )
 
 type ExecuteOptions struct {

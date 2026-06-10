@@ -4,16 +4,16 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/gailsapp/gails/v3/internal/browser"
+	"github.com/gailsapp/gails/internal/browser"
 
 	"github.com/pterm/pterm"
-	"github.com/gailsapp/gails/v3/internal/lo"
+	"github.com/gailsapp/gails/internal/lo"
 
 	"github.com/leaanthony/clir"
-	"github.com/gailsapp/gails/v3/internal/commands"
-	"github.com/gailsapp/gails/v3/internal/flags"
-	"github.com/gailsapp/gails/v3/internal/term"
-	"github.com/gailsapp/gails/v3/internal/wake"
+	"github.com/gailsapp/gails/internal/commands"
+	"github.com/gailsapp/gails/internal/flags"
+	"github.com/gailsapp/gails/internal/term"
+	"github.com/gailsapp/gails/internal/wake"
 )
 
 func init() {

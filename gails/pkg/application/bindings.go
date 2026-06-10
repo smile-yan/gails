@@ -10,8 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gailsapp/gails/v3/internal/hash"
-	"github.com/gailsapp/gails/v3/internal/sliceutil"
+	"github.com/gailsapp/gails/internal/hash"
+	"github.com/gailsapp/gails/internal/sliceutil"
 )
 
 // CallOptions defines the options for a method call.

@@ -8,7 +8,7 @@ import (
 
 	"github.com/leaanthony/clir"
 
-	"github.com/gailsapp/gails/v3/internal/lo"
+	"github.com/gailsapp/gails/internal/lo"
 )
 
 func main() {
