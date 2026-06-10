@@ -74,7 +74,7 @@ tasks:
       - sh: docker image inspect {{.CROSS_IMAGE}} > /dev/null 2>&1
         msg: |
           Docker image '{{.CROSS_IMAGE}}' not found.
-          Build it first: wails3 task setup:docker
+          Build it first: gails3 task setup:docker
     cmds:
       - docker run --rm -v "{{.ROOT_DIR}}:/app" {{.DOCKER_MOUNTS}} -e APP_NAME="{{.APP_NAME}}" {{if .EXTRA_TAGS}}-e EXTRA_TAGS="{{.EXTRA_TAGS}}"{{end}} {{if eq .OBFUSCATED "true"}}-e OBFUSCATED=true{{end}} {{if .GARBLE_ARGS}}-e GARBLE_ARGS="{{.GARBLE_ARGS}}"{{end}} {{.CROSS_IMAGE}} darwin {{.DOCKER_ARCH}}
       - cmd: docker run --rm -v "{{.ROOT_DIR}}:/app" alpine chown -R $(id -u):$(id -g) /app/bin
@@ -86,9 +86,9 @@ tasks:
       DEFAULT_OUTPUT: '{{.BIN_DIR}}/{{.APP_NAME}}'
       OUTPUT: '{{ .OUTPUT | default .DEFAULT_OUTPUT }}'
       # Generate Docker volume mounts: Go module cache + go.mod replace directives
-      # Uses wails3 tool docker-mounts for cross-platform compatibility (Windows/Linux/macOS)
+      # Uses gails3 tool docker-mounts for cross-platform compatibility (Windows/Linux/macOS)
       DOCKER_MOUNTS:
-        sh: 'wails3 tool docker-mounts'
+        sh: 'gails3 tool docker-mounts'
 
   build:universal:
     summary: Builds darwin universal binary (arm64 + amd64)
@@ -112,10 +112,10 @@ tasks:
       - rm "{{.BIN_DIR}}/{{.APP_NAME}}-amd64" "{{.BIN_DIR}}/{{.APP_NAME}}-arm64"
 
   build:universal:lipo:go:
-    summary: Creates universal binary using wails3 tool lipo (Linux/Windows)
+    summary: Creates universal binary using gails3 tool lipo (Linux/Windows)
     internal: true
     cmds:
-      - wails3 tool lipo -output "{{.BIN_DIR}}/{{.APP_NAME}}" -input "{{.BIN_DIR}}/{{.APP_NAME}}-amd64" -input "{{.BIN_DIR}}/{{.APP_NAME}}-arm64"
+      - gails3 tool lipo -output "{{.BIN_DIR}}/{{.APP_NAME}}" -input "{{.BIN_DIR}}/{{.APP_NAME}}-amd64" -input "{{.BIN_DIR}}/{{.APP_NAME}}-arm64"
       - rm -f "{{.BIN_DIR}}/{{.APP_NAME}}-amd64" "{{.BIN_DIR}}/{{.APP_NAME}}-arm64"
 
   package:
@@ -181,7 +181,7 @@ tasks:
     deps:
       - task: package
     cmds:
-      - wails3 tool sign --input "{{.BIN_DIR}}/{{.APP_NAME}}.app" --identity "{{.SIGN_IDENTITY}}" {{if .ENTITLEMENTS}}--entitlements {{.ENTITLEMENTS}}{{end}}
+      - gails3 tool sign --input "{{.BIN_DIR}}/{{.APP_NAME}}.app" --identity "{{.SIGN_IDENTITY}}" {{if .ENTITLEMENTS}}--entitlements {{.ENTITLEMENTS}}{{end}}
     preconditions:
       - sh: '[ -n "{{.SIGN_IDENTITY}}" ]'
         msg: "SIGN_IDENTITY is required. Set it in the vars section at the top of build/darwin/Taskfile.yml"
@@ -193,11 +193,11 @@ tasks:
       Configure SIGN_IDENTITY and KEYCHAIN_PROFILE in the vars section at the top of this file.
 
       Setup (one-time):
-        wails3 signing credentials --apple-id "you@email.com" --team-id "TEAMID" --password "app-specific-password" --profile "my-profile"
+        gails3 signing credentials --apple-id "you@email.com" --team-id "TEAMID" --password "app-specific-password" --profile "my-profile"
     deps:
       - task: package
     cmds:
-      - wails3 tool sign --input "{{.BIN_DIR}}/{{.APP_NAME}}.app" --identity "{{.SIGN_IDENTITY}}" {{if .ENTITLEMENTS}}--entitlements {{.ENTITLEMENTS}}{{end}} --notarize --keychain-profile {{.KEYCHAIN_PROFILE}}
+      - gails3 tool sign --input "{{.BIN_DIR}}/{{.APP_NAME}}.app" --identity "{{.SIGN_IDENTITY}}" {{if .ENTITLEMENTS}}--entitlements {{.ENTITLEMENTS}}{{end}} --notarize --keychain-profile {{.KEYCHAIN_PROFILE}}
     preconditions:
       - sh: '[ -n "{{.SIGN_IDENTITY}}" ]'
         msg: "SIGN_IDENTITY is required. Set it in the vars section at the top of build/darwin/Taskfile.yml"

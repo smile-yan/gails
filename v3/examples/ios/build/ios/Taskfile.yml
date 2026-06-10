@@ -138,7 +138,7 @@ tasks:
     generates:
       - frontend/bindings/**/*
     cmds:
-      - wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
+      - gails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
     env:
       GOOS: ios
       CGO_ENABLED: 1
@@ -182,7 +182,7 @@ tasks:
         fi
     preconditions:
       - sh: command -v xcrun
-        msg: "xcrun not found. Please run 'wails3 task ios:install:deps' to install iOS development dependencies"
+        msg: "xcrun not found. Please run 'gails3 task ios:install:deps' to install iOS development dependencies"
 
   generate:ios:overlay:
     internal: true
@@ -193,7 +193,7 @@ tasks:
       - build/ios/xcode/overlay.json
       - build/ios/xcode/gen/main_ios.gen.go
     cmds:
-      - wails3 ios overlay:gen -out build/ios/xcode/overlay.json -config build/config.yml
+      - gails3 ios overlay:gen -out build/ios/xcode/overlay.json -config build/config.yml
 
   generate:ios:xcode:
     internal: true
@@ -206,7 +206,7 @@ tasks:
       - build/ios/xcode/main/Assets.xcassets/**/*
       - build/ios/xcode/project.pbxproj
     cmds:
-      - wails3 ios xcode:gen -outdir build/ios/xcode -config build/config.yml
+      - gails3 ios xcode:gen -outdir build/ios/xcode -config build/config.yml
 
   run:
     summary: Run the application in iOS Simulator

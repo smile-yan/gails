@@ -9,7 +9,7 @@ vars:
   # SIGN_THUMBPRINT: "certificate-thumbprint"  # Alternative to SIGN_CERTIFICATE
   # TIMESTAMP_SERVER: "http://timestamp.digicert.com"
   #
-  # Password is stored securely in system keychain. Run: wails3 setup signing
+  # Password is stored securely in system keychain. Run: gails3 setup signing
 
   # Docker image for cross-compilation with CGO (used when CGO_ENABLED=1 on non-Windows)
   CROSS_IMAGE: wails-cross
@@ -78,7 +78,7 @@ tasks:
       - sh: docker image inspect {{.CROSS_IMAGE}} > /dev/null 2>&1
         msg: |
           Docker image '{{.CROSS_IMAGE}}' not found.
-          Build it first: wails3 task setup:docker
+          Build it first: gails3 task setup:docker
     cmds:
       - task: generate:syso
         vars:
@@ -90,9 +90,9 @@ tasks:
     vars:
       DOCKER_ARCH: '{{.ARCH | default "amd64"}}'
       # Generate Docker volume mounts: Go module cache + go.mod replace directives
-      # Uses wails3 tool docker-mounts for cross-platform compatibility (Windows/Linux/macOS)
+      # Uses gails3 tool docker-mounts for cross-platform compatibility (Windows/Linux/macOS)
       DOCKER_MOUNTS:
-        sh: 'wails3 tool docker-mounts'
+        sh: 'gails3 tool docker-mounts'
 
   package:
     summary: Packages the application
@@ -108,7 +108,7 @@ tasks:
     summary: Generates Windows `.syso` file
     dir: build
     cmds:
-      - wails3 generate syso -arch {{.ARCH}} -icon windows/icon.ico -manifest windows/wails.exe.manifest -info windows/info.json -out ../wails_windows_{{.ARCH}}.syso
+      - gails3 generate syso -arch {{.ARCH}} -icon windows/icon.ico -manifest windows/wails.exe.manifest -info windows/info.json -out ../wails_windows_{{.ARCH}}.syso
     vars:
       ARCH: '{{.ARCH | default ARCH}}'
 
@@ -122,7 +122,7 @@ tasks:
         msg: "INSTALL_SCOPE must be 'user' or 'machine', got '{{.INSTALL_SCOPE}}'"
     cmds:
       # Create the Microsoft WebView2 bootstrapper if it doesn't exist
-      - wails3 generate webview2bootstrapper -dir "{{.ROOT_DIR}}/build/windows/nsis"
+      - gails3 generate webview2bootstrapper -dir "{{.ROOT_DIR}}/build/windows/nsis"
       - |
         {{if eq OS "windows"}}
         makensis {{if eq .INSTALL_SCOPE "user"}}-DWAILS_INSTALL_SCOPE=user -DREQUEST_EXECUTION_LEVEL=user {{end}}-DARG_WAILS_{{.ARG_FLAG}}_BINARY="{{.ROOT_DIR}}\{{.BIN_DIR}}\{{.APP_NAME}}.exe" project.nsi
@@ -140,7 +140,7 @@ tasks:
       - task: build
     cmds:
       - |-
-        wails3 tool msix \
+        gails3 tool msix \
           --config "{{.ROOT_DIR}}/wails.json" \
           --name "{{.APP_NAME}}" \
           --executable "{{.ROOT_DIR}}/{{.BIN_DIR}}/{{.APP_NAME}}.exe" \
@@ -158,7 +158,7 @@ tasks:
   install:msix:tools:
     summary: Installs tools required for MSIX packaging
     cmds:
-      - wails3 tool msix-install-tools
+      - gails3 tool msix-install-tools
 
   run:
     cmds:
@@ -169,11 +169,11 @@ tasks:
     desc: |
       Signs the .exe with an Authenticode certificate.
       Configure SIGN_CERTIFICATE or SIGN_THUMBPRINT in the vars section at the top of this file.
-      Password is retrieved from system keychain (run: wails3 setup signing)
+      Password is retrieved from system keychain (run: gails3 setup signing)
     deps:
       - task: build
     cmds:
-      - wails3 tool sign --input "{{.BIN_DIR}}/{{.APP_NAME}}.exe" {{if .SIGN_CERTIFICATE}}--certificate {{.SIGN_CERTIFICATE}}{{end}} {{if .SIGN_THUMBPRINT}}--thumbprint {{.SIGN_THUMBPRINT}}{{end}} {{if .TIMESTAMP_SERVER}}--timestamp {{.TIMESTAMP_SERVER}}{{end}}
+      - gails3 tool sign --input "{{.BIN_DIR}}/{{.APP_NAME}}.exe" {{if .SIGN_CERTIFICATE}}--certificate {{.SIGN_CERTIFICATE}}{{end}} {{if .SIGN_THUMBPRINT}}--thumbprint {{.SIGN_THUMBPRINT}}{{end}} {{if .TIMESTAMP_SERVER}}--timestamp {{.TIMESTAMP_SERVER}}{{end}}
     preconditions:
       - sh: '[ -n "{{.SIGN_CERTIFICATE}}" ] || [ -n "{{.SIGN_THUMBPRINT}}" ]'
         msg: "Either SIGN_CERTIFICATE or SIGN_THUMBPRINT is required. Set it in the vars section at the top of build/windows/Taskfile.yml"
@@ -183,7 +183,7 @@ tasks:
     desc: |
       Creates and signs the NSIS installer.
       Configure SIGN_CERTIFICATE or SIGN_THUMBPRINT in the vars section at the top of this file.
-      Password is retrieved from system keychain (run: wails3 setup signing)
+      Password is retrieved from system keychain (run: gails3 setup signing)
     deps:
       - task: create:nsis:installer
         vars:
@@ -191,7 +191,7 @@ tasks:
     vars:
       INSTALL_SCOPE: '{{.INSTALL_SCOPE | default "machine"}}'
     cmds:
-      - wails3 tool sign --input "build/windows/nsis/{{.APP_NAME}}-installer.exe" {{if .SIGN_CERTIFICATE}}--certificate {{.SIGN_CERTIFICATE}}{{end}} {{if .SIGN_THUMBPRINT}}--thumbprint {{.SIGN_THUMBPRINT}}{{end}} {{if .TIMESTAMP_SERVER}}--timestamp {{.TIMESTAMP_SERVER}}{{end}}
+      - gails3 tool sign --input "build/windows/nsis/{{.APP_NAME}}-installer.exe" {{if .SIGN_CERTIFICATE}}--certificate {{.SIGN_CERTIFICATE}}{{end}} {{if .SIGN_THUMBPRINT}}--thumbprint {{.SIGN_THUMBPRINT}}{{end}} {{if .TIMESTAMP_SERVER}}--timestamp {{.TIMESTAMP_SERVER}}{{end}}
     preconditions:
       - sh: '[ -n "{{.SIGN_CERTIFICATE}}" ] || [ -n "{{.SIGN_THUMBPRINT}}" ]'
         msg: "Either SIGN_CERTIFICATE or SIGN_THUMBPRINT is required. Set it in the vars section at the top of build/windows/Taskfile.yml"

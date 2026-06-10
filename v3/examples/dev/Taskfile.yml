@@ -138,8 +138,8 @@ tasks:
     summary: Runs the application in development mode
     watch: true
     preconditions:
-      - sh: 'wails3 tool checkport -p 5173'
-        msg: "Vite does not appear to be running. Please run `wails3 task frontend:dev` in another terminal."
+      - sh: 'gails3 tool checkport -p 5173'
+        msg: "Vite does not appear to be running. Please run `gails3 task frontend:dev` in another terminal."
     cmds:
       - task: build:backend
 
