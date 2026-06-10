@@ -48,7 +48,7 @@ type linuxWebviewWindow struct {
 }
 
 var (
-	registered bool = false // avoid 'already registered message' about 'wails://'
+	registered bool = false // avoid 'already registered message' about 'gails://'
 )
 
 func (w *linuxWebviewWindow) endDrag(button uint, x, y int) {
@@ -383,7 +383,7 @@ func (w *linuxWebviewWindow) run() {
 	w.parent.RegisterHook(events.Linux.WindowLoadFinished, func(e *WindowEvent) {
 		// Inject runtime core and EnableFileDrop flag together
 		js := runtime.Core(globalApplication.impl.GetFlags(globalApplication.options))
-		js += fmt.Sprintf("window._wails.flags.enableFileDrop=%v;", w.parent.options.EnableFileDrop)
+		js += fmt.Sprintf("window._gails.flags.enableFileDrop=%v;", w.parent.options.EnableFileDrop)
 		w.execJS(js)
 	})
 	if w.parent.options.HTML != "" {

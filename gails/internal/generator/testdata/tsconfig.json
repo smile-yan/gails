@@ -8,7 +8,7 @@
     "output/**/*.got.?s"
   ],
   "references": [
-    { "path": "../../runtime/desktop/@wailsio/runtime" }
+    { "path": "../../runtime/desktop/@gailsio/runtime" }
   ],
   "compilerOptions": {
     "allowJs": true,
@@ -35,7 +35,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "/wails/runtime.js": ["../../runtime/desktop/@wailsio/runtime"]
+      "/gails/runtime.js": ["../../runtime/desktop/@gailsio/runtime"]
     }
   }
 }

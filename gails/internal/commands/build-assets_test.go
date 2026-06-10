@@ -13,7 +13,7 @@ import (
 
 func TestGenerateBuildAssets(t *testing.T) {
 	// Create a temporary directory for testing
-	tempDir, err := os.MkdirTemp("", "wails-build-assets-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-build-assets-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -135,7 +135,7 @@ func TestGenerateBuildAssets(t *testing.T) {
 
 				// Test that defaults were applied correctly
 				if tt.options.ProductIdentifier == "" && tt.options.Name != "" {
-					expectedIdentifier := "com.wails." + normaliseName(tt.options.Name)
+					expectedIdentifier := "com.gails." + normaliseName(tt.options.Name)
 					// We can't easily check this without modifying the function to return the config
 					// but we know the logic is there
 					_ = expectedIdentifier
@@ -147,20 +147,20 @@ func TestGenerateBuildAssets(t *testing.T) {
 
 func TestUpdateBuildAssets(t *testing.T) {
 	// Create a temporary directory for testing
-	tempDir, err := os.MkdirTemp("", "wails-update-assets-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-update-assets-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
 	defer os.RemoveAll(tempDir)
 
-	// Create a sample wails config file
+	// Create a sample gails config file
 	configDir := filepath.Join(tempDir, "config")
 	err = os.MkdirAll(configDir, 0755)
 	if err != nil {
 		t.Fatalf("Failed to create config directory: %v", err)
 	}
 
-	configFile := filepath.Join(configDir, "wails.yaml")
+	configFile := filepath.Join(configDir, "gails.yaml")
 	config := GailsConfig{
 		Info: struct {
 			CompanyName       string `yaml:"companyName"`
@@ -271,7 +271,7 @@ func TestUpdateBuildAssets(t *testing.T) {
 }
 
 func TestPlistMerge(t *testing.T) {
-	tempDir, err := os.MkdirTemp("", "wails-plist-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-plist-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -355,7 +355,7 @@ func TestPlistMerge(t *testing.T) {
 }
 
 func TestCFBundleIconNameDetection(t *testing.T) {
-	tempDir, err := os.MkdirTemp("", "wails-icon-name-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-icon-name-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -426,7 +426,7 @@ func TestCFBundleIconNameDetection(t *testing.T) {
 					t.Fatalf("Failed to create config directory: %v", err)
 				}
 
-				configFile = filepath.Join(configDir, "wails.yaml")
+				configFile = filepath.Join(configDir, "gails.yaml")
 				config := GailsConfig{
 					Info: struct {
 						CompanyName       string `yaml:"companyName"`
@@ -642,7 +642,7 @@ func TestNestedPlistMerge(t *testing.T) {
 // darwin/Info.plist file is still in raw-template form.
 // See: https://github.com/gailsapp/gails/issues/5259
 func TestOldFormatPlistMigration(t *testing.T) {
-	tempDir, err := os.MkdirTemp("", "wails-old-plist-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-old-plist-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -655,7 +655,7 @@ func TestOldFormatPlistMigration(t *testing.T) {
 	}
 
 	// Simulate an older-format Info.plist that still contains raw Go template
-	// directives (as produced by wails v2 / early v3 alpha scaffolding).
+	// directives (as produced by gails v2 / early v3 alpha scaffolding).
 	// The outer {{if}}…{{end}} blocks are ignored by the XML parser as text
 	// nodes, but the inner <string>{{.Ext}}</string> etc. are parsed as real
 	// string values — those are the stubs the fix must remove.
@@ -692,7 +692,7 @@ func TestOldFormatPlistMigration(t *testing.T) {
 	  {{range .Info.Protocols}}
 	  <dict>
 	    <key>CFBundleURLName</key>
-	    <string>com.wails.{{.Scheme}}</string>
+	    <string>com.gails.{{.Scheme}}</string>
 	    <key>CFBundleURLSchemes</key>
 	    <array>
 	      <string>{{.Scheme}}</string>
@@ -717,7 +717,7 @@ func TestOldFormatPlistMigration(t *testing.T) {
 		ProductName:       "TestApp",
 		ProductVersion:    "1.0.0",
 		ProductCompany:    "Wails",
-		ProductIdentifier: "com.wails.testapp",
+		ProductIdentifier: "com.gails.testapp",
 		Silent:            true,
 	}
 

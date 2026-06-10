@@ -1,5 +1,5 @@
 # This file contains the configuration for this project.
-# When you update `info` or `fileAssociations`, run `gails3 task common:update:build-assets` to update the assets.
+# When you update `info` or `fileAssociations`, run `gails task common:update:build-assets` to update the assets.
 # Note that this will overwrite any changes you have made to the assets.
 version: '3'
 
@@ -14,9 +14,9 @@ info:
   version: "v0.0.1" # The application version
 
 # File Associations
-# More information at: https://v3.wails.io/noit/done/yet
+# More information at: https://v3.gails.io/noit/done/yet
 fileAssociations:
-  - ext: wails
+  - ext: gails
     name: Wails
     description: Wails Application File
     iconName: icon

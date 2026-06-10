@@ -30,12 +30,12 @@ type Config struct {
 	LogLevel slog.Level
 }
 
-//wails:inject export {
-//wails:inject     DebugContext as Debug,
-//wails:inject     InfoContext as Info,
-//wails:inject     WarningContext as Warning,
-//wails:inject     ErrorContext as Error,
-//wails:inject };
+//gails:inject export {
+//gails:inject     DebugContext as Debug,
+//gails:inject     InfoContext as Info,
+//gails:inject     WarningContext as Warning,
+//gails:inject     ErrorContext as Error,
+//gails:inject };
 type LogService struct {
 	config atomic.Pointer[Config]
 	level  slog.LevelVar
@@ -62,7 +62,7 @@ func (l *LogService) ServiceName() string {
 // Configure reconfigures the logger dynamically.
 // If config is nil, it falls back to the default configuration.
 //
-//wails:ignore
+//gails:ignore
 func (l *LogService) Configure(config *Config) {
 	if config == nil {
 		config = &Config{}
@@ -105,7 +105,7 @@ func (l *LogService) Configure(config *Config) {
 // By doing so, setting updates made through [Service.SetLogLevel]
 // will propagate dynamically to the custom logger.
 //
-//wails:ignore
+//gails:ignore
 func (l *LogService) Level() slog.Level {
 	return l.level.Level()
 }
@@ -140,56 +140,56 @@ func (l *LogService) Log(ctx context.Context, level Level, message string, args 
 
 // Debug logs at level [Debug].
 //
-//wails:ignore
+//gails:ignore
 func (l *LogService) Debug(message string, args ...any) {
 	l.DebugContext(context.Background(), message, args...)
 }
 
 // Info logs at level [Info].
 //
-//wails:ignore
+//gails:ignore
 func (l *LogService) Info(message string, args ...any) {
 	l.InfoContext(context.Background(), message, args...)
 }
 
 // Warning logs at level [Warning].
 //
-//wails:ignore
+//gails:ignore
 func (l *LogService) Warning(message string, args ...any) {
 	l.WarningContext(context.Background(), message, args...)
 }
 
 // Error logs at level [Error].
 //
-//wails:ignore
+//gails:ignore
 func (l *LogService) Error(message string, args ...any) {
 	l.ErrorContext(context.Background(), message, args...)
 }
 
 // DebugContext logs at level [Debug].
 //
-//wails:internal
+//gails:internal
 func (l *LogService) DebugContext(ctx context.Context, message string, args ...any) {
 	l.Log(ctx, Debug, message, args...)
 }
 
 // InfoContext logs at level [Info].
 //
-//wails:internal
+//gails:internal
 func (l *LogService) InfoContext(ctx context.Context, message string, args ...any) {
 	l.Log(ctx, Info, message, args...)
 }
 
 // WarningContext logs at level [Warn].
 //
-//wails:internal
+//gails:internal
 func (l *LogService) WarningContext(ctx context.Context, message string, args ...any) {
 	l.Log(ctx, Warning, message, args...)
 }
 
 // ErrorContext logs at level [Error].
 //
-//wails:internal
+//gails:internal
 func (l *LogService) ErrorContext(ctx context.Context, message string, args ...any) {
 	l.Log(ctx, Error, message, args...)
 }

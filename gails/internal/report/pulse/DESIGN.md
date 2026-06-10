@@ -327,11 +327,11 @@ The fastest way is to run a real wake build with the pulse renderer on a
 generated project:
 
 ```bash
-gails3 init -n demo -t vanilla && cd demo
-WAILS_USE_WAKE=true gails3 build       # cold build — full pulse run
-WAILS_USE_WAKE=true gails3 build       # warm — most steps cached, fast verdict
-WAILS_USE_WAKE=true WAKE_FORCE=true gails3 build   # forced clean — every step runs
-WAILS_USE_WAKE=true WAKE_DEBUG=true gails3 build   # adds resolver internals
+gails init -n demo -t vanilla && cd demo
+WAILS_USE_WAKE=true gails build       # cold build — full pulse run
+WAILS_USE_WAKE=true gails build       # warm — most steps cached, fast verdict
+WAILS_USE_WAKE=true WAKE_FORCE=true gails build   # forced clean — every step runs
+WAILS_USE_WAKE=true WAKE_DEBUG=true gails build   # adds resolver internals
 ```
 
 Failure-panel rendering can be exercised by introducing a transient

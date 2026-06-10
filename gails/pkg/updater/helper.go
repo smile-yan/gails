@@ -191,13 +191,13 @@ func runHelperSwap(target, newPath string, parentPID int, logPath string, wait p
 	}
 
 	// Tear down the staging directory we received newPath from. The
-	// download created it as `wails-update-*` under os.TempDir; after the
+	// download created it as `gails-update-*` under os.TempDir; after the
 	// rename above the directory is empty, but absent this step it would
 	// accumulate across update attempts. Guarded by the prefix so we never
 	// recursively delete a caller-supplied path that happened to live in a
 	// non-temp location.
 	stagingDir := filepath.Dir(newPath)
-	if strings.HasPrefix(filepath.Base(stagingDir), "wails-update-") {
+	if strings.HasPrefix(filepath.Base(stagingDir), "gails-update-") {
 		if err := os.RemoveAll(stagingDir); err != nil {
 			lg.logf("staging cleanup: %v (non-fatal)", err)
 		}
@@ -321,7 +321,7 @@ type helperLog struct {
 
 func openHelperLog(path string) *helperLog {
 	if path == "" {
-		path = filepath.Join(os.TempDir(), fmt.Sprintf("wails-update-%d.log", os.Getpid()))
+		path = filepath.Join(os.TempDir(), fmt.Sprintf("gails-update-%d.log", os.Getpid()))
 	}
 	f, err := os.Create(path)
 	if err != nil {

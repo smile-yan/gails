@@ -9,7 +9,7 @@ import (
 )
 
 type Info struct {
-	// Development is true when the running gails3 binary was built from a
+	// Development is true when the running gails binary was built from a
 	// local Wails source tree that is still resolvable on disk at runtime,
 	// i.e. when [wdebug.LocalModulePath] resolved to a real directory.
 	//
@@ -18,10 +18,10 @@ type Info struct {
 	// That signal is unsafe to rely on for "is this a local dev build?":
 	// Go emits `vcs=git` for any binary built inside a git checkout,
 	// including release artefacts produced by CI. A user running a
-	// tagged `gails3.exe` on Windows would therefore see Development=true
+	// tagged `gails.exe` on Windows would therefore see Development=true
 	// even though the Wails source tree is nowhere on their machine.
 	// The downstream effect was a malformed `replace github.com/gailsapp/gails/v3
-	// => /v3` directive in scaffolded projects, breaking `gails3 init`
+	// => /v3` directive in scaffolded projects, breaking `gails init`
 	// outright.
 	//
 	// [wdebug.LocalModulePath] is set by the debug package's init() only
@@ -32,7 +32,7 @@ type Info struct {
 	Development   bool
 	Version       string
 	BuildSettings map[string]string
-	wailsPackage  *debug.Module
+	gailsPackage  *debug.Module
 }
 
 func Get() (*Info, error) {

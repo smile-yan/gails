@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <link rel="icon" type="image/svg+xml" href="/wails.png"/>
+    <link rel="icon" type="image/svg+xml" href="/gails.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="/style.css"/>
 
     <title>Wails App</title>
-    <!-- Android WebView setup - must run before module scripts to enable window._wails.invoke -->
+    <!-- Android WebView setup - must run before module scripts to enable window._gails.invoke -->
     <script>
-        // Android WebView exposes window.wails via addJavascriptInterface
-        // We need to set up window._wails.invoke before the module scripts run
-        if (window.wails && window.wails.invoke) {
-            console.log('[Wails Android Bootstrap] window.wails.invoke detected, setting up _wails');
-            window._wails = window._wails || {};
-            window._wails.invoke = function(m) {
-                return window.wails.invoke(typeof m === 'string' ? m : JSON.stringify(m));
+        // Android WebView exposes window.gails via addJavascriptInterface
+        // We need to set up window._gails.invoke before the module scripts run
+        if (window.gails && window.gails.invoke) {
+            console.log('[Wails Android Bootstrap] window.gails.invoke detected, setting up _gails');
+            window._gails = window._gails || {};
+            window._gails.invoke = function(m) {
+                return window.gails.invoke(typeof m === 'string' ? m : JSON.stringify(m));
             };
         } else {
-            console.log('[Wails Android Bootstrap] window.wails not available yet');
+            console.log('[Wails Android Bootstrap] window.gails not available yet');
         }
     </script>
 </head>
 <body>
 <div class="container">
     <div>
-        <a data-wml-openURL="https://wails.io">
-            <img src="/wails.png" class="logo" alt="Wails logo"/>
+        <a data-wml-openURL="https://gails.io">
+            <img src="/gails.png" class="logo" alt="Wails logo"/>
         </a>
         <a data-wml-openURL="https://developer.mozilla.org/en-US/docs/Web/JavaScript">
             <img src="/javascript.svg" class="logo vanilla" alt="JavaScript logo"/>

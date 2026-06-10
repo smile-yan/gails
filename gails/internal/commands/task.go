@@ -15,7 +15,7 @@ import (
 	"github.com/wailsapp/task/v3/taskfile/ast"
 )
 
-// wakeRoutableInvocation reports whether `gails3 task <name>` can be safely
+// wakeRoutableInvocation reports whether `gails task <name>` can be safely
 // dispatched to wake. wake doesn't model the introspection flags (list,
 // dry-run, summary, watch) — those bypass wake and fall through to the
 // embedded task runtime below.
@@ -36,7 +36,7 @@ func wakeRoutableInvocation(o *RunTaskOptions) bool {
 	return true
 }
 
-// parseCLIVars splits the trailing "KEY=VALUE" arguments off `gails3 task`
+// parseCLIVars splits the trailing "KEY=VALUE" arguments off `gails task`
 // invocations into a map for wake.ExecuteOptions.Vars. Args without an "="
 // are silently skipped (matching the embedded task runtime's behaviour).
 func parseCLIVars(args []string) map[string]string {
@@ -100,9 +100,9 @@ func RunTask(options *RunTaskOptions, otherArgs []string) error {
 		return task.InitTaskfile(os.Stdout, wd)
 	}
 
-	// When WAILS_USE_WAKE=true, route arbitrary `gails3 task <name>`
-	// invocations through wake too, for consistency with `gails3 build` /
-	// `gails3 package` / `gails3 sign` (which all dispatch via wrapTask).
+	// When WAILS_USE_WAKE=true, route arbitrary `gails task <name>`
+	// invocations through wake too, for consistency with `gails build` /
+	// `gails package` / `gails sign` (which all dispatch via wrapTask).
 	// Operations wake doesn't support (--list, --watch, --dry, etc.) fall
 	// through to the embedded task runtime below. wake itself will fall
 	// back to the embedded runtime if the Taskfile uses an unsupported

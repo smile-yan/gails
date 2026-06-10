@@ -91,7 +91,7 @@ bool ios_get_app_background_color(unsigned char* r, unsigned char* g, unsigned c
 unsigned int ios_create_webview(void);
 
 // Create a WebView window with specified Wails ID and return its native handle
-void* ios_create_webview_with_id(unsigned int wailsID);
+void* ios_create_webview_with_id(unsigned int gailsID);
 
 // Execute JavaScript in a WebView by ID (legacy)
 void ios_execute_javascript(unsigned int windowID, const char* js);

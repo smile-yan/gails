@@ -70,15 +70,15 @@ func Run() (err error) {
 
 	/** Gails **/
 
-	wailsPackage, _ := lo.Find(BuildInfo.Deps, func(dep *debug.Module) bool {
+	gailsPackage, _ := lo.Find(BuildInfo.Deps, func(dep *debug.Module) bool {
 		return dep.Path == "github.com/gailsapp/gails/v3"
 	})
 
 	gailsVersion := strings.TrimSpace(version.String())
-	if wailsPackage != nil && wailsPackage.Replace != nil {
-		gailsVersion = "(local) => " + filepath.ToSlash(wailsPackage.Replace.Path)
+	if gailsPackage != nil && gailsPackage.Replace != nil {
+		gailsVersion = "(local) => " + filepath.ToSlash(gailsPackage.Replace.Path)
 		// Get the latest commit hash
-		repo, err := git.PlainOpen(filepath.Join(wailsPackage.Replace.Path, ".."))
+		repo, err := git.PlainOpen(filepath.Join(gailsPackage.Replace.Path, ".."))
 		if err == nil {
 			head, err := repo.Head()
 			if err == nil {

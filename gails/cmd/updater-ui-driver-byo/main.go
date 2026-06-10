@@ -55,11 +55,11 @@ const customHTML = `<!doctype html>
   <div id="notes"></div>
 </div>
 <script>
-// window.wails.Events is auto-injected by the framework because this
+// window.gails.Events is auto-injected by the framework because this
 // window was created with AllowSimpleEventEmit: true (see main.go).
 // No need to hand-roll a dispatchWailsEvent receiver here.
 (function () {
-  var Events = window.wails.Events;
+  var Events = window.gails.Events;
   function setState(text) { document.getElementById("state").textContent = text; }
 
   Events.On("gails:updater:check-started",    function () { setState("Checking…"); });
@@ -105,7 +105,7 @@ func main() {
 		Height: 460,
 		HTML:   customHTML,
 		// Required for the custom HTML's buttons to reach the host via the
-		// `wails:event:emit:` postMessage path — see WebviewWindowOptions
+		// `gails:event:emit:` postMessage path — see WebviewWindowOptions
 		// GoDoc for the threat model.
 		AllowSimpleEventEmit: true,
 	})

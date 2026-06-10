@@ -16,7 +16,7 @@
   <div class="counter" id="counter">waiting&hellip;</div>
   <pre id="last"></pre>
   <script type="module">
-    import { Events } from "/wails/runtime.js";
+    import { Events } from "/gails/runtime.js";
     let last = 0;
     Events.On("backendmessage", (ev) => {
       const data = ev.data;

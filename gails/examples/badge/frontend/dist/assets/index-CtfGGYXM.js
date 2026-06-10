@@ -44,7 +44,7 @@ function nanoid(size = 21) {
   }
   return id;
 }
-const runtimeURL = window.location.origin + "/wails/runtime";
+const runtimeURL = window.location.origin + "/gails/runtime";
 const objectNames = Object.freeze({
   Call: 0,
   Clipboard: 1,
@@ -73,10 +73,10 @@ async function runtimeCallWithID(objectID, method, windowName, args) {
     url.searchParams.append("args", JSON.stringify(args));
   }
   let headers = {
-    ["x-wails-client-id"]: clientId
+    ["x-gails-client-id"]: clientId
   };
   if (windowName) {
-    headers["x-wails-window-name"] = windowName;
+    headers["x-gails-window-name"] = windowName;
   }
   let response = await fetch(url, { headers });
   if (!response.ok) {
@@ -99,7 +99,7 @@ const _invoke = function() {
     }
   } catch (e) {
   }
-  console.warn("\n%c⚠️ Browser Environment Detected %c\n\n%cOnly UI previews are available in the browser. For full functionality, please run the application in desktop mode.\nMore information at: https://v3.wails.io/learn/build/#using-a-browser-for-development\n", "background: #ffffff; color: #000000; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 2px solid #000000;", "background: transparent;", "color: #ffffff; font-style: italic; font-weight: bold;");
+  console.warn("\n%c⚠️ Browser Environment Detected %c\n\n%cOnly UI previews are available in the browser. For full functionality, please run the application in desktop mode.\nMore information at: https://v3.gails.io/learn/build/#using-a-browser-for-development\n", "background: #ffffff; color: #000000; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 2px solid #000000;", "background: transparent;", "color: #ffffff; font-style: italic; font-weight: bold;");
   return null;
 }();
 function invoke(msg) {
@@ -276,7 +276,7 @@ function primaryDown(event) {
   }
   const target = eventTarget(event);
   const style = window.getComputedStyle(target);
-  canDrag = style.getPropertyValue("--wails-draggable").trim() === "drag" && (event.offsetX - parseFloat(style.paddingLeft) < target.clientWidth && event.offsetY - parseFloat(style.paddingTop) < target.clientHeight);
+  canDrag = style.getPropertyValue("--gails-draggable").trim() === "drag" && (event.offsetX - parseFloat(style.paddingLeft) < target.clientWidth && event.offsetY - parseFloat(style.paddingTop) < target.clientHeight);
 }
 function primaryUp(event) {
   canDrag = false;
@@ -308,10 +308,10 @@ function setResize(edge) {
 function onMouseMove(event) {
   if (canResize && resizeEdge) {
     resizing = true;
-    invoke("wails:resize:" + resizeEdge);
+    invoke("gails:resize:" + resizeEdge);
   } else if (canDrag) {
     dragging = true;
-    invoke("wails:drag");
+    invoke("gails:drag");
   }
   if (dragging || resizing) {
     canDrag = canResize = false;
@@ -1296,11 +1296,11 @@ function dispatchGailsEvent(event) {
   if (!listeners) {
     return;
   }
-  let wailsEvent = new WailsEvent(event.name, event.data);
+  let gailsEvent = new WailsEvent(event.name, event.data);
   if ("sender" in event) {
-    wailsEvent.sender = event.sender;
+    gailsEvent.sender = event.sender;
   }
-  listeners = listeners.filter((listener) => !listener.dispatch(wailsEvent));
+  listeners = listeners.filter((listener) => !listener.dispatch(gailsEvent));
   if (listeners.length === 0) {
     eventListeners.delete(event.name);
   } else {
@@ -1322,7 +1322,7 @@ function Emit(event) {
 }
 window._gails = window._gails || {};
 window._gails.invoke = invoke;
-invoke("wails:runtime:ready");
+invoke("gails:runtime:ready");
 function RemoveBadge() {
   return ByID(2752757297);
 }

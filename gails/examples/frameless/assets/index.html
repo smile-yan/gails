@@ -20,34 +20,34 @@
             padding: 20px;
         }
     </style>
-    <script type="module" src="/wails/runtime.js"></script>
+    <script type="module" src="/gails/runtime.js"></script>
     <script type="module">
         document.addEventListener('DOMContentLoaded', (event) => {
             let minimiseButton = document.querySelector('#min');
             minimiseButton.addEventListener('click', function(event) {
-                window.wails.Window.Minimise();
+                window.gails.Window.Minimise();
                 setTimeout(function() {
-                    window.wails.Window.UnMinimise();
+                    window.gails.Window.UnMinimise();
                 }, 3000);
             });
             let closeButton = document.querySelector('#close');
             closeButton.addEventListener('click', function(event) {
-                window.wails.Window.Close();
+                window.gails.Window.Close();
             });
             let toggleFramelessButton = document.querySelector('#toggle-frameless');
             toggleFramelessButton.addEventListener('click', function(event) {
-                window.wails.Window.ToggleFrameless();
+                window.gails.Window.ToggleFrameless();
             });
         });
     </script>
 </head>
 <body>
 <div class="container">
-    <div class="quarter" style="background-color: lightblue; --wails-draggable: drag">Draggable</div>
+    <div class="quarter" style="background-color: lightblue; --gails-draggable: drag">Draggable</div>
     <div class="quarter" style="background-color: lightgreen;"><div>Not Draggable</div><button id="min">Minimise for 3s</button></div>
     <div class="quarter" style="background-color: lightpink;"><div>Not Draggable</div><button id="close">Close</button></div>
     <div class="quarter" style="background-color: lightred;"><div>Not Draggable</div><button id="toggle-frameless">Toggle Frameless</button></div>
-    <div class="quarter" style="background-color: lightyellow; --wails-draggable: drag">Draggable</div>
+    <div class="quarter" style="background-color: lightyellow; --gails-draggable: drag">Draggable</div>
 </div>
 </body>
 </html>

@@ -164,7 +164,7 @@
 
         <div class="demo-section">
             <h3>2. Asset Server Test</h3>
-            <button onclick="testAssetServer()">Load Asset via wails://</button>
+            <button onclick="testAssetServer()">Load Asset via gails://</button>
             <div id="asset-output" class="output">Ready to test...</div>
         </div>
 
@@ -228,10 +228,10 @@
         async function testAssetServer() {
             const output = document.getElementById('asset-output');
             try {
-                // Test loading a resource via wails:// scheme
-                const response = await fetch('wails://localhost/test.json');
+                // Test loading a resource via gails:// scheme
+                const response = await fetch('gails://localhost/test.json');
                 if (response.ok) {
-                    output.innerHTML = '✅ Asset loaded via wails:// scheme';
+                    output.innerHTML = '✅ Asset loaded via gails:// scheme';
                     document.getElementById('test2-icon').textContent = '✅';
                 } else {
                     output.innerHTML = '✅ Asset server responded (scheme handler working)';

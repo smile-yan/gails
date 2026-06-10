@@ -343,8 +343,8 @@ func fatalHandler(errFunc func(error)) {
 
 // JNI Export Functions - Called from Java
 
-//export Java_com_wails_app_WailsBridge_nativeInit
-func Java_com_wails_app_WailsBridge_nativeInit(env *C.JNIEnv, obj C.jobject, bridge C.jobject) {
+//export Java_com_gails_app_WailsBridge_nativeInit
+func Java_com_gails_app_WailsBridge_nativeInit(env *C.JNIEnv, obj C.jobject, bridge C.jobject) {
 	androidLogf("info", "🤖 [JNI] nativeInit called")
 
 	// Store references for later use (legacy - keeping for compatibility)
@@ -370,8 +370,8 @@ func Java_com_wails_app_WailsBridge_nativeInit(env *C.JNIEnv, obj C.jobject, bri
 	androidLogf("info", "🤖 [JNI] nativeInit complete")
 }
 
-//export Java_com_wails_app_WailsBridge_nativeShutdown
-func Java_com_wails_app_WailsBridge_nativeShutdown(env *C.JNIEnv, obj C.jobject) {
+//export Java_com_gails_app_WailsBridge_nativeShutdown
+func Java_com_gails_app_WailsBridge_nativeShutdown(env *C.JNIEnv, obj C.jobject) {
 	androidLogf("info", "🤖 [JNI] nativeShutdown called")
 
 	globalAppLock.Lock()
@@ -381,8 +381,8 @@ func Java_com_wails_app_WailsBridge_nativeShutdown(env *C.JNIEnv, obj C.jobject)
 	globalAppLock.Unlock()
 }
 
-//export Java_com_wails_app_WailsBridge_nativeOnResume
-func Java_com_wails_app_WailsBridge_nativeOnResume(env *C.JNIEnv, obj C.jobject) {
+//export Java_com_gails_app_WailsBridge_nativeOnResume
+func Java_com_gails_app_WailsBridge_nativeOnResume(env *C.JNIEnv, obj C.jobject) {
 	androidLogf("info", "🤖 [JNI] nativeOnResume called")
 
 	globalAppLock.RLock()
@@ -394,8 +394,8 @@ func Java_com_wails_app_WailsBridge_nativeOnResume(env *C.JNIEnv, obj C.jobject)
 	}
 }
 
-//export Java_com_wails_app_WailsBridge_nativeOnPause
-func Java_com_wails_app_WailsBridge_nativeOnPause(env *C.JNIEnv, obj C.jobject) {
+//export Java_com_gails_app_WailsBridge_nativeOnPause
+func Java_com_gails_app_WailsBridge_nativeOnPause(env *C.JNIEnv, obj C.jobject) {
 	androidLogf("info", "🤖 [JNI] nativeOnPause called")
 
 	globalAppLock.RLock()
@@ -407,8 +407,8 @@ func Java_com_wails_app_WailsBridge_nativeOnPause(env *C.JNIEnv, obj C.jobject) 
 	}
 }
 
-//export Java_com_wails_app_WailsBridge_nativeOnPageFinished
-func Java_com_wails_app_WailsBridge_nativeOnPageFinished(env *C.JNIEnv, obj C.jobject, jurl C.jstring) {
+//export Java_com_gails_app_WailsBridge_nativeOnPageFinished
+func Java_com_gails_app_WailsBridge_nativeOnPageFinished(env *C.JNIEnv, obj C.jobject, jurl C.jstring) {
 	cUrl := C.jstringToC(env, jurl)
 	defer C.releaseJString(env, jurl, cUrl)
 	url := C.GoString(cUrl)
@@ -453,8 +453,8 @@ func Java_com_wails_app_WailsBridge_nativeOnPageFinished(env *C.JNIEnv, obj C.jo
 	app.Event.Emit("PageFinished", url)
 }
 
-//export Java_com_wails_app_WailsBridge_nativeServeAsset
-func Java_com_wails_app_WailsBridge_nativeServeAsset(env *C.JNIEnv, obj C.jobject, jpath C.jstring, jmethod C.jstring, jheaders C.jstring) C.jbyteArray {
+//export Java_com_gails_app_WailsBridge_nativeServeAsset
+func Java_com_gails_app_WailsBridge_nativeServeAsset(env *C.JNIEnv, obj C.jobject, jpath C.jstring, jmethod C.jstring, jheaders C.jstring) C.jbyteArray {
 	// Convert Java strings to Go strings
 	cPath := C.jstringToC(env, jpath)
 	cMethod := C.jstringToC(env, jmethod)
@@ -498,8 +498,8 @@ func Java_com_wails_app_WailsBridge_nativeServeAsset(env *C.JNIEnv, obj C.jobjec
 	return C.createByteArray(env, unsafe.Pointer(&data[0]), C.int(len(data)))
 }
 
-//export Java_com_wails_app_WailsBridge_nativeHandleMessage
-func Java_com_wails_app_WailsBridge_nativeHandleMessage(env *C.JNIEnv, obj C.jobject, jmessage C.jstring) C.jstring {
+//export Java_com_gails_app_WailsBridge_nativeHandleMessage
+func Java_com_gails_app_WailsBridge_nativeHandleMessage(env *C.JNIEnv, obj C.jobject, jmessage C.jstring) C.jstring {
 	// Convert Java string to Go string
 	cMessage := C.jstringToC(env, jmessage)
 	defer C.releaseJString(env, jmessage, cMessage)
@@ -522,8 +522,8 @@ func Java_com_wails_app_WailsBridge_nativeHandleMessage(env *C.JNIEnv, obj C.job
 	return C.createJString(env, C.CString(response))
 }
 
-//export Java_com_wails_app_WailsBridge_nativeGetAssetMimeType
-func Java_com_wails_app_WailsBridge_nativeGetAssetMimeType(env *C.JNIEnv, obj C.jobject, jpath C.jstring) C.jstring {
+//export Java_com_gails_app_WailsBridge_nativeGetAssetMimeType
+func Java_com_gails_app_WailsBridge_nativeGetAssetMimeType(env *C.JNIEnv, obj C.jobject, jpath C.jstring) C.jstring {
 	// Convert Java string to Go string
 	cPath := C.jstringToC(env, jpath)
 	defer C.releaseJString(env, jpath, cPath)
@@ -537,7 +537,7 @@ func Java_com_wails_app_WailsBridge_nativeGetAssetMimeType(env *C.JNIEnv, obj C.
 
 func serveAssetForAndroid(app *App, path string) ([]byte, error) {
 	// Check if this is a runtime call (includes query string)
-	isRuntimeCall := strings.HasPrefix(path, "/wails/runtime")
+	isRuntimeCall := strings.HasPrefix(path, "/gails/runtime")
 
 	// Normalize path for regular assets (not runtime calls)
 	if !isRuntimeCall {
@@ -557,7 +557,7 @@ func serveAssetForAndroid(app *App, path string) ([]byte, error) {
 	}
 
 	// Create a fake HTTP request
-	fullURL := "https://wails.localhost" + path
+	fullURL := "https://gails.localhost" + path
 	androidLogf("debug", "🤖 [serveAssetForAndroid] Creating request for: %s", fullURL)
 
 	req, err := http.NewRequest("GET", fullURL, nil)
@@ -565,7 +565,7 @@ func serveAssetForAndroid(app *App, path string) ([]byte, error) {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	// For runtime calls (/wails/runtime), we need to add the window ID header
+	// For runtime calls (/gails/runtime), we need to add the window ID header
 	// This is required by the MessageProcessor to route the call correctly
 	if isRuntimeCall {
 		// Get the first window (on Android, there's typically only one)
@@ -574,7 +574,7 @@ func serveAssetForAndroid(app *App, path string) ([]byte, error) {
 		if len(windows) > 0 {
 			// Use the first window's ID
 			windowID := windows[0].ID()
-			req.Header.Set("x-wails-window-id", fmt.Sprintf("%d", windowID))
+			req.Header.Set("x-gails-window-id", fmt.Sprintf("%d", windowID))
 			androidLogf("debug", "🤖 [serveAssetForAndroid] Added window ID header: %d", windowID)
 		} else {
 			androidLogf("warn", "🤖 [serveAssetForAndroid] No windows available for runtime call")

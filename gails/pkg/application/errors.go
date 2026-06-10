@@ -15,7 +15,7 @@ type FatalError struct {
 	internal bool
 }
 
-// Internal returns true when the error was triggered from wails' internal code.
+// Internal returns true when the error was triggered from gails' internal code.
 func (e *FatalError) Internal() bool {
 	return e.internal
 }

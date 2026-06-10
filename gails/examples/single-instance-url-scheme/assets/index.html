@@ -14,9 +14,9 @@
 </style>
 </head>
 <body>
-<h1>wails#5089 repro</h1>
+<h1>gails#5089 repro</h1>
 <p>Launch a custom-scheme URL from Terminal while this window is open:</p>
-<pre>open 'wails-single-url://hello?n=1'</pre>
+<pre>open 'gails-single-url://hello?n=1'</pre>
 
 <div class="row">
   <div class="label">Last <code>ApplicationLaunchedWithUrl</code></div>
@@ -29,7 +29,7 @@
 </div>
 
 <script type="module">
-  import { Events } from "/wails/runtime.js";
+  import { Events } from "/gails/runtime.js";
 
   Events.On("launchedWithUrl", (ev) => {
     const el = document.getElementById("evt-url");

@@ -24,7 +24,7 @@ tasks:
     dir: assets
     cmds:
       # Generates both .ico and .icns files
-      - gails3 generate icons -input appicon.png
+      - gails generate icons -input appicon.png
 
   build:production:darwin:
     summary: Creates a production build of the application
@@ -78,7 +78,7 @@ tasks:
     platforms:
       - windows
     cmds:
-      - gails3 generate syso -arch {{.GOARCH}} -icon icon.ico -manifest wails.exe.manifest -info info.json -out ../wails_windows.syso
+      - gails generate syso -arch {{.GOARCH}} -icon icon.ico -manifest gails.exe.manifest -info info.json -out ../gails_windows.syso
     vars:
       GOARCH: '{{.GOARCH}}'
 

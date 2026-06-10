@@ -37,7 +37,7 @@ func (l *windowsLock) acquire(uniqueID string) error {
 	}
 
 	l.uniqueID = uniqueID
-	id := "wails-app-" + uniqueID
+	id := "gails-app-" + uniqueID
 	l.className = id + "-sic"
 	l.windowName = id + "-siw"
 	mutexName := id + "-sim"

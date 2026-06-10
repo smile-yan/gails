@@ -3,12 +3,12 @@ Unicode true
 ####
 ## Please note: Template replacements don't work in this file. They are provided with default defines like
 ## mentioned underneath.
-## If the keyword is not defined, "wails_tools.nsh" will populate them.
-## If they are defined here, "wails_tools.nsh" will not touch them. This allows you to use this project.nsi manually
+## If the keyword is not defined, "gails_tools.nsh" will populate them.
+## If they are defined here, "gails_tools.nsh" will not touch them. This allows you to use this project.nsi manually
 ## from outside of Wails for debugging and development of the installer.
 ## 
-## For development first make a wails nsis build to populate the "wails_tools.nsh":
-## > wails build --target windows/amd64 --nsis
+## For development first make a gails nsis build to populate the "gails_tools.nsh":
+## > gails build --target windows/amd64 --nsis
 ## Then you can call makensis on this file with specifying the path to your binary:
 ## For a AMD64 only installer:
 ## > makensis -DARG_WAILS_AMD64_BINARY=..\..\bin\app.exe
@@ -17,7 +17,7 @@ Unicode true
 ## For a installer with both architectures:
 ## > makensis -DARG_WAILS_AMD64_BINARY=..\..\bin\app-amd64.exe -DARG_WAILS_ARM64_BINARY=..\..\bin\app-arm64.exe
 ####
-## The following information is taken from the wails_tools.nsh file, but they can be overwritten here.
+## The following information is taken from the gails_tools.nsh file, but they can be overwritten here.
 ####
 ## !define INFO_PROJECTNAME    "my-project" # Default "fileassoc"
 ## !define INFO_COMPANYNAME    "My Company" # Default "My Company"
@@ -31,9 +31,9 @@ Unicode true
 ## !define REQUEST_EXECUTION_LEVEL "admin"            # Default "admin"  see also https://nsis.sourceforge.io/Docs/Chapter4.html
 ## !define WAILS_INSTALL_SCOPE     "user"             # Default "machine" - set to "user" for per-user install ($LOCALAPPDATA) without UAC prompt
 ####
-## Include the wails tools
+## Include the gails tools
 ####
-!include "wails_tools.nsh"
+!include "gails_tools.nsh"
 
 # The version information for this two must consist of 4 parts
 VIProductVersion "${INFO_PRODUCTVERSION}.0"
@@ -81,28 +81,28 @@ OutFile "..\..\bin\${INFO_PROJECTNAME}-${ARCH}-installer.exe" # Name of the inst
 ShowInstDetails show # This will always show the installation details.
 
 Function .onInit
-   !insertmacro wails.checkArchitecture
+   !insertmacro gails.checkArchitecture
 FunctionEnd
 
 Section
-    !insertmacro wails.setShellContext
+    !insertmacro gails.setShellContext
 
-    !insertmacro wails.webview2runtime
+    !insertmacro gails.webview2runtime
 
     SetOutPath $INSTDIR
     
-    !insertmacro wails.files
+    !insertmacro gails.files
 
     CreateShortcut "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
     CreateShortCut "$DESKTOP\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
 
-    !insertmacro wails.associateFiles
+    !insertmacro gails.associateFiles
 
-    !insertmacro wails.writeUninstaller
+    !insertmacro gails.writeUninstaller
 SectionEnd
 
 Section "uninstall" 
-    !insertmacro wails.setShellContext
+    !insertmacro gails.setShellContext
 
     RMDir /r "$AppData\${PRODUCT_EXECUTABLE}" # Remove the WebView2 DataPath
 
@@ -111,7 +111,7 @@ Section "uninstall"
     Delete "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk"
     Delete "$DESKTOP\${INFO_PRODUCTNAME}.lnk"
 
-    !insertmacro wails.unassociateFiles
+    !insertmacro gails.unassociateFiles
 
-    !insertmacro wails.deleteUninstaller
+    !insertmacro gails.deleteUninstaller
 SectionEnd

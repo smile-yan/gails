@@ -19,8 +19,8 @@ type module struct {
 // Runtime returns the import path for the Wails JS runtime module.
 func (m *module) Runtime() string {
 	if m.UseBundledRuntime {
-		return "/wails/runtime.js"
+		return "/gails/runtime.js"
 	} else {
-		return "@wailsio/runtime"
+		return "@gailsio/runtime"
 	}
 }

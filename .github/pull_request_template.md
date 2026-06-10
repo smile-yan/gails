@@ -9,7 +9,7 @@
 - *DO NOT* submit bugs for a source install of v3, ONLY tagged versions, e.g. v3.0.0-alpha.11
 - *DO NOT* submit PRs for v3 alpha enhancements, unless you have opened a post on the discord channel.
   All enhancements must be discussed first.
-  The feedback guide for v3 is here: https://v3.wails.io/feedback/
+  The feedback guide for v3 is here: https://v3.gails.io/feedback/
 
 - Before submitting your PR, please ensure you have created and linked the PR to an issue.
 - If a relevant issue already exists, please reference it in your PR by including `Fixes #<issue number>` in your PR description.
@@ -34,7 +34,7 @@ Please select the option that is relevant.
 
 # How Has This Been Tested?
   
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration using `wails doctor`.
+Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration using `gails doctor`.
 
 - [ ] Windows
 - [ ] macOS
@@ -44,7 +44,7 @@ If you checked Linux, please specify the distro and version.
   
 ## Test Configuration
 
-Please paste the output of `wails doctor`. If you are unable to run this command, please describe your environment in as much detail as possible.
+Please paste the output of `gails doctor`. If you are unable to run this command, please describe your environment in as much detail as possible.
 
 # Checklist:
 

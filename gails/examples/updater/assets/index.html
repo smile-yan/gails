@@ -41,11 +41,11 @@
       const t = new Date().toISOString().slice(11, 19);
       status.textContent = `[${t}] ${line}\n` + status.textContent;
     }
-    // Use the typed event constants from `@wailsio/runtime` rather than
+    // Use the typed event constants from `@gailsio/runtime` rather than
     // hard-coding strings — they cover both the lifecycle events and the
     // sub-namespaces (User.*, Window.*) and are kept in sync with the Go
     // side by a regression test.
-    import { Events, Updater } from "/wails/runtime.js";
+    import { Events, Updater } from "/gails/runtime.js";
     Events.On(Updater.Events.CheckStarted,     () => log("check started"));
     Events.On(Updater.Events.UpdateAvailable,  (e) => log(`available: v${(e.data ?? e).version}`));
     Events.On(Updater.Events.NoUpdate,         () => log("up to date"));

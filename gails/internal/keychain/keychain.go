@@ -12,7 +12,7 @@ import (
 
 const (
 	// ServiceName is the service identifier used for all Wails credentials
-	ServiceName = "wails"
+	ServiceName = "gails"
 
 	// Credential keys
 	KeyWindowsCertPassword = "windows-cert-password"
@@ -43,7 +43,7 @@ func Get(key string) (string, error) {
 	value, err := keyring.Get(ServiceName, key)
 	if err != nil {
 		if err == keyring.ErrNotFound {
-			return "", fmt.Errorf("credential %q not found in keychain (set with: gails3 setup signing, or set env var %s)", key, envKey)
+			return "", fmt.Errorf("credential %q not found in keychain (set with: gails setup signing, or set env var %s)", key, envKey)
 		}
 		return "", fmt.Errorf("failed to retrieve credential from keychain: %w", err)
 	}

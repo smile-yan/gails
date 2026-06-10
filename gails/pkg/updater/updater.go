@@ -408,7 +408,7 @@ func (u *Updater) Restart(_ context.Context) error {
 	target := bundleTarget(self)
 	// Include PID so concurrent helpers (e.g. test runs, multiple installed
 	// Wails apps updating at the same time) don't truncate each other's logs.
-	logPath := filepath.Join(os.TempDir(), fmt.Sprintf("wails-update-%d.log", os.Getpid()))
+	logPath := filepath.Join(os.TempDir(), fmt.Sprintf("gails-update-%d.log", os.Getpid()))
 	env := append(os.Environ(),
 		envHelperMode+"=1",
 		envHelperTarget+"="+target,
@@ -539,7 +539,7 @@ func finaliseDownload(tmpPath, filename string) (string, error) {
 	// the suffix. Neutralise the ones that would otherwise resolve outside
 	// the staging dir or that filepath.Join would not handle sanely.
 	if base == "" || base == "." || base == ".." || base == "/" || strings.ContainsAny(base, `\/`) {
-		base = "wails-update.bin"
+		base = "gails-update.bin"
 	}
 	final := filepath.Join(filepath.Dir(tmpPath), base)
 	if err := os.Rename(tmpPath, final); err != nil {

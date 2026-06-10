@@ -20,8 +20,8 @@
               }
             }
           ],
-          "image-name" : "wails_icon_vector.svg",
-          "name" : "wails_icon_vector",
+          "image-name" : "gails_icon_vector.svg",
+          "name" : "gails_icon_vector",
           "position" : {
             "scale" : 1.25,
             "translation-in-points" : [

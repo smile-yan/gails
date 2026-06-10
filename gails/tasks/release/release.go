@@ -665,7 +665,7 @@ func buildReleaseBody(version, changelogContent string) string {
 		"",
 		"**Installation:**",
 		"```bash",
-		fmt.Sprintf("go install github.com/gailsapp/gails/v3/cmd/gails3@%s", version),
+		fmt.Sprintf("go install github.com/gailsapp/gails/v3/cmd/gails@%s", version),
 		"```",
 		"",
 		"**⚠️ Alpha Warning:** This is pre-release software and may contain bugs or incomplete features.",

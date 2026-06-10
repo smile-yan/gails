@@ -397,7 +397,7 @@ loop1:
 }
 
 async function callBinding(name, ...params) {
-  return wails.Call.ByName(name, ...params)
+  return gails.Call.ByName(name, ...params)
 }
 
 function showAdvanced(e) {

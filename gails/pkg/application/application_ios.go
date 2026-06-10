@@ -327,7 +327,7 @@ func ServeAssetRequest(windowID C.uint, urlSchemeTask unsafe.Pointer) {
 		}
 
 		// Try to resolve the window name from the window ID so the AssetServer
-		// receives both x-wails-window-id and x-wails-window-name headers.
+		// receives both x-gails-window-id and x-gails-window-name headers.
 		winName := ""
 		if globalApplication != nil {
 			if window, ok := globalApplication.Window.GetByID(uint(windowID)); ok && window != nil {

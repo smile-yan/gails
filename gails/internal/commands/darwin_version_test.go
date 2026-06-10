@@ -8,7 +8,7 @@ import (
 )
 
 func TestDarwinMinimumVersionInTemplates(t *testing.T) {
-	tempDir, err := os.MkdirTemp("", "wails-darwin-version-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-darwin-version-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}

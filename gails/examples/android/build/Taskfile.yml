@@ -86,7 +86,7 @@ tasks:
     generates:
       - frontend/bindings/**/*
     cmds:
-      - gails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
+      - gails generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
 
   generate:icons:
     summary: Generates Windows `.ico` and Mac `.icns` files from an image
@@ -97,7 +97,7 @@ tasks:
       - "darwin/icons.icns"
       - "windows/icon.ico"
     cmds:
-      - gails3 generate icons -input appicon.png -macfilename darwin/icons.icns -windowsfilename windows/icon.ico
+      - gails generate icons -input appicon.png -macfilename darwin/icons.icns -windowsfilename windows/icon.ico
 
   dev:frontend:
     summary: Runs the frontend in development mode
@@ -111,7 +111,7 @@ tasks:
     summary: Updates the build assets
     dir: build
     cmds:
-      - gails3 update build-assets -name "{{.APP_NAME}}" -binaryname "{{.APP_NAME}}" -config config.yml -dir .
+      - gails update build-assets -name "{{.APP_NAME}}" -binaryname "{{.APP_NAME}}" -config config.yml -dir .
 
 
   ios:device:list:
@@ -127,7 +127,7 @@ tasks:
       CONFIG: '{{.CONFIG | default "Debug"}}'
       DERIVED: '{{.DERIVED | default "build/ios/DerivedData"}}'
       UDID: '{{.UDID}}'         # from `task ios:device:list`
-      BUNDLE_ID: '{{.BUNDLE_ID}}' # e.g., com.yourco.wails.ios.dev
+      BUNDLE_ID: '{{.BUNDLE_ID}}' # e.g., com.yourco.gails.ios.dev
       TEAM_ID: '{{.TEAM_ID}}'   # optional, if your project is not already set up for signing
     preconditions:
       - sh: xcrun -f xcodebuild
@@ -141,7 +141,7 @@ tasks:
       - sh: test -n "{{.UDID}}"
         msg: "Set UDID to your device UDID (see: task ios:device:list)."
       - sh: test -n "{{.BUNDLE_ID}}"
-        msg: "Set BUNDLE_ID to your app's bundle identifier (e.g., com.yourco.wails.ios.dev)."
+        msg: "Set BUNDLE_ID to your app's bundle identifier (e.g., com.yourco.gails.ios.dev)."
     cmds:
       - |
         set -euo pipefail

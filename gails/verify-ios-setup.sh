@@ -71,7 +71,7 @@ echo
 echo "=== Verification Complete ==="
 echo
 echo "The iOS build system structure is in place and ready for:"
-echo "1. Creating new iOS projects with 'gails3 init'"
+echo "1. Creating new iOS projects with 'gails init'"
 echo "2. Building with 'task ios:build'"
 echo "3. Running with 'task ios:run'"
 echo

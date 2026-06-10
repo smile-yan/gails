@@ -1,15 +1,15 @@
 /**
  * DND NPM Runtime Test
  *
- * This file tests drag-and-drop functionality using the @wailsio/runtime npm module
- * instead of the bundled /wails/runtime.js.
+ * This file tests drag-and-drop functionality using the @gailsio/runtime npm module
+ * instead of the bundled /gails/runtime.js.
  *
  * The key difference:
- * - Bundled runtime: import { Events } from '/wails/runtime.js'
- * - NPM module: import { Events } from '@wailsio/runtime'
+ * - Bundled runtime: import { Events } from '/gails/runtime.js'
+ * - NPM module: import { Events } from '@gailsio/runtime'
  */
 
-import { Events } from '@wailsio/runtime';
+import { Events } from '@gailsio/runtime';
 
 const documentsEl = document.getElementById('documents-list');
 const imagesEl = document.getElementById('images-list');
@@ -73,4 +73,4 @@ Events.On('files-dropped', (event) => {
     dropDetails.textContent = info;
 });
 
-console.log('[DND NPM Test] Initialized with @wailsio/runtime');
+console.log('[DND NPM Test] Initialized with @gailsio/runtime');

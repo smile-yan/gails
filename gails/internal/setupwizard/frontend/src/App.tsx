@@ -160,7 +160,7 @@ function WelcomePage({ system, onNext, onCancel, checking }: { system: SystemInf
             <span className="text-gray-400 dark:text-gray-500">Operating System</span>
             <span className="text-gray-700 dark:text-gray-200">{system.osName || system.os} ({system.arch})</span>
             <span className="text-gray-400 dark:text-gray-500">Wails Version</span>
-            <span className="text-gray-700 dark:text-gray-200">{system.wailsVersion.replace(/^v+/, '')}</span>
+            <span className="text-gray-700 dark:text-gray-200">{system.gailsVersion.replace(/^v+/, '')}</span>
             <span className="text-gray-400 dark:text-gray-500">Go Version</span>
             <span className="text-gray-700 dark:text-gray-200">{system.goVersion.replace(/^go/, '')}</span>
           </div>
@@ -515,7 +515,7 @@ function DockerPage({
                   Ready for cross-platform builds
                 </div>
                 <p className="text-xs text-gray-500">
-                  Docker {dockerStatus.version} • wails-cross image installed
+                  Docker {dockerStatus.version} • gails-cross image installed
                 </p>
               </div>
             ) : buildingImage ? (
@@ -526,7 +526,7 @@ function DockerPage({
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                   />
-                  Building wails-cross image... {dockerStatus.pullProgress}%
+                  Building gails-cross image... {dockerStatus.pullProgress}%
                 </div>
                 <div className="h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
                   <motion.div
@@ -542,7 +542,7 @@ function DockerPage({
                   Cross-compilation image not installed
                 </div>
                 <p className="text-xs text-gray-500 mb-3">
-                  Docker {dockerStatus.version} is running. Build the wails-cross image to enable cross-platform builds.
+                  Docker {dockerStatus.version} is running. Build the gails-cross image to enable cross-platform builds.
                 </p>
                 <button
                   onClick={onBuildImage}
@@ -845,7 +845,7 @@ function DefaultsPage({
 
       {/* Info about where this is stored */}
       <div className="text-[10px] text-gray-500 dark:text-gray-600 mb-3">
-        <span className="text-gray-400 dark:text-gray-500">Stored in:</span> ~/.config/wails/defaults.yaml
+        <span className="text-gray-400 dark:text-gray-500">Stored in:</span> ~/.config/gails/defaults.yaml
       </div>
 
       <WizardFooter
@@ -999,9 +999,9 @@ function CompletePage({ onClose }: { onClose: () => void }) {
       <div className="bg-gray-100 dark:bg-gray-900/50 rounded-lg p-4 text-left mb-6 max-w-sm mx-auto">
         <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">Next Steps</h3>
         <div className="space-y-3 text-sm">
-          <CopyableCommand command="wails3 init -n myapp" label="Create a new project:" />
-          <CopyableCommand command="wails3 dev" label="Start development server:" />
-          <CopyableCommand command="wails3 build" label="Build for production:" />
+          <CopyableCommand command="gails init -n myapp" label="Create a new project:" />
+          <CopyableCommand command="gails dev" label="Start development server:" />
+          <CopyableCommand command="gails build" label="Build for production:" />
         </div>
       </div>
 
@@ -1038,7 +1038,7 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>(() => {
     // Default to dark, but check for saved preference or system preference
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('wails-setup-theme');
+      const saved = localStorage.getItem('gails-setup-theme');
       if (saved === 'light' || saved === 'dark') return saved;
       if (window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
     }
@@ -1048,7 +1048,7 @@ export default function App() {
   const toggleTheme = () => {
     setTheme(prev => {
       const next = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('wails-setup-theme', next);
+      localStorage.setItem('gails-setup-theme', next);
       return next;
     });
   };

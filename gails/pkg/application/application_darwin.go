@@ -472,7 +472,7 @@ func macosOnDragEnter(windowID C.uint) {
 	}
 
 	// Call JavaScript to show drag entered state
-	window.ExecJS("window._wails.handleDragEnter();")
+	window.ExecJS("window._gails.handleDragEnter();")
 }
 
 //export macosOnDragExit
@@ -483,14 +483,14 @@ func macosOnDragExit(windowID C.uint) {
 	}
 
 	// Call JavaScript to clean up drag state
-	window.ExecJS("window._wails.handleDragLeave();")
+	window.ExecJS("window._gails.handleDragLeave();")
 }
 
 var (
 	// Pre-allocated buffer for drag JS calls to avoid allocations
 	dragOverJSBuffer = make([]byte, 128) // Increased for safety
 	dragOverJSMutex  sync.Mutex          // Protects dragOverJSBuffer
-	dragOverJSPrefix = []byte("window._wails.handleDragOver(")
+	dragOverJSPrefix = []byte("window._gails.handleDragOver(")
 
 	// Cache window references to avoid repeated lookups
 	windowImplCache sync.Map // windowID -> *macosWebviewWindow
@@ -686,7 +686,7 @@ func sendDragUpdate(winID uint, x, y int) {
 	dragOverJSMutex.Lock()
 
 	// Build JS string with zero allocations
-	// Format: "window._wails.handleDragOver(X,Y)"
+	// Format: "window._gails.handleDragOver(X,Y)"
 	// Max length with int32 coords: 30 + 11 + 1 + 11 + 1 + 1 = 55 bytes
 	n := copy(dragOverJSBuffer[:], dragOverJSPrefix)
 	n += writeInt(dragOverJSBuffer[n:], x)

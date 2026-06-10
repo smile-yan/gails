@@ -5,8 +5,8 @@
 
 <main>
   <div>
-    <a href="https://wails.io" target="_blank" rel="noreferrer">
-      <img src="/wails.png" class="logo" alt="Wails Logo" />
+    <a href="https://gails.io" target="_blank" rel="noreferrer">
+      <img src="/gails.png" class="logo" alt="Wails Logo" />
     </a>
     <a href="https://svelte.dev" target="_blank" rel="noreferrer"> 
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />

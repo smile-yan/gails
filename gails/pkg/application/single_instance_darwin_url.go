@@ -11,7 +11,7 @@ package application
 #import <Cocoa/Cocoa.h>
 #import <dispatch/dispatch.h>
 
-static char *g_wailsCapturedLaunchURL = NULL;
+static char *g_gailsCapturedLaunchURL = NULL;
 
 // stopAppEventLoop stops [NSApp run] by posting a synthetic event.
 static void stopAppEventLoop(void) {
@@ -36,8 +36,8 @@ static void stopAppEventLoop(void) {
 @implementation _WailsURLCaptureHandler
 + (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
     NSString *urlStr = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
-    if (urlStr && g_wailsCapturedLaunchURL == NULL) {
-        g_wailsCapturedLaunchURL = strdup([urlStr UTF8String]);
+    if (urlStr && g_gailsCapturedLaunchURL == NULL) {
+        g_gailsCapturedLaunchURL = strdup([urlStr UTF8String]);
     }
     stopAppEventLoop();
 }
@@ -65,7 +65,7 @@ static void stopAppEventLoop(void) {
 // event is received, or after timeoutSeconds if no event arrives.
 // Returns NULL on timeout.  Caller must free the returned string.
 static char *CaptureLaunchURL(double timeoutSeconds) {
-    g_wailsCapturedLaunchURL = NULL;
+    g_gailsCapturedLaunchURL = NULL;
 
     NSApplication *app = [NSApplication sharedApplication];
     // Run without a dock icon — this is a short-lived second instance.
@@ -91,7 +91,7 @@ static char *CaptureLaunchURL(double timeoutSeconds) {
     [app setDelegate:nil];
     [mgr removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
 
-    return g_wailsCapturedLaunchURL;
+    return g_gailsCapturedLaunchURL;
 }
 */
 import "C"

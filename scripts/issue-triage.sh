@@ -7,7 +7,7 @@ GITHUB_USERNAME="your-username"
 
 # Get the latest 10 open issues that aren't assigned and aren't labeled as "awaiting feedback"
 echo "Fetching recent unprocessed issues..."
-gh issue list --repo wailsapp/wails --limit 10 --json number,title,labels,assignees --jq '.[] | select(.assignees | length == 0) | select(any(.labels[]; .name != "awaiting feedback"))' > new_issues.json
+gh issue list --repo gailsapp/gails --limit 10 --json number,title,labels,assignees --jq '.[] | select(.assignees | length == 0) | select(any(.labels[]; .name != "awaiting feedback"))' > new_issues.json
 
 # Process each issue
 echo -e "\n===== Issues Needing Triage =====\n"
@@ -41,45 +41,45 @@ cat new_issues.json | jq -c '.[]' | while read -r issue; do
         
         case $action in
             v)
-                gh issue view $number --repo wailsapp/wails --web
+                gh issue view $number --repo gailsapp/gails --web
                 ;;
             2)
                 echo "Adding v2-only label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "v2-only"
+                gh issue edit $number --repo gailsapp/gails --add-label "v2-only"
                 ;;
             3)
                 echo "Adding v3-alpha label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "v3-alpha"
+                gh issue edit $number --repo gailsapp/gails --add-label "v3-alpha"
                 ;;
             b)
                 echo "Adding bug label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "Bug"
+                gh issue edit $number --repo gailsapp/gails --add-label "Bug"
                 ;;
             e)
                 echo "Adding enhancement label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "Enhancement"
+                gh issue edit $number --repo gailsapp/gails --add-label "Enhancement"
                 ;;
             d)
                 echo "Adding documentation label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "Documentation"
+                gh issue edit $number --repo gailsapp/gails --add-label "Documentation"
                 ;;
             w)
                 echo "Adding webview2 label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "webview2"
+                gh issue edit $number --repo gailsapp/gails --add-label "webview2"
                 ;;
             f)
                 echo "Requesting more info..."
-                gh issue comment $number --repo wailsapp/wails --body "Thank you for reporting this issue. Could you please provide additional information to help us investigate?\n\n- [Specific details needed]\n\nThis will help us address your issue more effectively."
-                gh issue edit $number --repo wailsapp/wails --add-label "awaiting feedback"
+                gh issue comment $number --repo gailsapp/gails --body "Thank you for reporting this issue. Could you please provide additional information to help us investigate?\n\n- [Specific details needed]\n\nThis will help us address your issue more effectively."
+                gh issue edit $number --repo gailsapp/gails --add-label "awaiting feedback"
                 ;;
             c)
                 read -p "Reason for closing (duplicate/invalid/etc): " reason
-                gh issue comment $number --repo wailsapp/wails --body "Closing this issue: $reason"
-                gh issue close $number --repo wailsapp/wails
+                gh issue comment $number --repo gailsapp/gails --body "Closing this issue: $reason"
+                gh issue close $number --repo gailsapp/gails
                 ;;
             a)
                 echo "Assigning to yourself..."
-                gh issue edit $number --repo wailsapp/wails --add-assignee "$GITHUB_USERNAME"
+                gh issue edit $number --repo gailsapp/gails --add-assignee "$GITHUB_USERNAME"
                 ;;
             s)
                 echo "Skipping to next issue..."

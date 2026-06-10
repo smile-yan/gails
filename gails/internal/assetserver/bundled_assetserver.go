@@ -18,8 +18,8 @@ func NewBundledAssetFileServer(fs fs.FS) *BundledAssetServer {
 }
 
 func (b *BundledAssetServer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if strings.HasPrefix(req.URL.Path, "/wails/") {
-		// Strip the /wails prefix
+	if strings.HasPrefix(req.URL.Path, "/gails/") {
+		// Strip the /gails prefix
 		req.URL.Path = req.URL.Path[6:]
 		switch req.URL.Path {
 		case "/runtime.js":

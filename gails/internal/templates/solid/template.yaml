@@ -3,6 +3,6 @@ name: "Solid + Vite"
 shortname: solid
 author: Lea Anthony
 description: "Solid + Vite development server"
-helpurl: https://wails.io
+helpurl: https://gails.io
 version: v0.0.1
-wailsVersion: 3
+gailsVersion: 3

@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <script src="/wails/runtime.js" type="module"></script>
+    <script src="/gails/runtime.js" type="module"></script>
     <script>
         let channel = null;
         const windowId = Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -143,7 +143,7 @@
         document.getElementById('windowId').textContent = windowId;
 
         function openNewWindow() {
-            wails.Call.ByName('main.WindowService.OpenNewWindow');
+            gails.Call.ByName('main.WindowService.OpenNewWindow');
         }
 
         // Check support & show features

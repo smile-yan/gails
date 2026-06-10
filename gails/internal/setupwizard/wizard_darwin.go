@@ -119,12 +119,12 @@ func checkDocker() DependencyStatus {
 		return dep
 	}
 
-	// Check for wails-cross image
-	imageCheck, _ := execCommand("docker", "image", "inspect", "wails-cross")
+	// Check for gails-cross image
+	imageCheck, _ := execCommand("docker", "image", "inspect", "gails-cross")
 	if imageCheck == "" || strings.Contains(imageCheck, "Error") {
 		dep.Installed = true
 		dep.Status = "installed"
-		dep.Message = "wails-cross image not built"
+		dep.Message = "gails-cross image not built"
 	} else {
 		dep.Installed = true
 		dep.Status = "installed"

@@ -135,7 +135,7 @@ func appName() string {
 func appNew(name string) pointer {
 	C.install_signal_handlers()
 
-	appId := fmt.Sprintf("org.wails.%s", name)
+	appId := fmt.Sprintf("org.gails.%s", name)
 	nameC := C.CString(appId)
 	defer C.free(unsafe.Pointer(nameC))
 	return pointer(C.gtk_application_new(nameC, C.APPLICATION_DEFAULT_FLAGS))
@@ -844,7 +844,7 @@ var emptyWorldName = C.CString("")
 
 func (w *linuxWebviewWindow) execJSDragOver(x, y int) {
 	buf := (*[64]byte)(unsafe.Pointer(dragOverJSBuffer))
-	n := copy(buf[:], "window._wails.handleDragOver(")
+	n := copy(buf[:], "window._gails.handleDragOver(")
 	n += writeInt(buf[n:], x)
 	buf[n] = ','
 	n++
@@ -1195,7 +1195,7 @@ func windowNewWebview(parentId uint, gpuPolicy WebviewGpuPolicy) pointer {
 	// Register URI scheme handler
 	registerURIScheme.Do(func() {
 		webContext := C.webkit_web_view_get_context(C.webkit_web_view((*C.GtkWidget)(webView)))
-		cScheme := C.CString("wails")
+		cScheme := C.CString("gails")
 		defer C.free(unsafe.Pointer(cScheme))
 		C.webkit_web_context_register_uri_scheme(webContext, cScheme,
 			(*[0]byte)(C.onProcessRequest), nil, nil)

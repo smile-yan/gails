@@ -7,14 +7,14 @@ import (
 
 func TestInjectInlineEventShim_OptedIn(t *testing.T) {
 	got := maybeInjectInlineEventShim("<html><body>hi</body></html>", true)
-	if !strings.Contains(got, "data-wails-inline-event-shim") {
+	if !strings.Contains(got, "data-gails-inline-event-shim") {
 		t.Errorf("shim should have been injected; got: %s", got)
 	}
-	if !strings.Contains(got, "window.wails.Events") {
-		t.Errorf("shim should install window.wails.Events; got: %s", got)
+	if !strings.Contains(got, "window.gails.Events") {
+		t.Errorf("shim should install window.gails.Events; got: %s", got)
 	}
 	if !strings.Contains(got, "gails:event:emit:") {
-		t.Errorf("shim should route emits through wails:event:emit:; got: %s", got)
+		t.Errorf("shim should route emits through gails:event:emit:; got: %s", got)
 	}
 }
 
@@ -45,8 +45,8 @@ func TestInjectInlineEventShim_NoDoubleInjection(t *testing.T) {
 	src := "<html><body>hi</body></html>"
 	once := maybeInjectInlineEventShim(src, true)
 	twice := maybeInjectInlineEventShim(once, true)
-	if strings.Count(twice, "data-wails-inline-event-shim") != 1 {
+	if strings.Count(twice, "data-gails-inline-event-shim") != 1 {
 		t.Errorf("re-running the helper must not inject a second copy; got %d markers",
-			strings.Count(twice, "data-wails-inline-event-shim"))
+			strings.Count(twice, "data-gails-inline-event-shim"))
 	}
 }

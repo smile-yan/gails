@@ -12,6 +12,6 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "@wailsio/runtime": "latest"
+    "@gailsio/runtime": "latest"
   }
 }

@@ -84,7 +84,7 @@ void* windowNew(unsigned int id, int width, int height, bool fraudulentWebsiteWa
 
 	config.suppressesIncrementalRendering = true;
     config.applicationNameForUserAgent = @"gails.io";
-	[config setURLSchemeHandler:delegate forURLScheme:@"wails"];
+	[config setURLSchemeHandler:delegate forURLScheme:@"gails"];
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 101500
  	if (@available(macOS 10.15, *)) {
@@ -510,7 +510,7 @@ void windowSetHideTitle(void* nsWindow, bool hideTitle) {
 void windowSetUseToolbar(void* nsWindow, bool useToolbar) {
 	WebviewWindow* window = (WebviewWindow*)nsWindow;
 	if( useToolbar ) {
-		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"wails.toolbar"];
+		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"gails.toolbar"];
 		[toolbar autorelease];
 		[window setToolbar:toolbar];
 	} else {
@@ -1224,7 +1224,7 @@ func newWindowImpl(parent *WebviewWindow) *macosWebviewWindow {
 	result.parent.RegisterHook(events.Mac.WebViewDidFinishNavigation, func(event *WindowEvent) {
 		// Inject runtime core
 		js := runtime.Core(globalApplication.impl.GetFlags(globalApplication.options))
-		js += fmt.Sprintf("window._wails.flags.enableFileDrop=%v;", result.parent.options.EnableFileDrop)
+		js += fmt.Sprintf("window._gails.flags.enableFileDrop=%v;", result.parent.options.EnableFileDrop)
 		result.execJS(js)
 	})
 	return result

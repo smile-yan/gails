@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	webViewRequestHeaderWindowId   = "x-wails-window-id"
-	webViewRequestHeaderWindowName = "x-wails-window-name"
+	webViewRequestHeaderWindowId   = "x-gails-window-id"
+	webViewRequestHeaderWindowName = "x-gails-window-name"
 	HeaderAcceptLanguage           = "accept-language"
 )
 

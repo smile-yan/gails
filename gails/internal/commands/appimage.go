@@ -51,7 +51,7 @@ func GenerateAppImage(options *GenerateAppImageOptions) error {
 	if options.BuildDir == "" {
 		// Create temp directory
 		var err error
-		options.BuildDir, err = os.MkdirTemp("", "wails-appimage-*")
+		options.BuildDir, err = os.MkdirTemp("", "gails-appimage-*")
 		if err != nil {
 			return err
 		}

@@ -35,7 +35,7 @@ func (s *FileserverService) ServiceName() string {
 // Configure reconfigures the fileserver.
 // If config is nil, then every request will receive a 503 Service Unavailable response.
 //
-//wails:ignore
+//gails:ignore
 func (s *FileserverService) Configure(config *Config) {
 	if config == nil {
 		s.fs.Store(&dummyHandler)

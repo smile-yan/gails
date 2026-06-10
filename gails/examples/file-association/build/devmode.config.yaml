@@ -16,13 +16,13 @@ config:
       - "*.go"
     git_ignore: true
   executes:
-    - cmd: gails3 task common:install:frontend:deps
+    - cmd: gails task common:install:frontend:deps
       type: once
-    - cmd: gails3 task common:dev:frontend
+    - cmd: gails task common:dev:frontend
       type: background
     - cmd: go mod tidy
       type: blocking
-    - cmd: gails3 task build
+    - cmd: gails task build
       type: blocking
-    - cmd: gails3 task run
+    - cmd: gails task run
       type: primary

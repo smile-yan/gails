@@ -46,7 +46,7 @@ func (h *updaterHost) OpenWindow(opts updater.WindowOptions) updater.WindowHandl
 	// SetHTML() call. On webkit2gtk (and likely WebView2 in some
 	// configurations) SetHTML loads the supplied document into the
 	// about:blank context, which does not have the Wails runtime
-	// (window.wails, _wails.dispatchWailsEvent) injected — JS event emits
+	// (window.gails, _gails.dispatchWailsEvent) injected — JS event emits
 	// from the loaded page silently no-op.
 	wopts := WebviewWindowOptions{
 		Title:         opts.Title,
@@ -97,7 +97,7 @@ func (h *updaterWindowHandle) SetSize(width, height int) {
 //
 // The owning window MUST be constructed with AllowSimpleEventEmit set —
 // the updater's HTML drives the install/skip/remind/cancel/restart actions
-// through the `wails:event:emit:` postMessage path, and that path is gated
+// through the `gails:event:emit:` postMessage path, and that path is gated
 // on the field. Without it the buttons silently no-op.
 //
 //	myWin := app.Window.NewWithOptions(application.WebviewWindowOptions{

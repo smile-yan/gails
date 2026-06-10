@@ -44,7 +44,7 @@ export interface WailsConfig {
 export interface SystemInfo {
   os: string;
   arch: string;
-  wailsVersion: string;
+  gailsVersion: string;
   goVersion: string;
   homeDir: string;
   osName?: string;
@@ -62,7 +62,7 @@ export interface WizardState {
   startTime: string;
 }
 
-export type Step = 'splash' | 'welcome' | 'dependencies' | 'docker' | 'defaults' | 'config' | 'wails-config' | 'complete';
+export type Step = 'splash' | 'welcome' | 'dependencies' | 'docker' | 'defaults' | 'config' | 'gails-config' | 'complete';
 
 export interface AuthorDefaults {
   name: string;

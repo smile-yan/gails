@@ -94,10 +94,10 @@ func New(appOptions Options) *App {
 
 	// Auto-wire events if transport supports event delivery
 	if eventTransport, ok := transport.(GailsEventListener); ok {
-		result.wailsEventListeners = append(result.wailsEventListeners, eventTransport)
+		result.gailsEventListeners = append(result.gailsEventListeners, eventTransport)
 	} else {
 		// otherwise fallback to IPC
-		result.wailsEventListeners = append(result.wailsEventListeners, &EventIPCTransport{
+		result.gailsEventListeners = append(result.gailsEventListeners, &EventIPCTransport{
 			app: result,
 		})
 	}
@@ -113,17 +113,17 @@ func New(appOptions Options) *App {
 			return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 				path := req.URL.Path
 				switch path {
-				case "/wails/runtime.js":
+				case "/gails/runtime.js":
 					err := assetserver.ServeFile(rw, path, bundledassets.RuntimeJS)
 					if err != nil {
 						result.fatal("unable to serve runtime.js: %w", err)
 					}
-				case "/wails/transport.js":
+				case "/gails/transport.js":
 					err := assetserver.ServeFile(rw, path, transport.JSClient())
 					if err != nil {
 						result.fatal("unable to serve transport.js: %w", err)
 					}
-				case "/wails/custom.js":
+				case "/gails/custom.js":
 					// custom.js is only served in server mode.
 					// Return 404 so the runtime's loadOptionalScript skips it.
 					http.NotFound(rw, req)
@@ -280,8 +280,8 @@ func addDragAndDropMessage(windowId uint, filenames []string, dropTarget *DropTa
 
 var _ webview.Request = &webViewAssetRequest{}
 
-const webViewRequestHeaderWindowId = "x-wails-window-id"
-const webViewRequestHeaderWindowName = "x-wails-window-name"
+const webViewRequestHeaderWindowId = "x-gails-window-id"
+const webViewRequestHeaderWindowName = "x-gails-window-name"
 
 type webViewAssetRequest struct {
 	Request    webview.Request
@@ -424,8 +424,8 @@ type App struct {
 	platformSignalHandler
 
 	// Wails ApplicationEvent Listener related
-	wailsEventListenerLock sync.Mutex
-	wailsEventListeners    []GailsEventListener
+	gailsEventListenerLock sync.Mutex
+	gailsEventListeners    []GailsEventListener
 
 	// singleInstanceManager handles single instance functionality
 	singleInstanceManager *singleInstanceManager
@@ -494,7 +494,7 @@ func (a *App) init() {
 	a.keyBindings = make(map[string]func(window Window))
 	a.Logger = a.options.Logger
 	a.pid = os.Getpid()
-	a.wailsEventListeners = make([]GailsEventListener, 0)
+	a.gailsEventListeners = make([]GailsEventListener, 0)
 
 	// Initialize managers
 	a.Window = newWindowManager(a)
@@ -746,7 +746,7 @@ func (a *App) handleWindowMessage(event *windowMessage) {
 	}
 	// Check if the message starts with "gails:"
 	if strings.HasPrefix(event.message, "gails:") {
-		a.debug("handleWindowMessage: Processing wails message", "message", event.message)
+		a.debug("handleWindowMessage: Processing gails message", "message", event.message)
 		window.HandleMessage(event.message)
 	} else {
 		if a.options.RawMessageHandler != nil {
@@ -760,7 +760,7 @@ func (a *App) handleWebViewRequest(request *webViewAssetRequest) {
 	// Log that we're processing the request
 	url, _ := request.Request.URL()
 	a.debug("handleWebViewRequest: Processing request", "url", url)
-	// IMPORTANT: pass the wrapper request so our injected headers (x-wails-window-id/name) are used
+	// IMPORTANT: pass the wrapper request so our injected headers (x-gails-window-id/name) are used
 	a.assets.ServeWebViewRequest(request)
 	a.debug("handleWebViewRequest: Request processing complete", "url", url)
 }

@@ -4,7 +4,7 @@ v2-only:
   - '\(v2\)'
   - 'v2:'
   - 'version 2'
-  - 'wails v2'
+  - 'gails v2'
   - 'using v2'
   - 'master branch'
 
@@ -15,7 +15,7 @@ v3-alpha:
   - '\[v3-alpha\]'
   - '\(v3-alpha\)'
   - 'version 3'
-  - 'wails v3'
+  - 'gails v3'
   - 'using v3'
   - 'v3-alpha branch'
 
@@ -56,10 +56,10 @@ linux:
 cli:
   - 'cli'
   - 'command line'
-  - 'wails doctor'
-  - 'wails init'
-  - 'wails build'
-  - 'wails dev'
+  - 'gails doctor'
+  - 'gails init'
+  - 'gails build'
+  - 'gails dev'
   - 'template'
   - 'scaffolding'
 

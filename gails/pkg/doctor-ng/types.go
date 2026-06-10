@@ -84,7 +84,7 @@ type GPUInfo struct {
 
 // BuildInfo contains build environment information
 type BuildInfo struct {
-	GailsVersion string            `json:"wails_version"`
+	GailsVersion string            `json:"gails_version"`
 	GoVersion    string            `json:"go_version"`
 	BuildMode    string            `json:"build_mode,omitempty"`
 	Compiler     string            `json:"compiler,omitempty"`

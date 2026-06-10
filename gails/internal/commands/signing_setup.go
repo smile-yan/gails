@@ -115,7 +115,7 @@ func setupDarwinSigning() error {
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Keychain profile name").
-				Description("The profile name used with 'gails3 signing credentials'").
+				Description("The profile name used with 'gails signing credentials'").
 				Placeholder("my-notarize-profile").
 				Value(&keychainProfile),
 		).WithHideFunc(func() bool {
@@ -158,7 +158,7 @@ func setupDarwinSigning() error {
 		fmt.Println()
 		pterm.Info.Println("Next step: Store your notarization credentials:")
 		fmt.Println()
-		pterm.Println(pterm.LightBlue(fmt.Sprintf(`  gails3 signing credentials \
+		pterm.Println(pterm.LightBlue(fmt.Sprintf(`  gails signing credentials \
     --apple-id "your@email.com" \
     --team-id "TEAMID" \
     --password "app-specific-password" \

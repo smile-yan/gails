@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --wails-red: #ef4444;
-  --wails-red-dark: #dc2626;
-  --wails-red-light: #f87171;
+  --gails-red: #ef4444;
+  --gails-red-dark: #dc2626;
+  --gails-red-light: #f87171;
   --bg-primary: #0f0f0f;
   --bg-secondary: #1f2937;
   --bg-tertiary: #374151;

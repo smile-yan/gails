@@ -1,7 +1,7 @@
 package updater
 
 // Event names emitted by the Updater. Subscribe in Go via app.Event.On(name, ...)
-// or in JavaScript via wails.Events.On(name, ...). Payload types are documented
+// or in JavaScript via gails.Events.On(name, ...). Payload types are documented
 // inline next to each constant.
 const (
 	// EventCheckStarted fires before a Check round trip. Payload: nil.

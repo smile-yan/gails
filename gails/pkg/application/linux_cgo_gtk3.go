@@ -601,7 +601,7 @@ func appName() string {
 
 func appNew(name string) pointer {
 	// Name is already sanitized by sanitizeAppName() in application_linux.go
-	appId := fmt.Sprintf("org.wails.%s", name)
+	appId := fmt.Sprintf("org.gails.%s", name)
 	nameC := C.CString(appId)
 	defer C.free(unsafe.Pointer(nameC))
 	return pointer(C.gtk_application_new(nameC, C.APPLICATION_DEFAULT_FLAGS))
@@ -1141,17 +1141,17 @@ func (w *linuxWebviewWindow) execJS(js string) {
 }
 
 // Preallocated buffer for drag-over JS calls to avoid allocations
-// "window._wails.handleDragOver(XXXXX,YYYYY)" is max ~45 chars
+// "window._gails.handleDragOver(XXXXX,YYYYY)" is max ~45 chars
 var dragOverJSBuffer = C.CString(strings.Repeat(" ", 64))
 var emptyWorldName = C.CString("")
 
 // execJSDragOver executes JS for drag-over events with zero Go allocations.
 // It directly writes to a preallocated C buffer. Must be called from main thread.
 func (w *linuxWebviewWindow) execJSDragOver(x, y int) {
-	// Format: "window._wails.handleDragOver(X,Y)"
+	// Format: "window._gails.handleDragOver(X,Y)"
 	// Write directly to C buffer
 	buf := (*[64]byte)(unsafe.Pointer(dragOverJSBuffer))
-	n := copy(buf[:], "window._wails.handleDragOver(")
+	n := copy(buf[:], "window._gails.handleDragOver(")
 	n += writeInt(buf[n:], x)
 	buf[n] = ','
 	n++
@@ -1458,7 +1458,7 @@ func windowNewWebview(parentId uint, gpuPolicy WebviewGpuPolicy) pointer {
 		context := C.webkit_web_view_get_context(C.webkit_web_view(webView))
 		C.webkit_web_context_register_uri_scheme(
 			context,
-			c.String("wails"),
+			c.String("gails"),
 			C.WebKitURISchemeRequestCallback(C.onProcessRequest),
 			nil,
 			nil)

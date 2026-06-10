@@ -28,9 +28,9 @@ var bufferPool = sync.Pool{
 }
 
 const (
-	chunkIDHeader    = "x-wails-chunk-id"
-	chunkIndexHeader = "x-wails-chunk-index"
-	chunkTotalHeader = "x-wails-chunk-total"
+	chunkIDHeader    = "x-gails-chunk-id"
+	chunkIndexHeader = "x-gails-chunk-index"
+	chunkTotalHeader = "x-gails-chunk-total"
 	chunkTTL         = 30 * time.Second
 
 	maxChunkTotal     = 1024
@@ -132,7 +132,7 @@ func (t *HTTPTransport) Handler() func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			path := req.URL.Path
 			switch path {
-			case "/wails/runtime":
+			case "/gails/runtime":
 				t.handleRuntimeRequest(rw, req)
 			default:
 				next.ServeHTTP(rw, req)
@@ -297,7 +297,7 @@ func (t *HTTPTransport) processBody(rw http.ResponseWriter, r *http.Request, bod
 	}
 
 	windowName := r.Header.Get(webViewRequestHeaderWindowName)
-	clientId := r.Header.Get("x-wails-client-id")
+	clientId := r.Header.Get("x-gails-client-id")
 
 	resp, err := t.messageProcessor.HandleRuntimeCallWithIDs(r.Context(), &RuntimeRequest{
 		Object:            *body.Object,

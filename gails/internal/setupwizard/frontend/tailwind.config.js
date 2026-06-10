@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'wails-red': {
+        'gails-red': {
           DEFAULT: '#ef4444',
           dark: '#dc2626',
           light: '#f87171',

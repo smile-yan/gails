@@ -31,4 +31,4 @@ tasks:
   dev:
     summary: Runs the application in development mode
     cmds:
-      - gails3 dev -config ./build/config.yml -port {{.VITE_PORT}}
+      - gails dev -config ./build/config.yml -port {{.VITE_PORT}}

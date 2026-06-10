@@ -91,14 +91,14 @@ type WebviewWindowOptions struct {
 	// HTML is the HTML to load in the window.
 	HTML string
 
-	// AllowSimpleEventEmit gates the `wails:event:emit:<name>` postMessage
+	// AllowSimpleEventEmit gates the `gails:event:emit:<name>` postMessage
 	// shortcut for this window. When true, JavaScript running in this
 	// window can fire bare-named Wails custom events on the host bus via
-	// `window._wails.invoke("gails:event:emit:<name>")`. The shortcut
+	// `window._gails.invoke("gails:event:emit:<name>")`. The shortcut
 	// exists so InitialHTML pages (loaded with no asset-server origin —
 	// the framework's built-in updater window is the canonical case) can
 	// still talk to the Go side without depending on the modern HTTP
-	// runtime that requires `fetch("/wails/runtime")` to work.
+	// runtime that requires `fetch("/gails/runtime")` to work.
 	//
 	// SECURITY: leave this off (the default) unless you control every byte
 	// of HTML that this window will ever load. When enabled, ANY script
@@ -727,7 +727,7 @@ type LinuxWindow struct {
 	//   - WebviewGpuPolicyNever
 	//
 	// Due to https://github.com/gailsapp/gails/issues/2977, if options.Linux is nil
-	// in the call to wails.Run(), WebviewGpuPolicy is set by default to WebviewGpuPolicyNever.
+	// in the call to gails.Run(), WebviewGpuPolicy is set by default to WebviewGpuPolicyNever.
 	// Client code may override this behavior by passing a non-nil Options and set
 	// WebviewGpuPolicy as needed.
 	WebviewGpuPolicy WebviewGpuPolicy

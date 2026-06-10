@@ -127,9 +127,9 @@ func (em *EventManager) RegisterApplicationEventHook(eventType events.Applicatio
 // Dispatch dispatches an event to listeners (internal use)
 func (em *EventManager) dispatch(event *CustomEvent) {
 	// Snapshot listeners under Lock
-	em.app.wailsEventListenerLock.Lock()
-	listeners := slices.Clone(em.app.wailsEventListeners)
-	em.app.wailsEventListenerLock.Unlock()
+	em.app.gailsEventListenerLock.Lock()
+	listeners := slices.Clone(em.app.gailsEventListeners)
+	em.app.gailsEventListenerLock.Unlock()
 
 	for _, listener := range listeners {
 		if event.IsCancelled() {

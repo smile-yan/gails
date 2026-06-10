@@ -104,7 +104,7 @@ func autostartSlug(name string) string {
 	}
 	out := strings.Trim(b.String(), "-._")
 	if out == "" {
-		return "wails-app"
+		return "gails-app"
 	}
 	return out
 }
@@ -122,7 +122,7 @@ type AutostartOptions struct {
 	//   Linux:   .desktop filename (without extension).
 	//
 	// If empty, a sensible default is derived: on macOS the application's
-	// bundle identifier (when running from a bundle) or "wails.autostart.<slug>";
+	// bundle identifier (when running from a bundle) or "gails.autostart.<slug>";
 	// on Windows and Linux a slugified form of the application's Options.Name
 	// (i.e. application.Options.Name from application.New).
 	Identifier string

@@ -32,9 +32,9 @@ func UpdateCLI(options *UpdateCLIOptions) error {
 		v3Path := filepath.ToSlash(debug.LocalModulePath + "/v3")
 		term.Println("This Wails CLI has been installed from source. To update to the latest stable release, run the following commands in the `" + v3Path + "` directory:")
 		term.Println("   - git pull")
-		term.Println("   - gails3 task install")
+		term.Println("   - gails task install")
 		term.Println("")
-		term.Println("If you want to install the latest release, please run `gails3 update cli -latest`")
+		term.Println("If you want to install the latest release, please run `gails update cli -latest`")
 		return nil
 	}
 
@@ -70,7 +70,7 @@ func UpdateCLI(options *UpdateCLIOptions) error {
 			if err != nil {
 				pterm.Println("")
 				pterm.Println("No stable release found for this major version. To update to the latest pre-release (eg beta), run:")
-				pterm.Println("   gails3 update cli -pre")
+				pterm.Println("   gails update cli -pre")
 				return nil
 			}
 		}
@@ -143,7 +143,7 @@ func updateToVersion(targetVersion *github.SemanticVersion, force bool, currentV
 		// Compare
 		if !success {
 			pterm.Println("Error: The requested version is lower than the current version.")
-			pterm.Printf("If this is what you really want to do, use `gails3 update cli -version %s`\n", targetVersionString)
+			pterm.Printf("If this is what you really want to do, use `gails update cli -version %s`\n", targetVersionString)
 			return nil
 		}
 
@@ -161,7 +161,7 @@ func updateToVersion(targetVersion *github.SemanticVersion, force bool, currentV
 		return fmt.Errorf("cannot find home directory: %w", err)
 	}
 
-	cmd := exec.Command("go", "install", "github.com/gailsapp/gails/v3/cmd/wails@"+desiredVersion)
+	cmd := exec.Command("go", "install", "github.com/gailsapp/gails/v3/cmd/gails@"+desiredVersion)
 	cmd.Dir = homeDir
 	sout, serr := cmd.CombinedOutput()
 	if err := cmd.Run(); err != nil {
@@ -172,7 +172,7 @@ func updateToVersion(targetVersion *github.SemanticVersion, force bool, currentV
 	pterm.Println("Done.")
 	pterm.Println("\nMake sure you update your project go.mod file to use " + desiredVersion + ":")
 	pterm.Println("  require github.com/gailsapp/gails/v3 " + desiredVersion)
-	pterm.Println("\nTo view the release notes, please run `gails3 releasenotes`")
+	pterm.Println("\nTo view the release notes, please run `gails releasenotes`")
 
 	return nil
 }

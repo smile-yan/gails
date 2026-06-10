@@ -2,7 +2,7 @@ module {{.ModulePath}}
 
 go 1.24
 
-require github.com/wailsapp/wails/v3 {{.WailsVersion}}
+require github.com/gailsapp/gails/v3 {{.WailsVersion}}
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
@@ -47,5 +47,5 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
 {{if .LocalModulePath}}
-replace github.com/wailsapp/wails/v3 => {{.LocalModulePath}}v3
+replace github.com/gailsapp/gails/v3 => {{.LocalModulePath}}v3
 {{end}}

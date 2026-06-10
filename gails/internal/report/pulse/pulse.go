@@ -70,7 +70,7 @@ type Reporter struct {
 	// artifacts: build outputs (binaries, bundles, archives) registered by
 	// the executor as tasks with `generates:` declarations complete. Rendered
 	// in their own block at the end of the summary so a user finishing a
-	// `gails3 build` sees exactly what came out and how big it is.
+	// `gails build` sees exactly what came out and how big it is.
 	artifacts []report.Artifact
 
 	// throughput samples: completions in each ~250 ms window, for the

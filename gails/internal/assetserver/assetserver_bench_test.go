@@ -122,8 +122,8 @@ func BenchmarkAssetServerServeHTTP(b *testing.B) {
 
 	b.Run("WithHeaders", func(b *testing.B) {
 		req := httptest.NewRequest("GET", "/index.html", nil)
-		req.Header.Set("x-wails-window-id", "1")
-		req.Header.Set("x-wails-window-name", "main")
+		req.Header.Set("x-gails-window-id", "1")
+		req.Header.Set("x-gails-window-name", "main")
 		req.Header.Set("Accept-Language", "en-US,en;q=0.9")
 		for b.Loop() {
 			rr := httptest.NewRecorder()

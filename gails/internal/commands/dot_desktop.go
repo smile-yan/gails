@@ -15,7 +15,7 @@ type DotDesktopOptions struct {
 	Categories    string `description:"Categories in which the application should be shown e.g. 'Development;IDE;'"`
 	Comment       string `description:"A brief description of the application"`
 	Terminal      bool   `description:"Whether the application runs in a terminal" default:"false"`
-	Keywords      string `description:"Keywords associated with the application e.g. 'Editor;Image;'" default:"wails"`
+	Keywords      string `description:"Keywords associated with the application e.g. 'Editor;Image;'" default:"gails"`
 	Version       string `description:"The version of the Desktop Entry Specification" default:"1.0"`
 	GenericName   string `description:"A generic name for the application"`
 	StartupNotify bool   `description:"If true, the app will send a notification when starting" default:"false"`

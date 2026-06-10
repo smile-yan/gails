@@ -1,5 +1,5 @@
-import wailsLogoWhite from '../assets/wails-logo-white-text.svg';
-import wailsLogoBlack from '../assets/wails-logo-black-text.svg';
+import gailsLogoWhite from '../assets/gails-logo-white-text.svg';
+import gailsLogoBlack from '../assets/gails-logo-black-text.svg';
 
 interface WailsLogoProps {
   className?: string;
@@ -9,7 +9,7 @@ interface WailsLogoProps {
 
 export default function WailsLogo({ className = '', size = 240, theme = 'dark' }: WailsLogoProps) {
   // White text for dark mode, black text for light mode
-  const logoSrc = theme === 'dark' ? wailsLogoWhite : wailsLogoBlack;
+  const logoSrc = theme === 'dark' ? gailsLogoWhite : gailsLogoBlack;
 
   return (
     <img

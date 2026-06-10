@@ -160,7 +160,7 @@ func (info *ServiceInfo) Collect() *ServiceInfo {
 					line, cond, err := ParseCondition(ParseDirective(comment.Text, "inject"))
 					if err != nil {
 						collector.logger.Errorf(
-							"%s: in `wails:inject` directive: %v",
+							"%s: in `gails:inject` directive: %v",
 							collector.Package(obj.Pkg()).Fset.Position(comment.Pos()),
 							err,
 						)
@@ -248,7 +248,7 @@ func (info *ServiceInfo) collectMethod(method *types.Func) *ServiceMethodInfo {
 
 				if err != nil {
 					collector.logger.Errorf(
-						"%s: invalid value '%s' in `wails:id` directive: expected a valid uint32 value",
+						"%s: invalid value '%s' in `gails:id` directive: expected a valid uint32 value",
 						collector.Package(method.Pkg()).Fset.Position(comment.Pos()),
 						idString,
 					)

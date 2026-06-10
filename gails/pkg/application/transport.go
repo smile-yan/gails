@@ -45,11 +45,11 @@ type AssetServerTransport interface {
 	// ServeAssets configures the transport to serve assets.
 	// The assetHandler is Wails' internal asset server that handles:
 	//   - All static assets (HTML, CSS, JS, images, etc.)
-	//   - /wails/runtime.js - The Wails runtime library
+	//   - /gails/runtime.js - The Wails runtime library
 	//
 	// The transport should integrate this handler into its HTTP server.
 	// Typically this means mounting it at "/" and ensuring the IPC endpoint
-	// (e.g., /wails/ws for WebSocket) is handled separately.
+	// (e.g., /gails/ws for WebSocket) is handled separately.
 	//
 	// This method is called after Start() completes successfully.
 	ServeAssets(assetHandler http.Handler) error
@@ -59,7 +59,7 @@ type AssetServerTransport interface {
 // to provide HTTP middleware for the Wails asset server in webview scenarios.
 //
 // When a transport implements this interface, Wails will use Handler() in
-// asset server middlewares that may provide handling for request done from webview to wails:// URLs.
+// asset server middlewares that may provide handling for request done from webview to gails:// URLs.
 //
 // This is used by the default HTTP transport to handle IPC endpoints.
 type TransportHTTPHandler interface {

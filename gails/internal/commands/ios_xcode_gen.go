@@ -197,8 +197,8 @@ func IOSXcodeGen(options *IOSXcodeGenOptions) error {
 	// Prepare config with defaults, then merge from build/config.yml if present
 	cfg := iOSProjectConfig{
 		ProductName:       "Wails App",
-		BinaryName:        "wailsapp",
-		ProductIdentifier: "com.wails.app",
+		BinaryName:        "gailsapp",
+		ProductIdentifier: "com.gails.app",
 		ProductVersion:    "0.1.0",
 		ProductCompany:    "",
 		ProductComments:   "",

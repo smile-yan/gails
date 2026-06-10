@@ -18,8 +18,8 @@ var staticFiles embed.FS
 func GinMiddleware(ginEngine *gin.Engine) application.Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Let Wails handle the `/wails` route
-			if strings.HasPrefix(r.URL.Path, "/wails") {
+			// Let Wails handle the `/gails` route
+			if strings.HasPrefix(r.URL.Path, "/gails") {
 				next.ServeHTTP(w, r)
 				return
 			}

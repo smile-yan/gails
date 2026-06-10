@@ -6,7 +6,7 @@ package application
 #include <stdlib.h>
 
 // Forward declarations of C functions for window management
-void* ios_create_webview_with_id(unsigned int wailsID);
+void* ios_create_webview_with_id(unsigned int gailsID);
 void ios_window_exec_js(void* viewController, const char* js);
 unsigned int ios_window_get_id(void* viewController);
 void ios_window_release_handle(void* viewController);
@@ -203,12 +203,12 @@ func (w *iosWebviewWindow) run() {
 	// Create the native WebView when the window runs
 	if w.nativeHandle == nil {
 		// Get the Wails window ID from the parent
-		wailsID := w.parent.ID()
+		gailsID := w.parent.ID()
 		// Create the native WebView with the Wails window ID
-		w.nativeHandle = C.ios_create_webview_with_id(C.uint(wailsID))
+		w.nativeHandle = C.ios_create_webview_with_id(C.uint(gailsID))
 		if w.nativeHandle != nil {
 			// Store the window ID (should match what we passed in)
-			w.windowID = uint32(wailsID)
+			w.windowID = uint32(gailsID)
 			// Apply initial background colour if set (default white otherwise)
 			rgba := w.parent.options.BackgroundColour
 			C.ios_window_set_background_color(

@@ -5,7 +5,7 @@
     <key>CFBundleExecutable</key>
     <string>ios</string>
     <key>CFBundleIdentifier</key>
-    <string>com.wails.ios</string>
+    <string>com.gails.ios</string>
     <key>CFBundleName</key>
     <string>My Product</string>
     <key>CFBundleDisplayName</key>

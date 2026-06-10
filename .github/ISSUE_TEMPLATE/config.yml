@@ -5,5 +5,5 @@ contact_links:
     about: Ask questions and discuss with other Wails users in real time.
 
   - name: GitHub Community Discussions
-    url: https://github.com/wailsapp/wails/discussions
+    url: https://github.com/gailsapp/gails/discussions
     about: If your question is not a feature or a bug, please go to the discussion panel and retrieve if your question already exists before submitting.

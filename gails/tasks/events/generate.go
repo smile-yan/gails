@@ -398,7 +398,7 @@ func main() {
 	templateToWrite = strings.ReplaceAll(templateToWrite, "$$LINUXJSEVENTS", linuxTSEvents.String())
 	templateToWrite = strings.ReplaceAll(templateToWrite, "$$IOSJSEVENTS", iosTSEvents.String())
 	templateToWrite = strings.ReplaceAll(templateToWrite, "$$COMMONJSEVENTS", commonTSEvents.String())
-	err = os.WriteFile("../../internal/runtime/desktop/@wailsio/runtime/src/event_types.ts", []byte(templateToWrite), 0644)
+	err = os.WriteFile("../../internal/runtime/desktop/@gailsio/runtime/src/event_types.ts", []byte(templateToWrite), 0644)
 	if err != nil {
 		panic(err)
 	}

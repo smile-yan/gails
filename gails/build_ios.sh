@@ -29,7 +29,7 @@ check_command xcrun
 
 # Configuration
 APP_NAME="${APP_NAME:-WailsIOSDemo}"
-BUNDLE_ID="${BUNDLE_ID:-com.wails.iosdemo}"
+BUNDLE_ID="${BUNDLE_ID:-com.gails.iosdemo}"
 BUILD_DIR="build/ios"
 SIMULATOR_SDK="iphonesimulator"
 MIN_IOS_VERSION="13.0"

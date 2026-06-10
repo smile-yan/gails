@@ -28,7 +28,7 @@ cat > "$TEST_DIR/build/ios/Info.plist" << 'EOF'
     <key>CFBundleExecutable</key>
     <string>TestIOSApp</string>
     <key>CFBundleIdentifier</key>
-    <string>com.wails.testiosapp</string>
+    <string>com.gails.testiosapp</string>
     <key>CFBundleName</key>
     <string>TestIOSApp</string>
     <key>CFBundlePackageType</key>
@@ -52,7 +52,7 @@ cat > "$TEST_DIR/build/ios/Info.dev.plist" << 'EOF'
     <key>CFBundleExecutable</key>
     <string>TestIOSApp</string>
     <key>CFBundleIdentifier</key>
-    <string>com.wails.testiosapp.dev</string>
+    <string>com.gails.testiosapp.dev</string>
     <key>CFBundleName</key>
     <string>TestIOSApp (Dev)</string>
     <key>CFBundlePackageType</key>
@@ -88,7 +88,7 @@ includes:
 vars:
   APP_NAME: "TestIOSApp"
   BIN_DIR: "bin"
-  BUNDLE_ID: "com.wails.testiosapp"
+  BUNDLE_ID: "com.gails.testiosapp"
 
 tasks:
   test:

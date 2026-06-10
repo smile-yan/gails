@@ -78,13 +78,13 @@ func (d *Doctor) collectBuildInfo() error {
 	}
 
 	gailsVersion := strings.TrimSpace(version.String())
-	wailsPackage, found := lo.Find(buildInfo.Deps, func(dep *debug.Module) bool {
+	gailsPackage, found := lo.Find(buildInfo.Deps, func(dep *debug.Module) bool {
 		return dep.Path == "github.com/gailsapp/gails/v3"
 	})
 
-	if found && wailsPackage != nil && wailsPackage.Replace != nil {
-		gailsVersion = "(local) => " + filepath.ToSlash(wailsPackage.Replace.Path)
-		repo, err := git.PlainOpen(filepath.Join(wailsPackage.Replace.Path, ".."))
+	if found && gailsPackage != nil && gailsPackage.Replace != nil {
+		gailsVersion = "(local) => " + filepath.ToSlash(gailsPackage.Replace.Path)
+		repo, err := git.PlainOpen(filepath.Join(gailsPackage.Replace.Path, ".."))
 		if err == nil {
 			head, err := repo.Head()
 			if err == nil {

@@ -122,7 +122,7 @@ func (a *darwinAutostart) defaultLabel() string {
 	if id := mac.GetBundleID(); id != "" {
 		return id
 	}
-	return "wails.autostart." + autostartSlug(a.app.options.Name)
+	return "gails.autostart." + autostartSlug(a.app.options.Name)
 }
 
 func (a *darwinAutostart) enableLaunchAgent(opts AutostartOptions) error {

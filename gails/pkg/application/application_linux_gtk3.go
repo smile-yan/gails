@@ -45,7 +45,7 @@ func sanitizeAppName(name string) string {
 	// Trim leading/trailing underscores
 	name = strings.Trim(name, "_")
 	if name == "" {
-		name = "wailsapp"
+		name = "gailsapp"
 	}
 	return strings.ToLower(name)
 }

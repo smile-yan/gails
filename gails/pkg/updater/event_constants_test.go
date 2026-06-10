@@ -10,11 +10,11 @@ import (
 
 // TestEventConstants_MatchRuntimeTS guards against drift between the
 // Go-side event constants and the JS-side mirror in
-// internal/runtime/desktop/@wailsio/runtime/src/updater.ts. Both files
+// internal/runtime/desktop/@gailsio/runtime/src/updater.ts. Both files
 // expose the same wire strings; if they diverge, app developers who
 // import the JS constants would silently miss events.
 func TestEventConstants_MatchRuntimeTS(t *testing.T) {
-	const tsPath = "../../internal/runtime/desktop/@wailsio/runtime/src/updater.ts"
+	const tsPath = "../../internal/runtime/desktop/@gailsio/runtime/src/updater.ts"
 	body, err := os.ReadFile(tsPath)
 	if err != nil {
 		t.Fatalf("read %s: %v", tsPath, err)

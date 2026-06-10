@@ -19,7 +19,7 @@ on:
 jobs:
   weekly-release:
     runs-on: ubuntu-latest
-    if: github.repository == 'wailsapp/wails'
+    if: github.repository == 'gailsapp/gails'
     env:
       GOWORK: "off"
 
@@ -178,7 +178,7 @@ jobs:
       if: steps.should_release.outputs.proceed == 'true'
       id: new_version
       run: |
-        NEW_VERSION=$(cat v2/cmd/wails/internal/version.txt)
+        NEW_VERSION=$(cat v2/cmd/gails/internal/version.txt)
         echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "New version: $NEW_VERSION"
 
@@ -209,7 +209,7 @@ jobs:
           echo "## Installation"
           echo ""
           echo '```bash'
-          echo "go install github.com/wailsapp/wails/v2/cmd/wails@${NEW_VERSION}"
+          echo "go install github.com/gailsapp/gails/v2/cmd/gails@${NEW_VERSION}"
           echo '```'
           echo ""
           echo "## Changes"
@@ -218,7 +218,7 @@ jobs:
         } > /tmp/release_notes.md
 
         gh release create "${NEW_VERSION}" \
-          --repo wailsapp/wails \
+          --repo gailsapp/gails \
           --title "Wails ${NEW_VERSION}" \
           --notes-file /tmp/release_notes.md \
           --latest
@@ -226,7 +226,7 @@ jobs:
     - name: Dry run summary
       if: steps.should_release.outputs.proceed == 'true' && github.event.inputs.dry_run == 'true'
       run: |
-        CURRENT=$(cat v2/cmd/wails/internal/version.txt)
+        CURRENT=$(cat v2/cmd/gails/internal/version.txt)
         echo "## DRY RUN — Would Release" >> $GITHUB_STEP_SUMMARY
         echo "**Current version:** ${CURRENT}" >> $GITHUB_STEP_SUMMARY
         echo "**Commits since last release:** ${{ steps.commit_check.outputs.commit_count }}" >> $GITHUB_STEP_SUMMARY

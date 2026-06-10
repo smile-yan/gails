@@ -40,7 +40,7 @@ func (l *linuxLock) acquire(uniqueID string) error {
 		return errors.New("UniqueID is required for single instance lock")
 	}
 
-	id := "wails_app_" + strings.ReplaceAll(strings.ReplaceAll(uniqueID, "-", "_"), ".", "_")
+	id := "gails_app_" + strings.ReplaceAll(strings.ReplaceAll(uniqueID, "-", "_"), ".", "_")
 
 	l.dbusName = "org." + id + ".SingleInstance"
 	l.dbusPath = "/org/" + id + "/SingleInstance"

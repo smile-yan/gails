@@ -73,7 +73,7 @@ const spotlightHTML = `<!DOCTYPE html>
 <html>
 <head>
     <title>Spotlight</title>
-    <script type="module" src="/wails/runtime.js"></script>
+    <script type="module" src="/gails/runtime.js"></script>
     <style>
         * {
             margin: 0;

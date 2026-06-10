@@ -28,7 +28,7 @@ func TestBuildAssetsSupportObfuscation(t *testing.T) {
 			want: []string{
 				"command -v garble",
 				"garble {{.GARBLE_ARGS}} build",
-				"wails_obfuscated",
+				"gails_obfuscated",
 				"-e OBFUSCATED=true",
 				"-e GARBLE_ARGS=\"{{.GARBLE_ARGS}}\"",
 			},
@@ -39,7 +39,7 @@ func TestBuildAssetsSupportObfuscation(t *testing.T) {
 			want: []string{
 				"command -v garble",
 				"garble {{.GARBLE_ARGS}} build",
-				"wails_obfuscated",
+				"gails_obfuscated",
 				"-e OBFUSCATED=true",
 				"-e GARBLE_ARGS=\"{{.GARBLE_ARGS}}\"",
 			},
@@ -50,7 +50,7 @@ func TestBuildAssetsSupportObfuscation(t *testing.T) {
 			want: []string{
 				"command -v garble",
 				"garble {{.GARBLE_ARGS}} build",
-				"wails_obfuscated",
+				"gails_obfuscated",
 				"-e OBFUSCATED=true",
 				"-e GARBLE_ARGS=\"{{.GARBLE_ARGS}}\"",
 			},
@@ -61,7 +61,7 @@ func TestBuildAssetsSupportObfuscation(t *testing.T) {
 			want: []string{
 				"go install mvdan.cc/garble",
 				`if [ "$OBFUSCATED" = "true" ]; then`,
-				"wails_obfuscated",
+				"gails_obfuscated",
 				"garble ${GARBLE_ARGS} build",
 			},
 		},

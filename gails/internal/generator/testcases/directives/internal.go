@@ -2,14 +2,14 @@ package main
 
 // An exported but internal model.
 //
-//wails:internal
+//gails:internal
 type InternalModel struct {
 	Field string
 }
 
 // An exported but internal service.
 //
-//wails:internal
+//gails:internal
 type InternalService struct{}
 
 func (InternalService) Method(InternalModel) {}

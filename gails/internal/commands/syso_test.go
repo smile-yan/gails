@@ -92,7 +92,7 @@ func TestGenerateSyso(t *testing.T) {
 				// Get the path to the example icon
 				exampleIcon := filepath.Join(localDir, "examples", "icon.ico")
 				// Get the path to the example manifest
-				exampleManifest := filepath.Join(localDir, "examples", "wails.exe.manifest")
+				exampleManifest := filepath.Join(localDir, "examples", "gails.exe.manifest")
 				return &SysoOptions{
 					Manifest: exampleManifest,
 					Icon:     exampleIcon,
@@ -110,7 +110,7 @@ func TestGenerateSyso(t *testing.T) {
 				// Get the path to the example icon
 				exampleIcon := filepath.Join(localDir, "examples", "icon.ico")
 				// Get the path to the example manifest
-				exampleManifest := filepath.Join(localDir, "examples", "wails.exe.manifest")
+				exampleManifest := filepath.Join(localDir, "examples", "gails.exe.manifest")
 				return &SysoOptions{
 					Manifest: exampleManifest,
 					Icon:     exampleIcon,

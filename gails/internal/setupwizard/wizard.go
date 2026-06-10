@@ -49,7 +49,7 @@ type DockerStatus struct {
 	PullError    string `json:"pullError,omitempty"`
 }
 
-// WailsConfigInfo represents the info section of wails.yaml
+// WailsConfigInfo represents the info section of gails.yaml
 type WailsConfigInfo struct {
 	CompanyName       string `json:"companyName" yaml:"companyName"`
 	ProductName       string `json:"productName" yaml:"productName"`
@@ -60,7 +60,7 @@ type WailsConfigInfo struct {
 	Version           string `json:"version" yaml:"version"`
 }
 
-// GailsConfig represents the wails.yaml configuration
+// GailsConfig represents the gails.yaml configuration
 type GailsConfig struct {
 	Info WailsConfigInfo `json:"info" yaml:"info"`
 }
@@ -163,7 +163,7 @@ func (w *Wizard) setupRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/docker/status", w.handleDockerStatus)
 	mux.HandleFunc("/api/docker/build", w.handleDockerBuild)
 	mux.HandleFunc("/api/docker/start-background", w.handleDockerStartBackground)
-	mux.HandleFunc("/api/wails-config", w.handleWailsConfig)
+	mux.HandleFunc("/api/gails-config", w.handleWailsConfig)
 	mux.HandleFunc("/api/defaults", w.handleDefaults)
 	mux.HandleFunc("/api/complete", w.handleComplete)
 	mux.HandleFunc("/api/close", w.handleClose)
@@ -235,7 +235,7 @@ func (w *Wizard) handleCheckDependencies(rw http.ResponseWriter, r *http.Request
 func (w *Wizard) handleWailsConfig(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Set("Content-Type", "application/json")
 
-	// Find wails.yaml in current directory or parent directories
+	// Find gails.yaml in current directory or parent directories
 	configPath := findWailsConfig()
 
 	switch r.Method {
@@ -267,7 +267,7 @@ func (w *Wizard) handleWailsConfig(rw http.ResponseWriter, r *http.Request) {
 		}
 
 		if configPath == "" {
-			configPath = "wails.yaml"
+			configPath = "gails.yaml"
 		}
 
 		data, err := yaml.Marshal(&config)
@@ -295,7 +295,7 @@ func findWailsConfig() string {
 	}
 
 	for {
-		configPath := filepath.Join(dir, "wails.yaml")
+		configPath := filepath.Join(dir, "gails.yaml")
 		if _, err := os.Stat(configPath); err == nil {
 			return configPath
 		}
@@ -361,7 +361,7 @@ func (w *Wizard) handleDockerStatus(rw http.ResponseWriter, r *http.Request) {
 
 func (w *Wizard) checkDocker() DockerStatus {
 	status := DockerStatus{
-		ImageName:  "wails-cross",
+		ImageName:  "gails-cross",
 		PullStatus: "idle",
 	}
 
@@ -386,8 +386,8 @@ func (w *Wizard) checkDocker() DockerStatus {
 	}
 	status.Running = true
 
-	// Check if wails-cross image exists
-	imageOutput, err := execCommand("docker", "image", "inspect", "wails-cross")
+	// Check if gails-cross image exists
+	imageOutput, err := execCommand("docker", "image", "inspect", "gails-cross")
 	status.ImageBuilt = err == nil && len(imageOutput) > 0
 
 	return status
@@ -406,8 +406,8 @@ func (w *Wizard) handleDockerBuild(rw http.ResponseWriter, r *http.Request) {
 
 	// Build the Docker image in background
 	go func() {
-		// Run: gails3 task setup:docker
-		cmd := exec.Command("gails3", "task", "setup:docker")
+		// Run: gails task setup:docker
+		cmd := exec.Command("gails", "task", "setup:docker")
 		err := cmd.Run()
 
 		w.dockerMu.Lock()
@@ -484,7 +484,7 @@ func (w *Wizard) handleDockerStartBackground(rw http.ResponseWriter, r *http.Req
 
 	// Build the Docker image in background
 	go func() {
-		cmd := exec.Command("gails3", "task", "setup:docker")
+		cmd := exec.Command("gails", "task", "setup:docker")
 		err := cmd.Run()
 
 		w.dockerMu.Lock()

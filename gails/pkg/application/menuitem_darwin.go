@@ -46,7 +46,7 @@ void* newMenuItem(unsigned int menuItemID, char *label, bool disabled, char* too
 // set menu item label
 //
 // Apply on the main thread synchronously so a menu reopen reflects the new
-// title. See setMenuItemChecked() below / wailsapp/wails#5002 for the stale-
+// title. See setMenuItemChecked() below / gailsapp/gails#5002 for the stale-
 // state race that motivates the isMainThread/dispatch_sync pattern.
 void setMenuItemLabel(void* nsMenuItem, char *label) {
     MenuItem *menuItem = (MenuItem *)nsMenuItem;
@@ -63,7 +63,7 @@ void setMenuItemLabel(void* nsMenuItem, char *label) {
 
 // set menu item disabled
 //
-// Apply synchronously (see setMenuItemChecked() / wailsapp/wails#5002).
+// Apply synchronously (see setMenuItemChecked() / gailsapp/gails#5002).
 void setMenuItemDisabled(void* nsMenuItem, bool disabled) {
     MenuItem *menuItem = (MenuItem *)nsMenuItem;
     void (^apply)(void) = ^{
@@ -93,7 +93,7 @@ void setMenuItemDisabled(void* nsMenuItem, bool disabled) {
 
 // set menu item hidden
 //
-// Apply synchronously (see setMenuItemChecked() / wailsapp/wails#5002).
+// Apply synchronously (see setMenuItemChecked() / gailsapp/gails#5002).
 void setMenuItemHidden(void* nsMenuItem, bool hidden) {
     MenuItem *menuItem = (MenuItem *)nsMenuItem;
     if ([NSThread isMainThread]) {
@@ -107,7 +107,7 @@ void setMenuItemHidden(void* nsMenuItem, bool hidden) {
 
 // set menu item tooltip
 //
-// Apply synchronously (see setMenuItemChecked() / wailsapp/wails#5002).
+// Apply synchronously (see setMenuItemChecked() / gailsapp/gails#5002).
 void setMenuItemTooltip(void* nsMenuItem, char *tooltip) {
     MenuItem *menuItem = (MenuItem *)nsMenuItem;
     if ([NSThread isMainThread]) {
@@ -126,7 +126,7 @@ void setMenuItemTooltip(void* nsMenuItem, char *tooltip) {
 // Apply the state change synchronously so a subsequent menu open reflects it.
 // dispatch_async enqueues the assignment for the next runloop turn, which can
 // land *after* the menu has already been rendered if the user reopens the menu
-// quickly (see wailsapp/wails#5002). dispatch_sync from the main thread would
+// quickly (see gailsapp/gails#5002). dispatch_sync from the main thread would
 // deadlock, so short-circuit when we are already on the main thread.
 void setMenuItemChecked(void* nsMenuItem, bool checked) {
     MenuItem *menuItem = (MenuItem *)nsMenuItem;

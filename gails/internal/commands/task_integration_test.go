@@ -20,7 +20,7 @@ func TestTaskParameterPassing(t *testing.T) {
 	}
 
 	// Create a temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "wails-task-test-*")
+	tmpDir, err := os.MkdirTemp("", "gails-task-test-*")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpDir)
 
@@ -244,7 +244,7 @@ func TestBackwardCompatibility(t *testing.T) {
 	}{
 		{
 			name:         "Legacy os.Args parsing",
-			osArgs:       []string{"gails3", "task", "build", "PLATFORM=windows"},
+			osArgs:       []string{"gails", "task", "build", "PLATFORM=windows"},
 			expectedTask: "build",
 			expectedVars: map[string]string{
 				"PLATFORM": "windows",
@@ -252,7 +252,7 @@ func TestBackwardCompatibility(t *testing.T) {
 		},
 		{
 			name:         "Legacy with flags before task",
-			osArgs:       []string{"gails3", "task", "--verbose", "test", "ENV=prod"},
+			osArgs:       []string{"gails", "task", "--verbose", "test", "ENV=prod"},
 			expectedTask: "test",
 			expectedVars: map[string]string{
 				"ENV": "prod",
@@ -297,7 +297,7 @@ func TestMkdirWithSpacesInPath(t *testing.T) {
 		t.Skip("Skipping integration test in CI")
 	}
 
-	tmpDir, err := os.MkdirTemp("", "wails task test with spaces-*")
+	tmpDir, err := os.MkdirTemp("", "gails task test with spaces-*")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpDir)
 

@@ -243,7 +243,7 @@ func parseTemplate(templateFS fs.FS, templateName string) (Template, error) {
 // Clones the given uri and returns the temporary cloned directory
 func gitclone(uri string) (string, error) {
 	// Create temporary directory
-	dirname, err := os.MkdirTemp("", "wails-template-*")
+	dirname, err := os.MkdirTemp("", "gails-template-*")
 	if err != nil {
 		return "", err
 	}
@@ -514,7 +514,7 @@ func GenerateTemplate(options *BaseTemplate) error {
 
 	// Copy the common files (Go backend, Taskfile, go.mod, etc.) verbatim.
 	// These files contain template variables like {{.ProjectName}} that must be
-	// preserved so they are expanded when users later run `wails init -t <template>`.
+	// preserved so they are expanded when users later run `gails init -t <template>`.
 	commonFS, err := fs.Sub(templates, "_common")
 	if err != nil {
 		return err

@@ -108,7 +108,7 @@ jobs:
           # Ensure validation script doesn't get committed
           echo "v3/scripts/validate-changelog.go" >> .git/info/exclude
           # Get the correct branch name to push to
-          REPO_OWNER="wailsapp"  # Always wailsapp for this repo
+          REPO_OWNER="gailsapp"  # Always gailsapp for this repo
           
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
@@ -122,7 +122,7 @@ jobs:
             echo "🔍 Head repository: $HEAD_REPO"
             
             # Don't push if this is from a fork or if branch is v3-alpha (main branch)
-            if [ "$HEAD_REPO" != "wails" ] || [ "$BRANCH_NAME" = "master" ]; then
+            if [ "$HEAD_REPO" != "gails" ] || [ "$BRANCH_NAME" = "master" ]; then
               echo "⚠️ Cannot push - either fork or direct v3-alpha branch. Manual fix required."
               echo "committed=false" >> $GITHUB_OUTPUT
               exit 0
@@ -135,8 +135,8 @@ jobs:
           git add docs/src/content/docs/changelog.mdx
           git commit -m "🤖 Fix changelog: move entries to Unreleased section"
           
-          # Only push if running on the main wailsapp repository
-          if [ "${{ github.repository }}" = "wailsapp/wails" ]; then
+          # Only push if running on the main gailsapp repository
+          if [ "${{ github.repository }}" = "gailsapp/gails" ]; then
             # Pull latest changes and rebase our commit
             git fetch origin $BRANCH_NAME
             git rebase origin/$BRANCH_NAME

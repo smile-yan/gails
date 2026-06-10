@@ -166,7 +166,7 @@
     </div>
     <div class="info">
       <strong>ℹ️ Transport Info:</strong>
-      This example uses a custom WebSocket transport running on <code>ws://localhost:9099/wails/ws</code>
+      This example uses a custom WebSocket transport running on <code>ws://localhost:9099/gails/ws</code>
       instead of the default HTTP fetch-based transport. All Wails <strong>generated bindings</strong> work identically!
       <br><br>
       The methods below use <code>GreetService.Greet()</code>, <code>GreetService.Echo()</code>, etc. from the generated bindings,
@@ -238,15 +238,15 @@
   try {
     // Import the custom WebSocket transport implementation with cache buster
     const timestamp = Date.now();
-    const { default: transport } = await import(`/wails/transport.js?v=${timestamp}`);
-    const { Events, Dialogs, setTransport } = await import("/wails/runtime.js");
+    const { default: transport } = await import(`/gails/transport.js?v=${timestamp}`);
+    const { Events, Dialogs, setTransport } = await import("/gails/runtime.js");
     // Set as the active transport
     setTransport(transport);
 
 
     // Import generated bindings
     console.log("[Init] Importing bindings from /bindings/...");
-    const bindings = await import("/bindings/github.com/wailsapp/wails/v3/examples/websocket-transport/index.js");
+    const bindings = await import("/bindings/github.com/gailsapp/gails/v3/examples/websocket-transport/index.js");
     console.log("[Init] Bindings imported:", bindings);
     const { GreetService } = bindings;
 

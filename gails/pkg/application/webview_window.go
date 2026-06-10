@@ -292,9 +292,9 @@ func NewWindow(options WebviewWindowOptions) *WebviewWindow {
 		options.Name = fmt.Sprintf("window-%d", thisWindowID)
 	}
 
-	// Inject the minimal `window.wails.Events` shim into HTML-supplied
+	// Inject the minimal `window.gails.Events` shim into HTML-supplied
 	// pages that opted into the simple postMessage emit path. Without this
-	// they can't load /wails/runtime.js (their origin is "null") so they'd
+	// they can't load /gails/runtime.js (their origin is "null") so they'd
 	// have to hand-roll a dispatch receiver and an invoke caller every
 	// time. See inline_event_shim.go.
 	options.HTML = maybeInjectInlineEventShim(options.HTML, options.AllowSimpleEventEmit)
@@ -793,7 +793,7 @@ func (w *WebviewWindow) HandleMessage(message string) {
 		// Forward an event from a page that can't reach the modern HTTP
 		// runtime (e.g. an InitialHTML pop-up loaded with `baseURL:nil`
 		// where `window.location.origin` is "null" and fetch fails). Sent
-		// as `wails:event:emit:<event-name>`; bare names only (no payload).
+		// as `gails:event:emit:<event-name>`; bare names only (no payload).
 		// Enough for the updater window's user-action buttons; pages that
 		// need to send structured data should use the full runtime.
 		//
@@ -807,7 +807,7 @@ func (w *WebviewWindow) HandleMessage(message string) {
 		}
 		name := strings.TrimPrefix(message, "gails:event:emit:")
 		if name == "" {
-			w.Error("empty event name in wails:event:emit")
+			w.Error("empty event name in gails:event:emit")
 			return
 		}
 		evt := &CustomEvent{Name: name, Sender: w.Name()}
@@ -1298,8 +1298,8 @@ func (w *WebviewWindow) DispatchWailsEvent(event *CustomEvent) {
 	}
 	// Guard against race condition where event fires before runtime is initialized
 	// This can happen during page reload when WindowLoadFinished fires before
-	// the JavaScript runtime has mounted dispatchWailsEvent on window._wails
-	msg := fmt.Sprintf("if(window._wails&&window._wails.dispatchWailsEvent){window._wails.dispatchWailsEvent(%s);}", event.ToJSON())
+	// the JavaScript runtime has mounted dispatchWailsEvent on window._gails
+	msg := fmt.Sprintf("if(window._gails&&window._gails.dispatchWailsEvent){window._gails.dispatchWailsEvent(%s);}", event.ToJSON())
 	w.ExecJS(msg)
 }
 
@@ -1597,7 +1597,7 @@ func (w *WebviewWindow) InitiateFrontendDropProcessing(filenames []string, x int
 	}
 
 	jsCall := fmt.Sprintf(
-		"window._wails.handlePlatformFileDrop(%s, %d, %d);",
+		"window._gails.handlePlatformFileDrop(%s, %d, %d);",
 		string(filenamesJSON),
 		x,
 		y,
@@ -1626,7 +1626,7 @@ func (w *WebviewWindow) HandleDragEnter() {
 	dragHover.lastSentX = 0
 	dragHover.lastSentY = 0
 
-	w.impl.execJS("window._wails.handleDragEnter();")
+	w.impl.execJS("window._gails.handleDragEnter();")
 }
 
 // Drag hover throttle state
@@ -1661,7 +1661,7 @@ func (w *WebviewWindow) HandleDragOver(x int, y int) {
 	if impl, ok := w.impl.(interface{ execJSDragOver(x, y int) }); ok {
 		impl.execJSDragOver(x, y)
 	} else {
-		w.impl.execJS(fmt.Sprintf("window._wails.handleDragOver(%d,%d)", x, y))
+		w.impl.execJS(fmt.Sprintf("window._gails.handleDragOver(%d,%d)", x, y))
 	}
 }
 
@@ -1672,7 +1672,7 @@ func (w *WebviewWindow) HandleDragLeave() {
 	}
 
 	// Don't use InvokeSync - execJS already handles main thread dispatch internally
-	w.impl.execJS("window._wails.handleDragLeave();")
+	w.impl.execJS("window._gails.handleDragLeave();")
 }
 
 // SnapAssist triggers the Windows Snap Assist feature by simulating Win+Z key combination.

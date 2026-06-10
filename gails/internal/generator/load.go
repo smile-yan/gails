@@ -23,34 +23,34 @@ func ResolveSystemPaths(buildFlags []string) (paths *config.SystemPaths, err err
 		panic("context package path matched multiple packages")
 	}
 
-	// Resolve wails app pkg path.
-	wailsAppPkgPaths, err := ResolvePatterns(buildFlags, config.GailsAppPkgPath)
+	// Resolve gails app pkg path.
+	gailsAppPkgPaths, err := ResolvePatterns(buildFlags, config.GailsAppPkgPath)
 	if err != nil {
 		return
-	} else if len(wailsAppPkgPaths) < 1 {
+	} else if len(gailsAppPkgPaths) < 1 {
 		err = ErrNoApplicationPackage
 		return
-	} else if len(wailsAppPkgPaths) > 1 {
+	} else if len(gailsAppPkgPaths) > 1 {
 		// This should never happen...
-		panic("wails application package path matched multiple packages")
+		panic("gails application package path matched multiple packages")
 	}
 
-	// Resolve wails internal pkg path.
-	wailsInternalPkgPaths, err := ResolvePatterns(buildFlags, config.GailsInternalPkgPath)
+	// Resolve gails internal pkg path.
+	gailsInternalPkgPaths, err := ResolvePatterns(buildFlags, config.GailsInternalPkgPath)
 	if err != nil {
 		return
-	} else if len(wailsInternalPkgPaths) < 1 {
+	} else if len(gailsInternalPkgPaths) < 1 {
 		err = ErrNoInternalPackage
 		return
-	} else if len(wailsInternalPkgPaths) > 1 {
+	} else if len(gailsInternalPkgPaths) > 1 {
 		// This should never happen...
-		panic("wails internal package path matched multiple packages")
+		panic("gails internal package path matched multiple packages")
 	}
 
 	paths = &config.SystemPaths{
 		ContextPackage:     contextPkgPaths[0],
-		ApplicationPackage: wailsAppPkgPaths[0],
-		InternalPackage:    wailsInternalPkgPaths[0],
+		ApplicationPackage: gailsAppPkgPaths[0],
+		InternalPackage:    gailsInternalPkgPaths[0],
 	}
 	return
 }

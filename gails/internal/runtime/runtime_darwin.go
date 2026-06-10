@@ -2,4 +2,4 @@
 
 package runtime
 
-var invoke = "window._wails.invoke=function(msg){window.webkit.messageHandlers.external.postMessage(msg);};"
+var invoke = "window._gails.invoke=function(msg){window.webkit.messageHandlers.external.postMessage(msg);};"

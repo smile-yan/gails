@@ -4,7 +4,7 @@ includes:
   common: ../Taskfile.yml
 
 vars:
-  BUNDLE_ID: '{{.BUNDLE_ID | default "com.wails.app"}}'
+  BUNDLE_ID: '{{.BUNDLE_ID | default "com.gails.app"}}'
   # SDK_PATH is computed lazily at task-level to avoid errors on non-macOS systems
   # Each task that needs it defines SDK_PATH in its own vars section
 
@@ -149,7 +149,7 @@ tasks:
       SDK_PATH:
         sh: xcrun --sdk iphonesimulator --show-sdk-path
     cmds:
-      - gails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
+      - gails generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
     env:
       GOOS: ios
       CGO_ENABLED: 1
@@ -193,7 +193,7 @@ tasks:
         fi
     preconditions:
       - sh: command -v xcrun
-        msg: "xcrun not found. Please run 'gails3 task ios:install:deps' to install iOS development dependencies"
+        msg: "xcrun not found. Please run 'gails task ios:install:deps' to install iOS development dependencies"
 
   generate:ios:overlay:
     internal: true
@@ -204,7 +204,7 @@ tasks:
       - build/ios/xcode/overlay.json
       - build/ios/xcode/gen/main_ios.gen.go
     cmds:
-      - gails3 ios overlay:gen -out build/ios/xcode/overlay.json -config build/config.yml
+      - gails ios overlay:gen -out build/ios/xcode/overlay.json -config build/config.yml
 
   generate:ios:xcode:
     internal: true
@@ -217,7 +217,7 @@ tasks:
       - build/ios/xcode/main/Assets.xcassets/**/*
       - build/ios/xcode/project.pbxproj
     cmds:
-      - gails3 ios xcode:gen -outdir build/ios/xcode -config build/config.yml
+      - gails ios xcode:gen -outdir build/ios/xcode -config build/config.yml
 
   run:
     summary: Run the application in iOS Simulator
@@ -254,10 +254,10 @@ tasks:
           fi
         fi
       - codesign --force --sign - "{{.BIN_DIR}}/{{.APP_NAME}}.dev.app"
-      - xcrun simctl terminate booted "com.wails.{{.APP_NAME | lower}}.dev" 2>/dev/null || true
-      - xcrun simctl uninstall booted "com.wails.{{.APP_NAME | lower}}.dev" 2>/dev/null || true
+      - xcrun simctl terminate booted "com.gails.{{.APP_NAME | lower}}.dev" 2>/dev/null || true
+      - xcrun simctl uninstall booted "com.gails.{{.APP_NAME | lower}}.dev" 2>/dev/null || true
       - xcrun simctl install booted "{{.BIN_DIR}}/{{.APP_NAME}}.dev.app"
-      - xcrun simctl launch booted "com.wails.{{.APP_NAME | lower}}.dev"
+      - xcrun simctl launch booted "com.gails.{{.APP_NAME | lower}}.dev"
 
   xcode:
     summary: Open the generated Xcode project for this app
@@ -281,7 +281,7 @@ tasks:
         xcrun simctl spawn booted log stream \
           --level debug \
           --style compact \
-          --predicate 'senderImagePath CONTAINS[c] ".dev.app/" OR subsystem == "com.wails.{{.APP_NAME | lower}}.dev" OR process == "{{.APP_NAME | lower}}"'
+          --predicate 'senderImagePath CONTAINS[c] ".dev.app/" OR subsystem == "com.gails.{{.APP_NAME | lower}}.dev" OR process == "{{.APP_NAME | lower}}"'
 
   logs:wide:
     summary: Wide log stream to help discover the exact process/bundle identifiers

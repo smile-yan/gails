@@ -57,12 +57,12 @@ export async function close(): Promise<void> {
 }
 
 export async function getWailsConfig(): Promise<WailsConfig | null> {
-  const response = await fetch(`${API_BASE}/wails-config`);
+  const response = await fetch(`${API_BASE}/gails-config`);
   return response.json();
 }
 
 export async function saveWailsConfig(config: WailsConfig): Promise<{ status: string }> {
-  const response = await fetch(`${API_BASE}/wails-config`, {
+  const response = await fetch(`${API_BASE}/gails-config`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(config),

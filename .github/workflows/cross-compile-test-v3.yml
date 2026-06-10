@@ -94,14 +94,14 @@ jobs:
       - name: Install Wails3 CLI
         working-directory: v3
         run: |
-          go install ./cmd/wails3
-          wails3 version
+          go install ./cmd/gails
+          gails version
 
       - name: Create test project
         run: |
           mkdir -p test-cross-compile
           cd test-cross-compile
-          wails3 init -n crosstest -t vanilla
+          gails init -n crosstest -t vanilla
 
       - name: Setup Docker cross-compile image
         working-directory: test-cross-compile/crosstest
@@ -111,8 +111,8 @@ jobs:
         working-directory: test-cross-compile/crosstest
         run: |
           # Change the replace directive to use absolute path that matches Docker mount
-          go mod edit -dropreplace github.com/wailsapp/wails/v3
-          go mod edit -replace github.com/wailsapp/wails/v3=${{ github.workspace }}/v3
+          go mod edit -dropreplace github.com/gailsapp/gails/v3
+          go mod edit -replace github.com/gailsapp/gails/v3=${{ github.workspace }}/v3
 
       - name: Cross-compile for ${{ matrix.target_os }}/${{ matrix.target_arch }}
         working-directory: test-cross-compile/crosstest

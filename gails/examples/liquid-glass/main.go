@@ -14,8 +14,8 @@ import (
 //go:embed index.html
 var indexHTML string
 
-//go:embed wails-logo.png
-var wailsLogo []byte
+//go:embed gails-logo.png
+var gailsLogo []byte
 
 func main() {
 	app := application.New(application.Options{
@@ -35,28 +35,28 @@ func main() {
 	}
 
 	// Convert logo to base64 data URI
-	logoDataURI := "data:image/png;base64," + base64.StdEncoding.EncodeToString(wailsLogo)
+	logoDataURI := "data:image/png;base64," + base64.StdEncoding.EncodeToString(gailsLogo)
 
 	// Create different HTML for each window
-	lightHTML := strings.Replace(indexHTML, "wails-logo.png", logoDataURI, 1)
+	lightHTML := strings.Replace(indexHTML, "gails-logo.png", logoDataURI, 1)
 	lightHTML = strings.Replace(lightHTML, "LIQUID GLASS", "Light Style", 1)
 
-	darkHTML := strings.Replace(indexHTML, "wails-logo.png", logoDataURI, 1)
+	darkHTML := strings.Replace(indexHTML, "gails-logo.png", logoDataURI, 1)
 	darkHTML = strings.Replace(darkHTML, "LIQUID GLASS", "Dark Style", 1)
 
-	vibrantHTML := strings.Replace(indexHTML, "wails-logo.png", logoDataURI, 1)
+	vibrantHTML := strings.Replace(indexHTML, "gails-logo.png", logoDataURI, 1)
 	vibrantHTML = strings.Replace(vibrantHTML, "LIQUID GLASS", "Vibrant Style", 1)
 
-	tintedHTML := strings.Replace(indexHTML, "wails-logo.png", logoDataURI, 1)
+	tintedHTML := strings.Replace(indexHTML, "gails-logo.png", logoDataURI, 1)
 	tintedHTML = strings.Replace(tintedHTML, "LIQUID GLASS", "Blue Tint", 1)
 
-	sheetHTML := strings.Replace(indexHTML, "wails-logo.png", logoDataURI, 1)
+	sheetHTML := strings.Replace(indexHTML, "gails-logo.png", logoDataURI, 1)
 	sheetHTML = strings.Replace(sheetHTML, "LIQUID GLASS", "Sheet Material", 1)
 
-	hudHTML := strings.Replace(indexHTML, "wails-logo.png", logoDataURI, 1)
+	hudHTML := strings.Replace(indexHTML, "gails-logo.png", logoDataURI, 1)
 	hudHTML = strings.Replace(hudHTML, "LIQUID GLASS", "HUD Window", 1)
 
-	contentHTML := strings.Replace(indexHTML, "wails-logo.png", logoDataURI, 1)
+	contentHTML := strings.Replace(indexHTML, "gails-logo.png", logoDataURI, 1)
 	contentHTML = strings.Replace(contentHTML, "LIQUID GLASS", "Content Background", 1)
 
 	// Window 1: Light style with no tint

@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@wailsio/runtime": "latest",
+    "@gailsio/runtime": "latest",
     "vue": "^3.2.45"
   },
   "devDependencies": {

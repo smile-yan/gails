@@ -22,7 +22,7 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// desktop/@wailsio/runtime/src/index.ts
+// desktop/@gailsio/runtime/src/index.ts
 var index_exports = {};
 __export(index_exports, {
   Application: () => application_exports,
@@ -49,20 +49,20 @@ __export(index_exports, {
   setTransport: () => setTransport
 });
 
-// desktop/@wailsio/runtime/src/wml.ts
+// desktop/@gailsio/runtime/src/wml.ts
 var wml_exports = {};
 __export(wml_exports, {
   Enable: () => Enable,
   Reload: () => Reload
 });
 
-// desktop/@wailsio/runtime/src/browser.ts
+// desktop/@gailsio/runtime/src/browser.ts
 var browser_exports = {};
 __export(browser_exports, {
   OpenURL: () => OpenURL
 });
 
-// desktop/@wailsio/runtime/src/nanoid.ts
+// desktop/@gailsio/runtime/src/nanoid.ts
 var urlAlphabet = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
 function nanoid(size = 21) {
   let id = "";
@@ -73,8 +73,8 @@ function nanoid(size = 21) {
   return id;
 }
 
-// desktop/@wailsio/runtime/src/runtime.ts
-var runtimeURL = window.location.origin + "/wails/runtime";
+// desktop/@gailsio/runtime/src/runtime.ts
+var runtimeURL = window.location.origin + "/gails/runtime";
 var CHUNK_THRESHOLD = 512 * 1024;
 var objectNames = Object.freeze({
   Call: 0,
@@ -117,11 +117,11 @@ async function runtimeCallWithID(objectID, method, windowName, args) {
     body.args = args;
   }
   let headers = {
-    ["x-wails-client-id"]: clientId,
+    ["x-gails-client-id"]: clientId,
     ["Content-Type"]: "application/json"
   };
   if (windowName) {
-    headers["x-wails-window-name"] = windowName;
+    headers["x-gails-window-name"] = windowName;
   }
   const bodyStr = JSON.stringify(body);
   let response;
@@ -148,9 +148,9 @@ async function sendChunked(url, headers, bodyStr) {
     const resp = await fetch(url, {
       method: "POST",
       headers: __spreadProps(__spreadValues({}, headers), {
-        "x-wails-chunk-id": chunkId,
-        "x-wails-chunk-index": String(i),
-        "x-wails-chunk-total": String(totalChunks)
+        "x-gails-chunk-id": chunkId,
+        "x-gails-chunk-index": String(i),
+        "x-gails-chunk-total": String(totalChunks)
       }),
       body: chunk
     });
@@ -161,22 +161,22 @@ async function sendChunked(url, headers, bodyStr) {
   return fetch(url, {
     method: "POST",
     headers: __spreadProps(__spreadValues({}, headers), {
-      "x-wails-chunk-id": chunkId,
-      "x-wails-chunk-index": String(totalChunks - 1),
-      "x-wails-chunk-total": String(totalChunks)
+      "x-gails-chunk-id": chunkId,
+      "x-gails-chunk-index": String(totalChunks - 1),
+      "x-gails-chunk-total": String(totalChunks)
     }),
     body: bodyBytes.subarray((totalChunks - 1) * CHUNK_THRESHOLD)
   });
 }
 
-// desktop/@wailsio/runtime/src/browser.ts
+// desktop/@gailsio/runtime/src/browser.ts
 var call = newRuntimeCaller(objectNames.Browser);
 var BrowserOpenURL = 0;
 function OpenURL(url) {
   return call(BrowserOpenURL, { url: url.toString() });
 }
 
-// desktop/@wailsio/runtime/src/dialogs.ts
+// desktop/@gailsio/runtime/src/dialogs.ts
 var dialogs_exports = {};
 __export(dialogs_exports, {
   Error: () => Error2,
@@ -217,7 +217,7 @@ function SaveFile(options) {
   return dialog(DialogSaveFile, options);
 }
 
-// desktop/@wailsio/runtime/src/events.ts
+// desktop/@gailsio/runtime/src/events.ts
 var events_exports = {};
 __export(events_exports, {
   Emit: () => Emit,
@@ -230,7 +230,7 @@ __export(events_exports, {
   WailsEvent: () => WailsEvent
 });
 
-// desktop/@wailsio/runtime/src/listener.ts
+// desktop/@gailsio/runtime/src/listener.ts
 var eventListeners = /* @__PURE__ */ new Map();
 var Listener = class {
   constructor(eventName, callback, maxCallbacks) {
@@ -262,7 +262,7 @@ function listenerOff(listener) {
   }
 }
 
-// desktop/@wailsio/runtime/src/create.ts
+// desktop/@gailsio/runtime/src/create.ts
 var create_exports = {};
 __export(create_exports, {
   Any: () => Any,
@@ -335,7 +335,7 @@ function Struct(createField) {
 }
 var Events = {};
 
-// desktop/@wailsio/runtime/src/event_types.ts
+// desktop/@gailsio/runtime/src/event_types.ts
 var Types = Object.freeze({
   Windows: Object.freeze({
     APMPowerSettingChange: "windows:APMPowerSettingChange",
@@ -592,7 +592,7 @@ var Types = Object.freeze({
   })
 });
 
-// desktop/@wailsio/runtime/src/events.ts
+// desktop/@gailsio/runtime/src/events.ts
 window._gails = window._gails || {};
 window._gails.dispatchGailsEvent = dispatchGailsEvent;
 var call3 = newRuntimeCaller(objectNames.Events);
@@ -608,14 +608,14 @@ function dispatchGailsEvent(event) {
   if (!listeners) {
     return;
   }
-  let wailsEvent = new WailsEvent(
+  let gailsEvent = new WailsEvent(
     event.name,
     event.name in Events ? Events[event.name](event.data) : event.data
   );
   if ("sender" in event) {
-    wailsEvent.sender = event.sender;
+    gailsEvent.sender = event.sender;
   }
-  listeners = listeners.filter((listener) => !listener.dispatch(wailsEvent));
+  listeners = listeners.filter((listener) => !listener.dispatch(gailsEvent));
   if (listeners.length === 0) {
     eventListeners.delete(event.name);
   } else {
@@ -645,10 +645,10 @@ function Emit(name, data) {
   return call3(EmitMethod, new WailsEvent(name, data));
 }
 
-// desktop/@wailsio/runtime/src/utils.ts
+// desktop/@gailsio/runtime/src/utils.ts
 function debugLog(message) {
   console.log(
-    "%c wails3 %c " + message + " ",
+    "%c gails %c " + message + " ",
     "background: #aa0000; color: #fff; border-radius: 3px 0px 0px 3px; padding: 1px; font-size: 0.7rem",
     "background: #009900; color: #fff; border-radius: 0px 3px 3px 0px; padding: 1px; font-size: 0.7rem"
   );
@@ -691,7 +691,7 @@ function whenReady(callback) {
   }
 }
 
-// desktop/@wailsio/runtime/src/window.ts
+// desktop/@gailsio/runtime/src/window.ts
 var DROP_TARGET_ATTRIBUTE = "data-file-drop-target";
 var DROP_TARGET_ACTIVE_CLASS = "file-drop-target-active";
 var currentDropTarget = null;
@@ -1354,7 +1354,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 }
 var window_default = thisWindow;
 
-// desktop/@wailsio/runtime/src/wml.ts
+// desktop/@gailsio/runtime/src/wml.ts
 function sendEvent(eventName, data = null) {
   Emit(eventName, data);
 }
@@ -1488,13 +1488,13 @@ function Reload() {
 }
 
 // desktop/compiled/main.js
-window.wails = index_exports;
+window.gails = index_exports;
 Enable();
 if (true) {
   debugLog("Wails Runtime Loaded");
 }
 
-// desktop/@wailsio/runtime/src/system.ts
+// desktop/@gailsio/runtime/src/system.ts
 var system_exports = {};
 __export(system_exports, {
   Capabilities: () => Capabilities,
@@ -1520,13 +1520,13 @@ var _invoke = (function() {
       return window.chrome.webview.postMessage.bind(window.chrome.webview);
     } else if ((_e = (_d = (_c = window.webkit) == null ? void 0 : _c.messageHandlers) == null ? void 0 : _d["external"]) == null ? void 0 : _e.postMessage) {
       return window.webkit.messageHandlers["external"].postMessage.bind(window.webkit.messageHandlers["external"]);
-    } else if ((_f = window.wails) == null ? void 0 : _f.invoke) {
-      return (msg) => window.wails.invoke(typeof msg === "string" ? msg : JSON.stringify(msg));
+    } else if ((_f = window.gails) == null ? void 0 : _f.invoke) {
+      return (msg) => window.gails.invoke(typeof msg === "string" ? msg : JSON.stringify(msg));
     }
   } catch (e) {
   }
   console.warn(
-    "\n%c\u26A0\uFE0F Browser Environment Detected %c\n\n%cOnly UI previews are available in the browser. For full functionality, please run the application in desktop mode.\nMore information at: https://v3.wails.io/learn/build/#using-a-browser-for-development\n",
+    "\n%c\u26A0\uFE0F Browser Environment Detected %c\n\n%cOnly UI previews are available in the browser. For full functionality, please run the application in desktop mode.\nMore information at: https://v3.gails.io/learn/build/#using-a-browser-for-development\n",
     "background: #ffffff; color: #000000; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 2px solid #000000;",
     "background: transparent;",
     "color: #ffffff; font-style: italic; font-weight: bold;"
@@ -1574,7 +1574,7 @@ function IsDebug() {
   return Boolean((_b = (_a2 = window._gails) == null ? void 0 : _a2.environment) == null ? void 0 : _b.Debug);
 }
 
-// desktop/@wailsio/runtime/src/contextmenu.ts
+// desktop/@gailsio/runtime/src/contextmenu.ts
 window.addEventListener("contextmenu", contextMenuHandler);
 var call5 = newRuntimeCaller(objectNames.ContextMenu);
 var ContextMenuOpen = 0;
@@ -1628,7 +1628,7 @@ function processDefaultContextMenu(event, target) {
   event.preventDefault();
 }
 
-// desktop/@wailsio/runtime/src/flags.ts
+// desktop/@gailsio/runtime/src/flags.ts
 var flags_exports = {};
 __export(flags_exports, {
   GetFlag: () => GetFlag
@@ -1641,7 +1641,7 @@ function GetFlag(key) {
   }
 }
 
-// desktop/@wailsio/runtime/src/drag.ts
+// desktop/@gailsio/runtime/src/drag.ts
 var canDrag = false;
 var dragging = false;
 var resizable = false;
@@ -1760,7 +1760,7 @@ function primaryDown(event) {
   }
   const target = eventTarget(event);
   const style = window.getComputedStyle(target);
-  canDrag = style.getPropertyValue("--wails-draggable").trim() === "drag" && (event.offsetX - parseFloat(style.paddingLeft) < target.clientWidth && event.offsetY - parseFloat(style.paddingTop) < target.clientHeight);
+  canDrag = style.getPropertyValue("--gails-draggable").trim() === "drag" && (event.offsetX - parseFloat(style.paddingLeft) < target.clientWidth && event.offsetY - parseFloat(style.paddingTop) < target.clientHeight);
 }
 function primaryUp(event) {
   canDrag = false;
@@ -1831,7 +1831,7 @@ function onMouseMove(event) {
   else setResize();
 }
 
-// desktop/@wailsio/runtime/src/application.ts
+// desktop/@gailsio/runtime/src/application.ts
 var application_exports = {};
 __export(application_exports, {
   Hide: () => Hide,
@@ -1852,7 +1852,7 @@ function Quit() {
   return call6(QuitMethod);
 }
 
-// desktop/@wailsio/runtime/src/calls.ts
+// desktop/@gailsio/runtime/src/calls.ts
 var calls_exports = {};
 __export(calls_exports, {
   ByID: () => ByID,
@@ -1861,7 +1861,7 @@ __export(calls_exports, {
   RuntimeError: () => RuntimeError
 });
 
-// desktop/@wailsio/runtime/src/callable.ts
+// desktop/@gailsio/runtime/src/callable.ts
 var fnToStr = Function.prototype.toString;
 var reflectApply = typeof Reflect === "object" && Reflect !== null && Reflect.apply;
 var badArrayLike;
@@ -1976,7 +1976,7 @@ function isCallableNoRefApply(value) {
 }
 var callable_default = reflectApply ? isCallableRefApply : isCallableNoRefApply;
 
-// desktop/@wailsio/runtime/src/cancellable.ts
+// desktop/@gailsio/runtime/src/cancellable.ts
 var CancelError = class extends Error {
   /**
    * Constructs a new `CancelError` instance.
@@ -2655,7 +2655,7 @@ if (promiseWithResolvers && typeof promiseWithResolvers === "function") {
   };
 }
 
-// desktop/@wailsio/runtime/src/calls.ts
+// desktop/@gailsio/runtime/src/calls.ts
 window._gails = window._gails || {};
 var call7 = newRuntimeCaller(objectNames.Call);
 var cancelCall = newRuntimeCaller(objectNames.CancelCall);
@@ -2717,7 +2717,7 @@ function ByID(methodID, ...args) {
   return Call({ methodID, args });
 }
 
-// desktop/@wailsio/runtime/src/clipboard.ts
+// desktop/@gailsio/runtime/src/clipboard.ts
 var clipboard_exports = {};
 __export(clipboard_exports, {
   SetText: () => SetText,
@@ -2733,7 +2733,7 @@ function Text() {
   return call8(ClipboardText);
 }
 
-// desktop/@wailsio/runtime/src/screens.ts
+// desktop/@gailsio/runtime/src/screens.ts
 var screens_exports = {};
 __export(screens_exports, {
   GetAll: () => GetAll,
@@ -2764,7 +2764,7 @@ function GetByIndex(index) {
   return call9(getByIndex, { index });
 }
 
-// desktop/@wailsio/runtime/src/ios.ts
+// desktop/@gailsio/runtime/src/ios.ts
 var ios_exports = {};
 __export(ios_exports, {
   Device: () => Device,
@@ -2788,7 +2788,7 @@ var Device;
   Device2.Info = Info2;
 })(Device || (Device = {}));
 
-// desktop/@wailsio/runtime/src/updater.ts
+// desktop/@gailsio/runtime/src/updater.ts
 var updater_exports = {};
 __export(updater_exports, {
   Events: () => Events2
@@ -2837,7 +2837,7 @@ var Events2 = Object.freeze({
   })
 });
 
-// desktop/@wailsio/runtime/src/index.ts
+// desktop/@gailsio/runtime/src/index.ts
 window._gails = window._gails || {};
 window._gails.invoke = invoke;
 window._gails.clientId = clientId;
@@ -2859,7 +2859,7 @@ function loadOptionalScript(url) {
   }).catch(() => {
   });
 }
-loadOptionalScript("/wails/custom.js");
+loadOptionalScript("/gails/custom.js");
 export {
   application_exports as Application,
   browser_exports as Browser,

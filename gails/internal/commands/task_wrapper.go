@@ -42,7 +42,7 @@ func SignWrapper(_ *flags.SignWrapper, otherArgs []string) error {
 }
 
 func wrapTask(action string, otherArgs []string) error {
-	// Match the banner other gails3 commands print; the footer is restored by
+	// Match the banner other gails commands print; the footer is restored by
 	// leaving DisableFooter at its default so printFooter runs on exit.
 	term.Header(title(action))
 
@@ -79,7 +79,7 @@ func wrapTask(action string, otherArgs []string) error {
 		return runWakeTask(action, taskName, goos, goarch, remainingArgs)
 	}
 
-	newArgs := []string{"gails3", "task", taskName}
+	newArgs := []string{"gails", "task", taskName}
 	newArgs = append(newArgs, remainingArgs...)
 	os.Args = newArgs
 	return runTaskFunc(&RunTaskOptions{Name: taskName}, remainingArgs)

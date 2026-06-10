@@ -34,7 +34,7 @@ func TestCheckAndInstall_BuiltinWindow_OpensClosesOnSuccess(t *testing.T) {
 	if opts.Title == "" || opts.Width == 0 || opts.Height == 0 {
 		t.Errorf("default window options missing defaults: %+v", opts)
 	}
-	if !strings.Contains(opts.InitialHTML, "wails-updater") {
+	if !strings.Contains(opts.InitialHTML, "gails-updater") {
 		t.Errorf("default HTML doesn't contain expected marker class")
 	}
 	if host.window == nil {
@@ -147,7 +147,7 @@ func TestCheckAndInstall_BuiltinWindow_AppendsCSS(t *testing.T) {
 	host.mu.Lock()
 	defer host.mu.Unlock()
 	html := host.openCalls[0].InitialHTML
-	if !strings.Contains(html, "wails-updater") {
+	if !strings.Contains(html, "gails-updater") {
 		t.Errorf("default template lost when only CSS overridden")
 	}
 	if !strings.Contains(html, "background: red") {

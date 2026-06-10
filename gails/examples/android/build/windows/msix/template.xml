@@ -25,7 +25,7 @@
         </Capabilities>
         <Applications>
             <Application
-                Id="com.wails.ios"
+                Id="com.gails.ios"
                 Description="My Product Description"
                 DisplayName="My Product"
                 ExecutableName="ios"

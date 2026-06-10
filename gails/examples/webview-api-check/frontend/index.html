@@ -340,7 +340,7 @@
         async function init() {
             // Get platform info from Go backend
             try {
-                platformInfo = await wails.Call.APICheckService.GetPlatformInfo();
+                platformInfo = await gails.Call.APICheckService.GetPlatformInfo();
                 document.getElementById('osInfo').textContent = platformInfo.os;
                 document.getElementById('archInfo').textContent = platformInfo.arch;
                 document.getElementById('webviewInfo').textContent =
@@ -493,7 +493,7 @@
             };
 
             try {
-                await wails.Call.APICheckService.SaveReport(report);
+                await gails.Call.APICheckService.SaveReport(report);
                 if (!silent) alert('Report saved successfully!');
                 console.log('Report saved successfully');
             } catch (e) {
@@ -514,7 +514,7 @@
             const params = new URLSearchParams(window.location.search);
             if (params.has('autorun')) {
                 console.log('Auto-run mode enabled');
-                // Wait a bit for wails bindings to be fully ready
+                // Wait a bit for gails bindings to be fully ready
                 await new Promise(r => setTimeout(r, 500));
                 await runAllTests();
                 await exportReport(true); // silent mode
@@ -522,7 +522,7 @@
                 await new Promise(r => setTimeout(r, 500));
                 // Quit the app after saving
                 try {
-                    await wails.Call.APICheckService.Quit();
+                    await gails.Call.APICheckService.Quit();
                 } catch (e) {
                     console.log('App will close');
                 }

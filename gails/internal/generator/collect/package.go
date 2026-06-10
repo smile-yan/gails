@@ -159,7 +159,7 @@ func (info *PackageInfo) Collect() *PackageInfo {
 			pos := info.Fset.Position(file.Pos())
 			if !pos.IsValid() {
 				collector.logger.Errorf(
-					"package %s: found AST file with unknown path: `wails:include` directives from that file will be ignored",
+					"package %s: found AST file with unknown path: `gails:include` directives from that file will be ignored",
 					info.Path,
 				)
 			}
@@ -176,7 +176,7 @@ func (info *PackageInfo) Collect() *PackageInfo {
 					line, cond, err := ParseCondition(ParseDirective(comment.Text, "inject"))
 					if err != nil {
 						collector.logger.Errorf(
-							"%s: in `wails:inject` directive: %v",
+							"%s: in `gails:inject` directive: %v",
 							info.Fset.Position(comment.Pos()),
 							err,
 						)
@@ -195,7 +195,7 @@ func (info *PackageInfo) Collect() *PackageInfo {
 					pattern, cond, err := ParseCondition(ParseDirective(comment.Text, "include"))
 					if err != nil {
 						collector.logger.Errorf(
-							"%s: in `wails:include` directive: %v",
+							"%s: in `gails:include` directive: %v",
 							info.Fset.Position(comment.Pos()),
 							err,
 						)
@@ -210,7 +210,7 @@ func (info *PackageInfo) Collect() *PackageInfo {
 					paths, err := filepath.Glob(filepath.Join(dir, pattern))
 					if err != nil {
 						collector.logger.Errorf(
-							"%s: invalid pattern '%s' in `wails:include` directive: %v",
+							"%s: invalid pattern '%s' in `gails:include` directive: %v",
 							info.Fset.Position(comment.Pos()),
 							pattern,
 							err,
@@ -218,7 +218,7 @@ func (info *PackageInfo) Collect() *PackageInfo {
 						continue
 					} else if len(paths) == 0 {
 						collector.logger.Warningf(
-							"%s: pattern '%s' in `wails:include` directive matched no files",
+							"%s: pattern '%s' in `gails:include` directive matched no files",
 							info.Fset.Position(comment.Pos()),
 							pattern,
 						)

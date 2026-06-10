@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wails Headless Example</title>
-    <script type="module" src="/wails/runtime.js"></script>
+    <script type="module" src="/gails/runtime.js"></script>
     <style>
         * {
             margin: 0;
@@ -140,7 +140,7 @@
             try {
                 // Call the Go service method via Wails bindings
                 // The binding ID is generated from the FQN: main.GreetService.Greet
-                const response = await wails.Call.ByName('main.GreetService.Greet', name);
+                const response = await gails.Call.ByName('main.GreetService.Greet', name);
                 result.textContent = response;
                 result.className = 'success';
             } catch (err) {
@@ -159,7 +159,7 @@
         // Broadcast an event to all connected clients (via the server)
         window.broadcast = async function() {
             try {
-                await wails.Events.Emit('broadcast', { message: 'Hello from browser!', time: new Date().toISOString() });
+                await gails.Events.Emit('broadcast', { message: 'Hello from browser!', time: new Date().toISOString() });
             } catch (err) {
                 console.error('Failed to broadcast:', err);
             }
@@ -167,10 +167,10 @@
 
         // Set up event handling for server-side events via WebSocket
         // The custom.js (loaded by runtime.js) sets up the WebSocket connection
-        // and calls window._wails.dispatchWailsEvent for each event
-        const origDispatch = window._wails?.dispatchWailsEvent;
-        window._wails = window._wails || {};
-        window._wails.dispatchWailsEvent = function(event) {
+        // and calls window._gails.dispatchWailsEvent for each event
+        const origDispatch = window._gails?.dispatchWailsEvent;
+        window._gails = window._gails || {};
+        window._gails.dispatchWailsEvent = function(event) {
             // Log the event in the UI
             const eventLog = document.getElementById('event-log');
             if (eventLog) {
@@ -180,7 +180,7 @@
                 eventLog.insertBefore(div, eventLog.firstChild); // Newest first
             }
             // Call original handler if it exists
-            if (origDispatch) origDispatch.call(window._wails, event);
+            if (origDispatch) origDispatch.call(window._gails, event);
         };
     </script>
 </body>

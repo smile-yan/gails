@@ -18,8 +18,8 @@ func setupTestEnvironment(t *testing.T) (cleanup func(), projectRoot string) {
 	// Create a temporary directory for testing
 	tmpDir := t.TempDir()
 
-	// Create the wails project structure within temp directory
-	projectRoot = filepath.Join(tmpDir, "wails")
+	// Create the gails project structure within temp directory
+	projectRoot = filepath.Join(tmpDir, "gails")
 	v3Dir := filepath.Join(projectRoot, "v3")
 	releaseDir := filepath.Join(v3Dir, "tasks", "release")
 

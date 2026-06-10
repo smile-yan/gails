@@ -6,7 +6,7 @@ $GITHUB_USERNAME = "your-username"
 
 # Get the latest 10 open issues that aren't assigned and aren't labeled as "awaiting feedback"
 Write-Host "Fetching recent unprocessed issues..."
-gh issue list --repo wailsapp/wails --limit 10 --json number,title,labels,assignees | Out-File -Encoding utf8 -FilePath "issues_temp.json"
+gh issue list --repo gailsapp/gails --limit 10 --json number,title,labels,assignees | Out-File -Encoding utf8 -FilePath "issues_temp.json"
 $issues = Get-Content -Raw -Path "issues_temp.json" | ConvertFrom-Json
 $newIssues = $issues | Where-Object { 
     $_.assignees.Count -eq 0 -and 
@@ -43,45 +43,45 @@ foreach ($issue in $newIssues) {
         
         switch ($action) {
             "v" {
-                gh issue view $number --repo wailsapp/wails --web
+                gh issue view $number --repo gailsapp/gails --web
             }
             "2" {
                 Write-Host "Adding v2-only label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "v2-only"
+                gh issue edit $number --repo gailsapp/gails --add-label "v2-only"
             }
             "3" {
                 Write-Host "Adding v3-alpha label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "v3-alpha"
+                gh issue edit $number --repo gailsapp/gails --add-label "v3-alpha"
             }
             "b" {
                 Write-Host "Adding bug label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "Bug"
+                gh issue edit $number --repo gailsapp/gails --add-label "Bug"
             }
             "e" {
                 Write-Host "Adding enhancement label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "Enhancement"
+                gh issue edit $number --repo gailsapp/gails --add-label "Enhancement"
             }
             "d" {
                 Write-Host "Adding documentation label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "Documentation"
+                gh issue edit $number --repo gailsapp/gails --add-label "Documentation"
             }
             "w" {
                 Write-Host "Adding webview2 label..."
-                gh issue edit $number --repo wailsapp/wails --add-label "webview2"
+                gh issue edit $number --repo gailsapp/gails --add-label "webview2"
             }
             "f" {
                 Write-Host "Requesting more info..."
-                gh issue comment $number --repo wailsapp/wails --body "Thank you for reporting this issue. Could you please provide additional information to help us investigate?`n`n- [Specific details needed]`n`nThis will help us address your issue more effectively."
-                gh issue edit $number --repo wailsapp/wails --add-label "awaiting feedback"
+                gh issue comment $number --repo gailsapp/gails --body "Thank you for reporting this issue. Could you please provide additional information to help us investigate?`n`n- [Specific details needed]`n`nThis will help us address your issue more effectively."
+                gh issue edit $number --repo gailsapp/gails --add-label "awaiting feedback"
             }
             "c" {
                 $reason = Read-Host "Reason for closing (duplicate/invalid/etc)"
-                gh issue comment $number --repo wailsapp/wails --body "Closing this issue: $reason"
-                gh issue close $number --repo wailsapp/wails
+                gh issue comment $number --repo gailsapp/gails --body "Closing this issue: $reason"
+                gh issue close $number --repo gailsapp/gails
             }
             "a" {
                 Write-Host "Assigning to yourself..."
-                gh issue edit $number --repo wailsapp/wails --add-assignee "$GITHUB_USERNAME"
+                gh issue edit $number --repo gailsapp/gails --add-assignee "$GITHUB_USERNAME"
             }
             "s" {
                 Write-Host "Skipping to next issue..."

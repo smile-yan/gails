@@ -31,11 +31,11 @@ tasks:
       - mkdir -p {{.TEMPLATE_DIR}}
 
   install:
-    dir: cmd/gails3
+    dir: cmd/gails
     silent: true
     cmds:
       - go install
-      - echo "Installed wails CLI"
+      - echo "Installed gails CLI"
 
   release:
     summary: Release a new version of Wails. Call with `task v3:release -- <version>`
@@ -48,12 +48,12 @@ tasks:
       - go get -u github.com/go-task/task/v3
 
   reinstall-cli:
-    dir: cmd/gails3
+    dir: cmd/gails
     internal: true
     silent: true
     cmds:
       - go install
-      - echo "Reinstalled wails CLI"
+      - echo "Reinstalled gails CLI"
 
   generate:events:
     dir: tasks/events
@@ -115,47 +115,47 @@ tasks:
     summary: Build a single example for Linux ARM64 using Docker (Ubuntu 24.04)
     cmds:
       - echo "Building example {{.DIR}} for Linux ARM64 using Docker"
-      - docker build --pull -f test/docker/Dockerfile.linux-arm64 -t wails-v3-linux-arm64 .
-      - docker run --rm wails-v3-linux-arm64 /build/build-linux-arm64.sh {{.DIR}}
+      - docker build --pull -f test/docker/Dockerfile.linux-arm64 -t gails-v3-linux-arm64 .
+      - docker run --rm gails-v3-linux-arm64 /build/build-linux-arm64.sh {{.DIR}}
 
   test:example:linux:docker:x86_64:
     summary: Build a single example for Linux x86_64 using Docker (Ubuntu 24.04)
     cmds:
       - echo "Building example {{.DIR}} for Linux x86_64 using Docker"
-      - docker build --pull -f test/docker/Dockerfile.linux-x86_64 -t wails-v3-linux-x86_64 .
-      - docker run --rm wails-v3-linux-x86_64 /build/build-linux-x86_64.sh {{.DIR}}
+      - docker build --pull -f test/docker/Dockerfile.linux-x86_64 -t gails-v3-linux-x86_64 .
+      - docker run --rm gails-v3-linux-x86_64 /build/build-linux-x86_64.sh {{.DIR}}
 
   test:examples:linux:docker:arm64:
     summary: Build all examples for Linux ARM64 using Docker (Ubuntu 24.04, GTK4)
     cmds:
       - echo "Building Docker image for Linux ARM64 compilation..."
-      - docker build --pull -f test/docker/Dockerfile.linux-arm64 -t wails-v3-linux-arm64 .
+      - docker build --pull -f test/docker/Dockerfile.linux-arm64 -t gails-v3-linux-arm64 .
       - echo "Running Linux ARM64 compilation in Docker container (GTK4)..."
-      - docker run --rm wails-v3-linux-arm64
+      - docker run --rm gails-v3-linux-arm64
 
   test:examples:linux:docker:x86_64:
     summary: Build all examples for Linux x86_64 using Docker (Ubuntu 24.04, GTK4)
     cmds:
       - echo "Building Docker image for Linux x86_64 compilation..."
-      - docker build --pull -f test/docker/Dockerfile.linux-x86_64 -t wails-v3-linux-x86_64 .
+      - docker build --pull -f test/docker/Dockerfile.linux-x86_64 -t gails-v3-linux-x86_64 .
       - echo "Running Linux x86_64 compilation in Docker container (GTK4)..."
-      - docker run --rm wails-v3-linux-x86_64
+      - docker run --rm gails-v3-linux-x86_64
 
   test:examples:linux:docker:x86_64:gtk3:
     summary: Build all examples for Linux x86_64 using Docker with GTK3 (legacy)
     cmds:
       - echo "Building Docker image for Linux x86_64 compilation..."
-      - docker build --pull -f test/docker/Dockerfile.linux-x86_64 -t wails-v3-linux-x86_64 .
+      - docker build --pull -f test/docker/Dockerfile.linux-x86_64 -t gails-v3-linux-x86_64 .
       - echo "Running Linux x86_64 compilation in Docker container (GTK3 legacy)..."
-      - docker run --rm -e BUILD_TAGS=gtk3 wails-v3-linux-x86_64
+      - docker run --rm -e BUILD_TAGS=gtk3 gails-v3-linux-x86_64
 
   test:examples:linux:docker:arm64:gtk3:
     summary: Build all examples for Linux ARM64 using Docker with GTK3 (legacy)
     cmds:
       - echo "Building Docker image for Linux ARM64 compilation..."
-      - docker build --pull -f test/docker/Dockerfile.linux-arm64 -t wails-v3-linux-arm64 .
+      - docker build --pull -f test/docker/Dockerfile.linux-arm64 -t gails-v3-linux-arm64 .
       - echo "Running Linux ARM64 compilation in Docker container (GTK3 legacy)..."
-      - docker run --rm -e BUILD_TAGS=gtk3 wails-v3-linux-arm64
+      - docker run --rm -e BUILD_TAGS=gtk3 gails-v3-linux-arm64
 
   test:example:linux:docker:
     summary: Build a single example for Linux using Docker (auto-detect architecture)
@@ -281,12 +281,12 @@ tasks:
       - echo "Testing template generation (core templates)..."
       - task: install
       - echo "Testing lit template generation..."
-      - rm -rf ./test-template-lit && gails3 init -n test-template-lit -t lit
+      - rm -rf ./test-template-lit && gails init -n test-template-lit -t lit
       - mkdir -p ./test-template-lit/frontend/dist && touch ./test-template-lit/frontend/dist/.keep
       - cd ./test-template-lit && go mod tidy && go build
       - rm -rf ./test-template-lit
       - echo "Testing react template generation..."
-      - rm -rf ./test-template-react && gails3 init -n test-template-react -t react
+      - rm -rf ./test-template-react && gails init -n test-template-react -t react
       - mkdir -p ./test-template-react/frontend/dist && touch ./test-template-react/frontend/dist/.keep
       - cd ./test-template-react && go mod tidy && go build
       - rm -rf ./test-template-react

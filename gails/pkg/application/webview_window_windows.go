@@ -305,7 +305,7 @@ func (w *windowsWebviewWindow) setURL(url string) {
 
 func (w *windowsWebviewWindow) setResizable(resizable bool) {
 	w.setStyle(resizable, w32.WS_THICKFRAME)
-	w.execJS(fmt.Sprintf("window._wails.setResizable(%v);", resizable))
+	w.execJS(fmt.Sprintf("window._gails.setResizable(%v);", resizable))
 }
 
 func (w *windowsWebviewWindow) setMinSize(width, height int) {
@@ -2018,7 +2018,7 @@ func (w *windowsWebviewWindow) processRequest(
 	if reqUri.Scheme != "http" {
 		// Let the WebView2 handle the request with its default handler
 		return
-	} else if !strings.HasPrefix(reqUri.Host, "wails.localhost") {
+	} else if !strings.HasPrefix(reqUri.Host, "gails.localhost") {
 		// Let the WebView2 handle the request with its default handler
 		return
 	}
@@ -2126,7 +2126,7 @@ func (w *windowsWebviewWindow) setupChromium() {
 	//
 	// When EnableFileDrop is false:
 	// - We cannot use AllowExternalDrag(false) as it breaks HTML5 internal drag-and-drop
-	// - JS runtime checks window._wails.flags.enableFileDrop and shows "no drop" cursor
+	// - JS runtime checks window._gails.flags.enableFileDrop and shows "no drop" cursor
 	// - The enableFileDrop flag is injected in navigationCompleted callback
 
 	err = chromium.PutIsGeneralAutofillEnabled(opts.GeneralAutofillEnabled)
@@ -2256,7 +2256,7 @@ func (w *windowsWebviewWindow) navigationCompleted(
 
 	// Set the EnableFileDrop flag for this window (Windows-specific)
 	// The JS runtime checks this before processing file drops
-	w.execJS(fmt.Sprintf("window._wails.flags.enableFileDrop = %v;", w.parent.options.EnableFileDrop))
+	w.execJS(fmt.Sprintf("window._gails.flags.enableFileDrop = %v;", w.parent.options.EnableFileDrop))
 
 	// EmitEvent DomReady ApplicationEvent
 	windowEvents <- &windowEvent{EventID: uint(events.Windows.WebViewNavigationCompleted), WindowID: w.parent.id}

@@ -9,7 +9,7 @@
 
 console.log("[WebSocket Transport] Loading VERSION 5 - simplified");
 
-import { clientId } from "/wails/runtime.js";
+import { clientId } from "/gails/runtime.js";
 
 /**
  * Generate a unique ID (simplified nanoid implementation)
@@ -235,7 +235,7 @@ export class WebSocketTransport {
 /**
  * Create and configure a WebSocket transport
  *
- * @param url - WebSocket URL (e.g., 'ws://localhost:9099/wails/ws')
+ * @param url - WebSocket URL (e.g., 'ws://localhost:9099/gails/ws')
  * @param options - Optional configuration
  * @returns WebSocketTransport instance
  */
@@ -245,7 +245,7 @@ export async function createWebSocketTransport(url, options = {}) {
   return transport;
 }
 
-const wsTransport = await createWebSocketTransport("ws://localhost:9099/wails/ws", {
+const wsTransport = await createWebSocketTransport("ws://localhost:9099/gails/ws", {
   reconnectDelay: 2000,
   requestTimeout: 30000
 });

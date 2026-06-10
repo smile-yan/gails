@@ -56,13 +56,13 @@ type RuntimeRequest struct {
 	// Args contains the method arguments
 	Args *Args `json:"args"`
 
-	// WebviewWindowName identifies the source window by name (optional, sent via header x-wails-window-name)
+	// WebviewWindowName identifies the source window by name (optional, sent via header x-gails-window-name)
 	WebviewWindowName string `json:"webviewWindowName,omitempty"`
 
-	// WebviewWindowID identifies the source window (optional, sent via header x-wails-window-id)
+	// WebviewWindowID identifies the source window (optional, sent via header x-gails-window-id)
 	WebviewWindowID uint32 `json:"webviewWindowId,omitempty"`
 
-	// ClientID identifies the frontend client (sent via header x-wails-client-id)
+	// ClientID identifies the frontend client (sent via header x-gails-client-id)
 	ClientID string `json:"clientId,omitempty"`
 }
 

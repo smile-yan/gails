@@ -22,7 +22,7 @@ type PlatformInfo struct {
 	OS          string `json:"os"`
 	Arch        string `json:"arch"`
 	GoVersion   string `json:"goVersion"`
-	GailsInfo   string `json:"wailsInfo"`
+	GailsInfo   string `json:"gailsInfo"`
 	WebViewInfo string `json:"webViewInfo"`
 	GTKVersion  string `json:"gtkVersion,omitempty"`
 	Timestamp   string `json:"timestamp"`

@@ -39,7 +39,7 @@ extern unsigned int nextWindowID;
 
 // C-callable bridge used by Go
 unsigned int ios_create_webview(void);
-void* ios_create_webview_with_id(unsigned int wailsID);
+void* ios_create_webview_with_id(unsigned int gailsID);
 void ios_execute_javascript(unsigned int windowID, const char* js);
 void ios_window_exec_js(void* viewController, const char* js);
 void ios_window_load_url(void* viewController, const char* url);

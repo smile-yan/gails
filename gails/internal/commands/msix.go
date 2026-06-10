@@ -221,7 +221,7 @@ func validateMSIXOptions(options *MSIXOptions) error {
 // createMSIXWithPackagingTool creates an MSIX package using the Microsoft MSIX Packaging Tool
 func createMSIXWithPackagingTool(options *MSIXOptions) error {
 	// Create a temporary directory for the template
-	tempDir, err := os.MkdirTemp("", "wails-msix-")
+	tempDir, err := os.MkdirTemp("", "gails-msix-")
 	if err != nil {
 		return fmt.Errorf("error creating temporary directory: %w", err)
 	}
@@ -256,7 +256,7 @@ func createMSIXWithPackagingTool(options *MSIXOptions) error {
 // createMSIXWithMakeAppx creates an MSIX package using MakeAppx.exe
 func createMSIXWithMakeAppx(options *MSIXOptions) error {
 	// Create a temporary directory for the package structure
-	tempDir, err := os.MkdirTemp("", "wails-msix-")
+	tempDir, err := os.MkdirTemp("", "gails-msix-")
 	if err != nil {
 		return fmt.Errorf("error creating temporary directory: %w", err)
 	}

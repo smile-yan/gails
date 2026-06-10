@@ -40,18 +40,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-runtime-${{ hashFiles('v3/internal/runtime/desktop/@wailsio/runtime/package-lock.json') }}
+          key: ${{ runner.os }}-npm-runtime-${{ hashFiles('v3/internal/runtime/desktop/@gailsio/runtime/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-runtime-
 
       - name: Install dependencies
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: |
           npm ci
           npx --yes esbuild@latest --version
 
       - name: Clean build artifacts
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: npm run clean
 
       - name: Type-check runtime
@@ -67,11 +67,11 @@ jobs:
         run: task runtime:build
 
       - name: Check that the npm package builds
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: npm run build
 
       - name: Pack runtime for template tests
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: npm pack
 
       - name: Store runtime build artifacts
@@ -79,15 +79,15 @@ jobs:
         with:
           name: runtime-build-artifacts
           path: |
-            v3/internal/runtime/desktop/@wailsio/runtime/dist/
-            v3/internal/runtime/desktop/@wailsio/runtime/types/
-            v3/internal/runtime/desktop/@wailsio/runtime/tsconfig.tsbuildinfo
+            v3/internal/runtime/desktop/@gailsio/runtime/dist/
+            v3/internal/runtime/desktop/@gailsio/runtime/types/
+            v3/internal/runtime/desktop/@gailsio/runtime/tsconfig.tsbuildinfo
 
       - name: Store runtime package
         uses: actions/upload-artifact@v4
         with:
           name: runtime-package
-          path: v3/internal/runtime/desktop/@wailsio/runtime/*.tgz
+          path: v3/internal/runtime/desktop/@gailsio/runtime/*.tgz
 
   test_go:
     name: Run Go Tests v3
@@ -138,7 +138,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: runtime-build-artifacts
-          path: v3/internal/runtime/desktop/@wailsio/runtime/
+          path: v3/internal/runtime/desktop/@gailsio/runtime/
 
       - name: Build Examples (GTK4 default)
         working-directory: v3
@@ -255,31 +255,31 @@ jobs:
         working-directory: v3
         run: |
           task install
-          wails3 doctor
+          gails doctor
 
       - name: Download runtime package
         uses: actions/download-artifact@v4
         with:
           name: runtime-package
-          path: wails-runtime-temp
+          path: gails-runtime-temp
 
       - name: Generate template '${{ matrix.template }}' (GTK4 default)
         shell: bash
         run: |
           # Get absolute path - use pwd -W on Windows for native paths, pwd elsewhere
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            RUNTIME_TGZ="$(cd wails-runtime-temp && pwd -W)/$(ls wails-runtime-temp/*.tgz | xargs basename)"
+            RUNTIME_TGZ="$(cd gails-runtime-temp && pwd -W)/$(ls gails-runtime-temp/*.tgz | xargs basename)"
           else
-            RUNTIME_TGZ="$(cd wails-runtime-temp && pwd)/$(ls wails-runtime-temp/*.tgz | xargs basename)"
+            RUNTIME_TGZ="$(cd gails-runtime-temp && pwd)/$(ls gails-runtime-temp/*.tgz | xargs basename)"
           fi
           mkdir -p ./test-${{ matrix.template }}
           cd ./test-${{ matrix.template }}
-          wails3 init -n ${{ matrix.template }} -t ${{ matrix.template }}
+          gails init -n ${{ matrix.template }} -t ${{ matrix.template }}
           cd ${{ matrix.template }}/frontend
-          # Replace @wailsio/runtime version with local tarball
-          npm pkg set dependencies.@wailsio/runtime="file://$RUNTIME_TGZ"
+          # Replace @gailsio/runtime version with local tarball
+          npm pkg set dependencies.@gailsio/runtime="file://$RUNTIME_TGZ"
           cd ..
-          wails3 build
+          gails build
 
       # GTK3 legacy template builds are covered by the Go example compilation tests above.
 

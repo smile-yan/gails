@@ -2,7 +2,7 @@ on:
   push:
     branches: ['master']
     paths:
-      - 'v3/internal/runtime/desktop/@wailsio/runtime/**'
+      - 'v3/internal/runtime/desktop/@gailsio/runtime/**'
       - '.github/workflows/publish-npm.yml'
   workflow_dispatch:
 
@@ -29,8 +29,8 @@ jobs:
         uses: step-security/changed-files@3dbe17c78367e7d60f00d78ae6781a35be47b4a1 # v45.0.1
         with:
           files: |
-            v3/internal/runtime/desktop/@wailsio/runtime/package.json
-            v3/internal/runtime/desktop/@wailsio/runtime/package-lock.json
+            v3/internal/runtime/desktop/@gailsio/runtime/package.json
+            v3/internal/runtime/desktop/@gailsio/runtime/package-lock.json
 
       - name: Detect committed source changes
         if: >-
@@ -40,9 +40,9 @@ jobs:
         with:
           files: |
             v3/internal/runtime/Taskfile.yaml
-            v3/internal/runtime/desktop/@wailsio/compiled/main.js
-            v3/internal/runtime/desktop/@wailsio/runtime/tsconfig.json
-            v3/internal/runtime/desktop/@wailsio/runtime/src/**
+            v3/internal/runtime/desktop/@gailsio/compiled/main.js
+            v3/internal/runtime/desktop/@gailsio/runtime/tsconfig.json
+            v3/internal/runtime/desktop/@gailsio/runtime/src/**
             v3/pkg/events/events.txt
             v3/tasks/events/**
 
@@ -83,13 +83,13 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: |
           npm ci
           npx --yes esbuild@latest --version
 
       - name: Clean build artifacts
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: npm run clean
 
       - name: Build bundled runtime
@@ -97,26 +97,26 @@ jobs:
         run: task runtime:build
 
       - name: Test+Build npm package
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: |
           npm test
           npm run build
 
       - name: Bump version
         id: bump-version
-        working-directory: v3/internal/runtime/desktop/@wailsio/runtime
+        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
         run: |
           echo "version=$(npm --no-git-tag-version --force version prerelease)" >> "$GITHUB_OUTPUT"
 
       - name: Commit changes
         run: |
           git add .
-          git commit -m "[skip ci] Publish @wailsio/runtime ${{ steps.bump-version.outputs.version }}"
+          git commit -m "[skip ci] Publish @gailsio/runtime ${{ steps.bump-version.outputs.version }}"
           git push
 
       - name: Publish npm package
         uses: JS-DevTools/npm-publish@v3
         with:
-          package: v3/internal/runtime/desktop/@wailsio/runtime
+          package: v3/internal/runtime/desktop/@gailsio/runtime
           access: public
           token: ${{ secrets.NPM_TOKEN }}

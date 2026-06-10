@@ -5,6 +5,6 @@ Exec=testapp
 Icon=appicon
 Categories=Development;
 Terminal=false
-Keywords=wails
+Keywords=gails
 Version=1.0
 StartupNotify=false

@@ -1,5 +1,5 @@
 // Package defaults provides functionality for loading and saving global default settings
-// for Wails projects. Settings are stored in ~/.config/wails/defaults.yaml
+// for Wails projects. Settings are stored in ~/.config/gails/defaults.yaml
 package defaults
 
 import (
@@ -11,7 +11,7 @@ import (
 )
 
 // GlobalDefaults represents the user's default project settings
-// These are stored in ~/.config/wails/defaults.yaml and used when creating new projects
+// These are stored in ~/.config/gails/defaults.yaml and used when creating new projects
 type GlobalDefaults struct {
 	// Author information
 	Author AuthorDefaults `json:"author" yaml:"author"`
@@ -72,7 +72,7 @@ func GetConfigDir() (string, error) {
 		}
 		configHome = filepath.Join(homeDir, ".config")
 	}
-	return filepath.Join(configHome, "wails"), nil
+	return filepath.Join(configHome, "gails"), nil
 }
 
 // GetDefaultsPath returns the path to the defaults.yaml file

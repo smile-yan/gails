@@ -6,7 +6,7 @@ $GITHUB_USERNAME = "your-username"
 
 # Get open PRs that are ready for review
 Write-Host "Fetching PRs ready for review..."
-gh pr list --repo wailsapp/wails --json number,title,author,labels,reviewDecision,additions,deletions,baseRefName,headRefName --limit 10 | Out-File -Encoding utf8 -FilePath "prs_temp.json"
+gh pr list --repo gailsapp/gails --json number,title,author,labels,reviewDecision,additions,deletions,baseRefName,headRefName --limit 10 | Out-File -Encoding utf8 -FilePath "prs_temp.json"
 $prs = Get-Content -Raw -Path "prs_temp.json" | ConvertFrom-Json
 
 # Process each PR
@@ -55,10 +55,10 @@ foreach ($pr in $prs) {
         
         switch ($action) {
             "v" {
-                gh pr view $number --repo wailsapp/wails --web
+                gh pr view $number --repo gailsapp/gails --web
             }
             "d" {
-                gh pr diff $number --repo wailsapp/wails --web
+                gh pr diff $number --repo gailsapp/gails --web
             }
             "c" {
                 # Generate review checklist
@@ -106,18 +106,18 @@ foreach ($pr in $prs) {
             "a" {
                 $comment = Read-Host "Approval comment (blank for none)"
                 if ($comment) {
-                    gh pr review $number --repo wailsapp/wails --approve --body $comment
+                    gh pr review $number --repo gailsapp/gails --approve --body $comment
                 } else {
-                    gh pr review $number --repo wailsapp/wails --approve
+                    gh pr review $number --repo gailsapp/gails --approve
                 }
             }
             "r" {
                 $comment = Read-Host "Feedback for changes requested"
-                gh pr review $number --repo wailsapp/wails --request-changes --body $comment
+                gh pr review $number --repo gailsapp/gails --request-changes --body $comment
             }
             "m" {
                 $comment = Read-Host "Comment text"
-                gh pr comment $number --repo wailsapp/wails --body $comment
+                gh pr comment $number --repo gailsapp/gails --body $comment
             }
             "l" {
                 $labels = Read-Host "Labels to add (comma-separated)"
@@ -125,7 +125,7 @@ foreach ($pr in $prs) {
                 foreach ($label in $labelArray) {
                     $labelTrimmed = $label.Trim()
                     if ($labelTrimmed) {
-                        gh pr edit $number --repo wailsapp/wails --add-label $labelTrimmed
+                        gh pr edit $number --repo gailsapp/gails --add-label $labelTrimmed
                     }
                 }
             }

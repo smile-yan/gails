@@ -13,7 +13,7 @@ import (
 func TestParseTemplate_YAML_Valid(t *testing.T) {
 	fsys := fstest.MapFS{
 		"template.yaml": &fstest.MapFile{
-			Data: []byte("name: Test\nshortname: test\nauthor: Me\ndescription: A test\nhelpurl: https://example.com\nversion: v1.0.0\nwailsVersion: 3\n"),
+			Data: []byte("name: Test\nshortname: test\nauthor: Me\ndescription: A test\nhelpurl: https://example.com\nversion: v1.0.0\ngailsVersion: 3\n"),
 		},
 	}
 	tmpl, err := parseTemplate(fsys, "")
@@ -43,7 +43,7 @@ func TestParseTemplate_YAML_MissingWailsVersion(t *testing.T) {
 func TestParseTemplate_YAML_WrongWailsVersion(t *testing.T) {
 	fsys := fstest.MapFS{
 		"template.yaml": &fstest.MapFile{
-			Data: []byte("name: Test\nwailsVersion: 2\n"),
+			Data: []byte("name: Test\ngailsVersion: 2\n"),
 		},
 	}
 	_, err := parseTemplate(fsys, "")
@@ -103,7 +103,7 @@ func TestParseTemplate_NoFiles_Error(t *testing.T) {
 func TestParseTemplate_YAML_TakesPrecedenceOverJSON(t *testing.T) {
 	fsys := fstest.MapFS{
 		"template.yaml": &fstest.MapFile{
-			Data: []byte("name: FromYAML\nwailsVersion: 3\n"),
+			Data: []byte("name: FromYAML\ngailsVersion: 3\n"),
 		},
 		"template.json": &fstest.MapFile{
 			// This JSON has no schema — would error if parsed.
@@ -123,7 +123,7 @@ func TestParseTemplate_YAML_TakesPrecedenceOverJSON(t *testing.T) {
 func TestParseTemplate_WithSubdirPrefix(t *testing.T) {
 	fsys := fstest.MapFS{
 		"mytemplate/template.yaml": &fstest.MapFile{
-			Data: []byte("name: Sub\nwailsVersion: 3\n"),
+			Data: []byte("name: Sub\ngailsVersion: 3\n"),
 		},
 	}
 	tmpl, err := parseTemplate(fsys, "mytemplate")

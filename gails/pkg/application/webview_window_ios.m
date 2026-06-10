@@ -78,9 +78,9 @@ static NSMutableArray<NSString *> *pendingConsoleJS;
     [super viewDidLoad];
     WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
     config.suppressesIncrementalRendering = YES;
-    // Application name for UA (default to "wails.io" if not set)
+    // Application name for UA (default to "gails.io" if not set)
     const char* appNameForUA = ios_get_app_name_for_user_agent();
-    config.applicationNameForUserAgent = appNameForUA ? [NSString stringWithUTF8String:appNameForUA] : @"wails.io";
+    config.applicationNameForUserAgent = appNameForUA ? [NSString stringWithUTF8String:appNameForUA] : @"gails.io";
     // Enable JavaScript using modern API (javaScriptEnabled is deprecated)
     if (@available(iOS 14.0, *)) {
         config.defaultWebpagePreferences.allowsContentJavaScript = YES;
@@ -100,11 +100,11 @@ static NSMutableArray<NSString *> *pendingConsoleJS;
     }
     // URL scheme handler and script bridge
     self.schemeHandler = [[WailsSchemeHandler alloc] initWithWindowID:self.windowID];
-    [config setURLSchemeHandler:self.schemeHandler forURLScheme:@"wails"];
+    [config setURLSchemeHandler:self.schemeHandler forURLScheme:@"gails"];
     self.messageHandler = [[WailsMessageHandler alloc] initWithWindowID:self.windowID];
-    // Register both handler names used by runtimes: "external" (current runtime) and "wails" (legacy)
+    // Register both handler names used by runtimes: "external" (current runtime) and "gails" (legacy)
     [config.userContentController addScriptMessageHandler:self.messageHandler name:@"external"];
-    [config.userContentController addScriptMessageHandler:self.messageHandler name:@"wails"];
+    [config.userContentController addScriptMessageHandler:self.messageHandler name:@"gails"];
     self.webView = [[WailsWebView alloc] initWithFrame:self.view.bounds configuration:config];
     // Custom user agent if provided
     const char* userAgent = ios_get_user_agent();
@@ -142,7 +142,7 @@ static NSMutableArray<NSString *> *pendingConsoleJS;
     }
     [self.view addSubview:self.webView];
     // Initial load triggers our scheme handler
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"wails://localhost/"]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"gails://localhost/"]];
     [self.webView loadRequest:request];
     // Flush any pending console logs now that a webview exists
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -330,13 +330,13 @@ unsigned int ios_create_webview(void) {
     });
     return windowID;
 }
-void* ios_create_webview_with_id(unsigned int wailsID) {
+void* ios_create_webview_with_id(unsigned int gailsID) {
     __block WailsViewController *viewController = nil;
     if (!appDelegate || !appDelegate.window) {
         return NULL;
     }
     void (^createBlock)(void) = ^{
-        viewController = [[WailsViewController alloc] initWithWindowID:wailsID];
+        viewController = [[WailsViewController alloc] initWithWindowID:gailsID];
         if (!appDelegate.viewControllers) appDelegate.viewControllers = [NSMutableArray array];
         [appDelegate.viewControllers addObject:viewController];
         if (appDelegate.viewControllers.count == 1) {
@@ -382,7 +382,7 @@ void ios_window_set_html(void* viewController, const char* html) {
     WailsViewController *vc = (__bridge WailsViewController *)viewController;
     NSString *htmlString = [NSString stringWithUTF8String:html];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [vc.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"wails://localhost/"]];
+        [vc.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"gails://localhost/"]];
     });
 }
 unsigned int ios_window_get_id(void* viewController) {
@@ -406,7 +406,7 @@ void ios_console_log(const char* level, const char* message) {
     NSString *b64 = [data base64EncodedStringWithOptions:0];
     NSString *levelJS = ([lvl length] ? [NSString stringWithFormat:@"'%@'", lvl] : @"'log'");
     NSString *js = [NSString stringWithFormat:
-                    @"(function(){try{var b=atob('%@');var bytes=new Uint8Array(b.length);for(var i=0;i<b.length;i++){bytes[i]=b.charCodeAt(i);}var msg=new TextDecoder('utf-8').decode(bytes);console[%@](msg);}catch(e){console.log('wails log bridge error:'+e)}})();",
+                    @"(function(){try{var b=atob('%@');var bytes=new Uint8Array(b.length);for(var i=0;i<b.length;i++){bytes[i]=b.charCodeAt(i);}var msg=new TextDecoder('utf-8').decode(bytes);console[%@](msg);}catch(e){console.log('gails log bridge error:'+e)}})();",
                     b64, levelJS];
     dispatch_async(dispatch_get_main_queue(), ^{
         // Ensure buffer is initialised

@@ -1,13 +1,13 @@
-//wails:inject console.log("Hello everywhere!");
-//wails:inject **:console.log("Hello everywhere again!");
-//wails:inject *c:console.log("Hello Classes!");
-//wails:inject *i:console.log("Hello Interfaces!");
-//wails:inject j*:console.log("Hello JS!");
-//wails:inject jc:console.log("Hello JS Classes!");
-//wails:inject ji:console.log("Hello JS Interfaces!");
-//wails:inject t*:console.log("Hello TS!");
-//wails:inject tc:console.log("Hello TS Classes!");
-//wails:inject ti:console.log("Hello TS Interfaces!");
+//gails:inject console.log("Hello everywhere!");
+//gails:inject **:console.log("Hello everywhere again!");
+//gails:inject *c:console.log("Hello Classes!");
+//gails:inject *i:console.log("Hello Interfaces!");
+//gails:inject j*:console.log("Hello JS!");
+//gails:inject jc:console.log("Hello JS Classes!");
+//gails:inject ji:console.log("Hello JS Interfaces!");
+//gails:inject t*:console.log("Hello TS!");
+//gails:inject tc:console.log("Hello TS Classes!");
+//gails:inject ti:console.log("Hello TS Interfaces!");
 package main
 
 import (
@@ -21,22 +21,22 @@ type IgnoredType struct {
 	Field int
 }
 
-//wails:inject j*:/**
-//wails:inject j*: * @param {string} arg
-//wails:inject j*: * @returns {Promise<void>}
-//wails:inject j*: */
-//wails:inject j*:export async function CustomMethod(arg) {
-//wails:inject t*:export async function CustomMethod(arg: string): Promise<void> {
-//wails:inject     await InternalMethod("Hello " + arg + "!");
-//wails:inject }
+//gails:inject j*:/**
+//gails:inject j*: * @param {string} arg
+//gails:inject j*: * @returns {Promise<void>}
+//gails:inject j*: */
+//gails:inject j*:export async function CustomMethod(arg) {
+//gails:inject t*:export async function CustomMethod(arg: string): Promise<void> {
+//gails:inject     await InternalMethod("Hello " + arg + "!");
+//gails:inject }
 type Service struct{}
 
 func (*Service) VisibleMethod(otherpackage.Dummy) {}
 
-//wails:ignore
+//gails:ignore
 func (*Service) IgnoredMethod(IgnoredType) {}
 
-//wails:internal
+//gails:internal
 func (*Service) InternalMethod(string) {}
 
 func main() {

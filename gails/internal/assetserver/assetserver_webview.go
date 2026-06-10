@@ -153,7 +153,7 @@ func (a *AssetServer) processWebViewRequestInternal(r webview.Request) {
 	}
 
 	// iOS uses "localhost" while other platforms might use different hosts
-	// Skip host check for iOS requests from wails:// scheme
+	// Skip host check for iOS requests from gails:// scheme
 	if expectedHost := a.ExpectedWebViewHost; expectedHost != "" && expectedHost != req.Host && !strings.HasPrefix(uri, "gails://") {
 		a.webviewRequestErrorHandler(uri, rw, fmt.Errorf("expected host '%s' in request, but was '%s'", expectedHost, req.Host))
 		return

@@ -29,5 +29,5 @@ tasks:
   dev:
     summary: Runs the application in development mode
     cmds:
-      - gails3 dev -config ./build/config.yml
+      - gails dev -config ./build/config.yml
 

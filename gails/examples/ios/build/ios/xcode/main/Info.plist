@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleExecutable</key>
-    <string>wailsapp</string>
+    <string>gailsapp</string>
     <key>CFBundleIdentifier</key>
     <string>com.mycompany.myproduct</string>
     <key>CFBundleName</key>

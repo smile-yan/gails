@@ -1,4 +1,4 @@
-//wails:include stmt.js
+//gails:include stmt.js
 package sqlite
 
 import (
@@ -22,39 +22,39 @@ type Config struct {
 	DBSource string
 }
 
-//wails:inject export {
-//wails:inject     ExecContext as Execute,
-//wails:inject     QueryContext as Query
-//wails:inject };
-//wails:inject
-//wails:inject import { Stmt } from "./stmt.js";
-//wails:inject
-//wails:inject **:/**
-//wails:inject **: * Prepare creates a prepared statement for later queries or executions.
-//wails:inject **: * Multiple queries or executions may be run concurrently from the returned statement.
-//wails:inject **: *
-//wails:inject **: * The caller must call the statement's Close method when it is no longer needed.
-//wails:inject **: * Statements are closed automatically
-//wails:inject **: * when the connection they are associated with is closed.
-//wails:inject **: *
-//wails:inject **: * Prepare supports early cancellation.
-//wails:inject j*: *
-//wails:inject j*: * @param {string} query
-//wails:inject j*: * @returns {Promise<Stmt | null> & { cancel(): void }}
-//wails:inject **: */
-//wails:inject j*:export function Prepare(query) {
-//wails:inject t*:export function Prepare(query: string): Promise<Stmt | null> & { cancel(): void } {
-//wails:inject **:    const promise = PrepareContext(query);
-//wails:inject j*:    const wrapper = /** @type {any} */(promise.then(function (id) {
-//wails:inject t*:    const wrapper: any = (promise.then(function (id) {
-//wails:inject **:        return id == null ? null : new Stmt(
-//wails:inject **:            ClosePrepared.bind(null, id),
-//wails:inject **:            ExecPrepared.bind(null, id),
-//wails:inject **:            QueryPrepared.bind(null, id));
-//wails:inject **:    }));
-//wails:inject **:    wrapper.cancel = promise.cancel;
-//wails:inject **:    return wrapper;
-//wails:inject **:}
+//gails:inject export {
+//gails:inject     ExecContext as Execute,
+//gails:inject     QueryContext as Query
+//gails:inject };
+//gails:inject
+//gails:inject import { Stmt } from "./stmt.js";
+//gails:inject
+//gails:inject **:/**
+//gails:inject **: * Prepare creates a prepared statement for later queries or executions.
+//gails:inject **: * Multiple queries or executions may be run concurrently from the returned statement.
+//gails:inject **: *
+//gails:inject **: * The caller must call the statement's Close method when it is no longer needed.
+//gails:inject **: * Statements are closed automatically
+//gails:inject **: * when the connection they are associated with is closed.
+//gails:inject **: *
+//gails:inject **: * Prepare supports early cancellation.
+//gails:inject j*: *
+//gails:inject j*: * @param {string} query
+//gails:inject j*: * @returns {Promise<Stmt | null> & { cancel(): void }}
+//gails:inject **: */
+//gails:inject j*:export function Prepare(query) {
+//gails:inject t*:export function Prepare(query: string): Promise<Stmt | null> & { cancel(): void } {
+//gails:inject **:    const promise = PrepareContext(query);
+//gails:inject j*:    const wrapper = /** @type {any} */(promise.then(function (id) {
+//gails:inject t*:    const wrapper: any = (promise.then(function (id) {
+//gails:inject **:        return id == null ? null : new Stmt(
+//gails:inject **:            ClosePrepared.bind(null, id),
+//gails:inject **:            ExecPrepared.bind(null, id),
+//gails:inject **:            QueryPrepared.bind(null, id));
+//gails:inject **:    }));
+//gails:inject **:    wrapper.cancel = promise.cancel;
+//gails:inject **:    return wrapper;
+//gails:inject **:}
 type SQLiteService struct {
 	lock   sync.RWMutex
 	config *Config
@@ -105,7 +105,7 @@ func (s *SQLiteService) ServiceShutdown() error {
 //
 // See [NewWithConfig] for details on configuration.
 //
-//wails:ignore
+//gails:ignore
 func (s *SQLiteService) Configure(config *Config) {
 	if config == nil {
 		config = &Config{DBSource: ":memory:"}
@@ -201,7 +201,7 @@ func (s *SQLiteService) closeImpl() error {
 
 // Execute executes a query without returning any rows.
 //
-//wails:ignore
+//gails:ignore
 func (s *SQLiteService) Execute(query string, args ...any) error {
 	return s.ExecContext(context.Background(), query, args...)
 }
@@ -209,7 +209,7 @@ func (s *SQLiteService) Execute(query string, args ...any) error {
 // ExecContext executes a query without returning any rows.
 // It supports early cancellation.
 //
-//wails:internal
+//gails:internal
 func (s *SQLiteService) ExecContext(ctx context.Context, query string, args ...any) error {
 	s.lock.RLock()
 	conn := s.conn
@@ -230,7 +230,7 @@ func (s *SQLiteService) ExecContext(ctx context.Context, query string, args ...a
 // Query executes a query and returns a slice of key-value records,
 // one per row, with column names as keys.
 //
-//wails:ignore
+//gails:ignore
 func (s *SQLiteService) Query(query string, args ...any) (Rows, error) {
 	return s.QueryContext(context.Background(), query, args...)
 }
@@ -239,7 +239,7 @@ func (s *SQLiteService) Query(query string, args ...any) (Rows, error) {
 // one per row, with column names as keys.
 // It supports early cancellation, returning the slice of results fetched so far.
 //
-//wails:internal
+//gails:internal
 func (s *SQLiteService) QueryContext(ctx context.Context, query string, args ...any) (Rows, error) {
 	s.lock.RLock()
 	conn := s.conn
@@ -268,7 +268,7 @@ func (s *SQLiteService) QueryContext(ctx context.Context, query string, args ...
 // Statements are closed automatically
 // when the connection they are associated with is closed.
 //
-//wails:ignore
+//gails:ignore
 func (s *SQLiteService) Prepare(query string) (*Stmt, error) {
 	return s.PrepareContext(context.Background(), query)
 }
@@ -282,7 +282,7 @@ func (s *SQLiteService) Prepare(query string) (*Stmt, error) {
 //
 // PrepareContext supports early cancellation.
 //
-//wails:internal
+//gails:internal
 func (s *SQLiteService) PrepareContext(ctx context.Context, query string) (*Stmt, error) {
 	s.lock.RLock()
 	conn := s.conn
@@ -330,7 +330,7 @@ func (s *SQLiteService) PrepareContext(ctx context.Context, query string) (*Stmt
 // ClosePrepared is idempotent:
 // it has no effect on prepared statements that are already closed.
 //
-//wails:internal
+//gails:internal
 func (s *SQLiteService) ClosePrepared(stmt *Stmt) error {
 	return stmt.Close()
 }
@@ -340,7 +340,7 @@ func (s *SQLiteService) ClosePrepared(stmt *Stmt) error {
 // without returning any rows.
 // It supports early cancellation.
 //
-//wails:internal
+//gails:internal
 func (s *SQLiteService) ExecPrepared(ctx context.Context, stmt *Stmt, args ...any) error {
 	if stmt == nil {
 		return errors.New("no prepared statement provided")
@@ -361,7 +361,7 @@ func (s *SQLiteService) ExecPrepared(ctx context.Context, stmt *Stmt, args ...an
 // and returns a slice of key-value records, one per row, with column names as keys.
 // It supports early cancellation, returning the slice of results fetched so far.
 //
-//wails:internal
+//gails:internal
 func (s *SQLiteService) QueryPrepared(ctx context.Context, stmt *Stmt, args ...any) (Rows, error) {
 	if stmt == nil {
 		return nil, errors.New("no prepared statement provided")
@@ -445,7 +445,7 @@ type (
 	// Stmt wraps a prepared sql statement pointer.
 	// It provides the same methods as the [sql.Stmt] type.
 	//
-	//wails:internal
+	//gails:internal
 	Stmt struct {
 		sqlStmt
 		db *SQLiteService

@@ -10,7 +10,7 @@ import (
 )
 
 const defaultVitePort = 9245
-const wailsVitePort = "WAILS_VITE_PORT"
+const gailsVitePort = "WAILS_VITE_PORT"
 
 type DevOptions struct {
 	flags.Common
@@ -27,7 +27,7 @@ func Dev(options *DevOptions) error {
 	var port int
 	if options.VitePort != 0 {
 		port = options.VitePort
-	} else if p, err := strconv.Atoi(os.Getenv(wailsVitePort)); err == nil {
+	} else if p, err := strconv.Atoi(os.Getenv(gailsVitePort)); err == nil {
 		port = p
 	} else {
 		port = defaultVitePort
@@ -43,7 +43,7 @@ func Dev(options *DevOptions) error {
 	}
 
 	// Set environment variable for the dev:frontend task
-	os.Setenv(wailsVitePort, strconv.Itoa(port))
+	os.Setenv(gailsVitePort, strconv.Itoa(port))
 
 	// Set url of frontend dev server
 	if options.Secure {

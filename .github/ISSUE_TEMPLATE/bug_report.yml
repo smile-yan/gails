@@ -13,12 +13,12 @@ body:
         Before submitting this issue, please do the following:
         - Do a web search for your error. This usually leads to a much better understanding of the issue.
         - Prove that the error is indeed a Wails bug and not an application bug, with a specific set of steps to reproduce. 
-        - Search the issue tracker using [this link](https://github.com/wailsapp/wails/issues?q=is%3Aissue+).
-        - Search the [discussion forums](https://github.com/wailsapp/wails/discussions?discussions_q=type+your+issue+here).
-        - Read the [Troubleshooting Guide](https://wails.io/docs/next/guides/troubleshooting).
+        - Search the issue tracker using [this link](https://github.com/gailsapp/gails/issues?q=is%3Aissue+).
+        - Search the [discussion forums](https://github.com/gailsapp/gails/discussions?discussions_q=type+your+issue+here).
+        - Read the [Troubleshooting Guide](https://gails.io/docs/next/guides/troubleshooting).
         - Create a [Minimal Reproducible Example](https://stackoverflow.com/help/minimal-reproducible-example) and link to it in the issue.
         - If your issue is related to TypeScript generation, please open a ticket and create a PR with a failing test case.
-        TS tests can be found [here](https://github.com/wailsapp/wails/tree/master/v2/internal/binding/binding_test). Remember to add
+        TS tests can be found [here](https://github.com/gailsapp/gails/tree/master/v2/internal/binding/binding_test). Remember to add
         your test to the `binding_test.go` file.
         - Try to fix it yourself. Keep a list of things you have done to fix the problem.   
 
@@ -75,7 +75,7 @@ body:
     id: systemdetails
     attributes:
       label: System Details
-      description: Please add the output of `wails doctor`.
+      description: Please add the output of `gails doctor`.
       render: shell
     validations:
       required: true

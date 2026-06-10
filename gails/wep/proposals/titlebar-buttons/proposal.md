@@ -81,8 +81,8 @@ Example:
 package main
 
 import (
-	"github.com/wailsapp/gails/v3/pkg/application"
-	"github.com/wailsapp/gails/v3/pkg/w32"
+	"github.com/gailsapp/gails/v3/pkg/application"
+	"github.com/gailsapp/gails/v3/pkg/w32"
 )
 
 func main() {

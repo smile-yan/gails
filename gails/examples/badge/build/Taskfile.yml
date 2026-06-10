@@ -59,7 +59,7 @@ tasks:
     generates:
       - frontend/bindings/**/*
     cmds:
-      - gails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true -ts
+      - gails generate bindings -f '{{.BUILD_FLAGS}}' -clean=true -ts
 
   generate:icons:
     summary: Generates Windows `.ico` and Mac `.icns` files from an image
@@ -70,7 +70,7 @@ tasks:
       - "darwin/icons.icns"
       - "windows/icon.ico"
     cmds:
-      - gails3 generate icons -input appicon.png -macfilename darwin/icons.icns -windowsfilename windows/icon.ico
+      - gails generate icons -input appicon.png -macfilename darwin/icons.icns -windowsfilename windows/icon.ico
 
   dev:frontend:
     summary: Runs the frontend in development mode
@@ -84,4 +84,4 @@ tasks:
     summary: Updates the build assets
     dir: build
     cmds:
-      - gails3 update build-assets -name "{{.APP_NAME}}" -binaryname "{{.APP_NAME}}" -config config.yml -dir .
+      - gails update build-assets -name "{{.APP_NAME}}" -binaryname "{{.APP_NAME}}" -config config.yml -dir .

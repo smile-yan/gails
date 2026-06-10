@@ -8,7 +8,7 @@ import (
 )
 
 func TestGenerateDotDesktopPreservesAppName(t *testing.T) {
-	tempDir, err := os.MkdirTemp("", "wails-dotdesktop-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-dotdesktop-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -75,7 +75,7 @@ func TestGenerateDotDesktopPreservesAppName(t *testing.T) {
 }
 
 func TestGenerateDotDesktopDefaultOutputFile(t *testing.T) {
-	tempDir, err := os.MkdirTemp("", "wails-dotdesktop-test-*")
+	tempDir, err := os.MkdirTemp("", "gails-dotdesktop-test-*")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}

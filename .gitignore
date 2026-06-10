@@ -13,7 +13,7 @@
 
 examples/**/example*
 !examples/**/*.*
-cmd/wails/wails
+cmd/gails/gails
 .DS_Store
 tmp
 node_modules/
@@ -23,12 +23,12 @@ v2/test/**/build/
 v2/test/frameless/icon.png
 v2/test/hidden/icon.png
 v2/test/kitchensink/frontend/public/bundle.*
-v2/pkg/parser/testproject/frontend/wails
+v2/pkg/parser/testproject/frontend/gails
 v2/test/kitchensink/frontend/public
 v2/test/kitchensink/build/darwin/desktop/kitchensink
 v2/test/kitchensink/frontend/package.json.md5
 .idea/
-v2/cmd/wails/internal/commands/initialise/templates/testtemplates/
+v2/cmd/gails/internal/commands/initialise/templates/testtemplates/
 .env
 /website/static/img/.cache.json
 

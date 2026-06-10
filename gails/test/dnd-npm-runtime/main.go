@@ -14,7 +14,7 @@ var assets embed.FS
 func main() {
 	app := application.New(application.Options{
 		Name:        "DND NPM Runtime Test",
-		Description: "Test drag and drop with npm @wailsio/runtime module",
+		Description: "Test drag and drop with npm @gailsio/runtime module",
 		Assets: application.AssetOptions{
 			Handler: application.BundledAssetFileServer(assets),
 		},

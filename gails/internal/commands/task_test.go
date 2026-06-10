@@ -49,7 +49,7 @@ func TestParseTaskAndVars(t *testing.T) {
 			name:         "Default task when no args provided",
 			options:      &RunTaskOptions{},
 			otherArgs:    []string{},
-			osArgs:       []string{"gails3", "task"}, // Set explicit os.Args to avoid test framework interference
+			osArgs:       []string{"gails", "task"}, // Set explicit os.Args to avoid test framework interference
 			expectedTask: "default",
 			expectedVars: map[string]string{},
 		},

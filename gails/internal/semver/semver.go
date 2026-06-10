@@ -1,6 +1,6 @@
 // Package semver provides simple semantic version parsing and comparison.
 // Implements a subset of the Semantic Versioning 2.0.0 spec sufficient
-// for the wails version-check use cases.
+// for the gails version-check use cases.
 package semver
 
 import (

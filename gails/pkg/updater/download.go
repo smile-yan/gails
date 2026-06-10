@@ -25,7 +25,7 @@ func (u *Updater) download(ctx context.Context, p Provider, rel *Release) (path,
 	u.transition(StateDownloading)
 	u.host.Emit(EventDownloadStarted, rel)
 
-	dir, err = os.MkdirTemp("", "wails-update-*")
+	dir, err = os.MkdirTemp("", "gails-update-*")
 	if err != nil {
 		return "", "", fmt.Errorf("updater: temp dir: %w", err)
 	}

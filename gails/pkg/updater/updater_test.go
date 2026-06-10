@@ -383,7 +383,7 @@ func TestDownloadAndInstall_HappyPath_NoVerification(t *testing.T) {
 
 // On any failure between download and ready (verify mismatch, unknown
 // digest algo, etc.) the temp staging directory created under
-// os.TempDir/wails-update-* must be removed; otherwise repeated update
+// os.TempDir/gails-update-* must be removed; otherwise repeated update
 // attempts accumulate orphan directories.
 func TestDownloadAndInstall_FailedFlow_RemovesStagingDir(t *testing.T) {
 	host := &fakeHost{}
@@ -411,11 +411,11 @@ func TestDownloadAndInstall_FailedFlow_RemovesStagingDir(t *testing.T) {
 
 	after := countStagingDirs(t)
 	if after > before {
-		t.Errorf("staging dir leaked: %d → %d wails-update-* directories under %s", before, after, os.TempDir())
+		t.Errorf("staging dir leaked: %d → %d gails-update-* directories under %s", before, after, os.TempDir())
 	}
 }
 
-// countStagingDirs returns the number of `wails-update-*` directories under
+// countStagingDirs returns the number of `gails-update-*` directories under
 // os.TempDir. Used to detect leaks across the download/install flow without
 // being sensitive to absolute paths.
 func countStagingDirs(t *testing.T) int {
@@ -426,7 +426,7 @@ func countStagingDirs(t *testing.T) int {
 	}
 	n := 0
 	for _, e := range entries {
-		if e.IsDir() && strings.HasPrefix(e.Name(), "wails-update-") {
+		if e.IsDir() && strings.HasPrefix(e.Name(), "gails-update-") {
 			n++
 		}
 	}
@@ -931,10 +931,10 @@ func newConfiguredWithKey(t *testing.T, host updater.Host, publicKey []byte, pro
 	}
 	t.Cleanup(func() {
 		if p := u.DownloadedPath(); p != "" {
-			// Walk up to the wails-update-* temp dir and remove it whole.
+			// Walk up to the gails-update-* temp dir and remove it whole.
 			dir := p
 			for dir != "" && dir != "/" && dir != "." {
-				if strings.Contains(dir, "wails-update-") {
+				if strings.Contains(dir, "gails-update-") {
 					_ = osRemoveAll(dir)
 					return
 				}

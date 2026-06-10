@@ -116,7 +116,7 @@ type Options struct {
 	// This allows you to use WebSockets, custom protocols, or any other transport mechanism
 	// while retaining all Wails generated bindings and event communication.
 	//
-	// The default transport uses HTTP fetch requests to /wails/runtime + events via js.Exec in webview.
+	// The default transport uses HTTP fetch requests to /gails/runtime + events via js.Exec in webview.
 	// If not specified, the default transport is used.
 	//
 	// Example use case: Implementing WebSocket-based or PostMessage IPC.
@@ -220,7 +220,7 @@ func AssetFileServerFS(assets fs.FS) http.Handler {
 // BundledAssetFileServer returns a http handler which serves the assets from the fs.FS.
 // If an external devserver has been provided 'FRONTEND_DEVSERVER_URL' the files are being served
 // from the external server, ignoring the `assets`.
-// It also serves the compiled runtime.js file at `/wails/runtime.js`.
+// It also serves the compiled runtime.js file at `/gails/runtime.js`.
 // It will provide the production runtime.js file from the embedded assets if the `production` tag is used.
 func BundledAssetFileServer(assets fs.FS) http.Handler {
 	return assetserver.NewBundledAssetFileServer(assets)

@@ -339,7 +339,7 @@ window.webkit.messageHandlers.gails.postMessage({
 #### Receive from Go
 
 ```javascript
-window.wailsCallback = function(data) {
+window.gailsCallback = function(data) {
     console.log('Received:', data);
 };
 ```

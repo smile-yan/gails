@@ -118,17 +118,17 @@
         </div>
 
         <div class="card">
-            <h2>Custom Element Demo: &lt;wails-card&gt;</h2>
+            <h2>Custom Element Demo: &lt;gails-card&gt;</h2>
             <p class="demo-label">A custom card element with Shadow DOM encapsulation:</p>
             <div class="component-demo">
-                <wails-card title="Welcome to Wails" theme="green">
+                <gails-card title="Welcome to Wails" theme="green">
                     This is content inside a custom Web Component. The styling is encapsulated via Shadow DOM.
-                </wails-card>
+                </gails-card>
             </div>
             <div class="component-demo">
-                <wails-card title="Another Card" theme="blue">
+                <gails-card title="Another Card" theme="blue">
                     Different theme variant using the same component.
-                </wails-card>
+                </gails-card>
             </div>
             <div style="margin-top: 15px;">
                 <input type="text" id="cardTitle" placeholder="Card title" value="Dynamic Card">
@@ -143,13 +143,13 @@
         </div>
 
         <div class="card">
-            <h2>Custom Element Demo: &lt;wails-counter&gt;</h2>
+            <h2>Custom Element Demo: &lt;gails-counter&gt;</h2>
             <p class="demo-label">A stateful counter component with reactive attributes:</p>
             <div class="component-demo">
-                <wails-counter value="0" step="1"></wails-counter>
+                <gails-counter value="0" step="1"></gails-counter>
             </div>
             <div class="component-demo">
-                <wails-counter value="100" step="10"></wails-counter>
+                <gails-counter value="100" step="10"></gails-counter>
             </div>
         </div>
 
@@ -169,14 +169,14 @@
         </div>
 
         <div class="card">
-            <h2>Slot Demo: &lt;wails-panel&gt;</h2>
+            <h2>Slot Demo: &lt;gails-panel&gt;</h2>
             <p class="demo-label">Named slots for flexible content composition:</p>
             <div class="component-demo">
-                <wails-panel>
+                <gails-panel>
                     <span slot="header">Panel Header</span>
                     <p>This is the default slot content - the main body of the panel.</p>
                     <span slot="footer">Panel Footer - Created with Web Components</span>
-                </wails-panel>
+                </gails-panel>
             </div>
         </div>
 
@@ -239,7 +239,7 @@
             return div.innerHTML;
         }
 
-        // Define wails-card custom element
+        // Define gails-card custom element
         class WailsCard extends HTMLElement {
             static get observedAttributes() {
                 return ['title', 'theme'];
@@ -310,7 +310,7 @@
             }
         }
 
-        // Define wails-counter custom element
+        // Define gails-counter custom element
         class WailsCounter extends HTMLElement {
             static get observedAttributes() {
                 return ['value', 'step'];
@@ -411,7 +411,7 @@
             }
         }
 
-        // Define wails-panel with slots
+        // Define gails-panel with slots
         class WailsPanel extends HTMLElement {
             constructor() {
                 super();
@@ -475,9 +475,9 @@
         }
 
         // Register custom elements
-        customElements.define('wails-card', WailsCard);
-        customElements.define('wails-counter', WailsCounter);
-        customElements.define('wails-panel', WailsPanel);
+        customElements.define('gails-card', WailsCard);
+        customElements.define('gails-counter', WailsCounter);
+        customElements.define('gails-panel', WailsPanel);
 
         // Template functionality
         let itemCounter = 0;
@@ -503,7 +503,7 @@
         function addCard() {
             const title = document.getElementById('cardTitle').value || 'Untitled';
             const theme = document.getElementById('cardTheme').value;
-            const card = document.createElement('wails-card');
+            const card = document.createElement('gails-card');
             card.setAttribute('title', title);
             card.setAttribute('theme', theme);
             card.innerHTML = `Dynamically created at ${new Date().toLocaleTimeString()}`;

@@ -1,12 +1,12 @@
 examples/kitchensink/kitchensink
-cmd/wails3/wails
+cmd/gails/gails
 /examples/systray-menu/systray
 /examples/window/window
 /examples/dialogs/dialogs
 /examples/menu/menu
 /examples/clipboard/clipboard
 /examples/plain/plain
-/cmd/wails3/ui/.task/
+/cmd/gails/ui/.task/
 !internal/commands/webview2/MicrosoftEdgeWebview2Setup.exe
 internal/commands/appimage_testfiles/appimage_testfiles
 testiosapp/

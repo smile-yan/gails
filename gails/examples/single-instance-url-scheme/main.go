@@ -30,10 +30,10 @@ var assets embed.FS
 // process exits before NSApplication.run installs the Apple Event handler.
 // Result: URL is lost.
 
-const scheme = "wails-single-url"
+const scheme = "gails-single-url"
 
 func main() {
-	logFile, err := os.OpenFile("/tmp/wails-single-instance-url.log",
+	logFile, err := os.OpenFile("/tmp/gails-single-instance-url.log",
 		os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err == nil {
 		log.SetOutput(logFile)
@@ -48,7 +48,7 @@ func main() {
 	app := application.New(application.Options{
 		Name:        "Single Instance URL Scheme Repro",
 		LogLevel:    slog.LevelDebug,
-		Description: "Reproduces wails#5089",
+		Description: "Reproduces gails#5089",
 		Mac: application.MacOptions{
 			ApplicationShouldTerminateAfterLastWindowClosed: true,
 		},
@@ -56,7 +56,7 @@ func main() {
 			Handler: application.BundledAssetFileServer(assets),
 		},
 		SingleInstance: &application.SingleInstanceOptions{
-			UniqueID: "com.wails.example.single-instance-url-scheme",
+			UniqueID: "com.gails.example.single-instance-url-scheme",
 			OnSecondInstanceLaunch: func(data application.SecondInstanceData) {
 				url, found := findSchemeURL(data.Args)
 				log.Printf("[first] OnSecondInstanceLaunch fired")

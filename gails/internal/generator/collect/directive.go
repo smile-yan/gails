@@ -10,10 +10,10 @@ import (
 )
 
 // IsDirective returns true if the given comment
-// is a directive of the form //wails: + directive.
+// is a directive of the form //gails: + directive.
 func IsDirective(comment string, directive string) bool {
-	if strings.HasPrefix(comment, "//wails:"+directive) {
-		length := len("//wails:") + len(directive)
+	if strings.HasPrefix(comment, "//gails:"+directive) {
+		length := len("//gails:") + len(directive)
 		if len(comment) == length {
 			return true
 		}
@@ -25,15 +25,15 @@ func IsDirective(comment string, directive string) bool {
 	return false
 }
 
-// ParseDirective extracts the argument portion of a //wails: + directive comment.
+// ParseDirective extracts the argument portion of a //gails: + directive comment.
 func ParseDirective(comment string, directive string) string {
-	rawArg := comment[len("//wails:")+len(directive):]
+	rawArg := comment[len("//gails:")+len(directive):]
 
 	if directive != "inject" {
 		return strings.TrimSpace(rawArg)
 	}
 
-	// wails:inject requires special parsing:
+	// gails:inject requires special parsing:
 	// do not trim all surrounding space, just the one space
 	// immediately after the directive name.
 	_, wsize := utf8.DecodeRuneInString(rawArg)

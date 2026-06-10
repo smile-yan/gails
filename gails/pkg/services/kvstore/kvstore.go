@@ -80,7 +80,7 @@ func (kvs *KVStoreService) ServiceShutdown() error {
 //
 // See [NewWithConfig] for details on configuration.
 //
-//wails:ignore
+//gails:ignore
 func (kvs *KVStoreService) Configure(config *Config) {
 	if config != nil {
 		// Clone to prevent changes from the outside.

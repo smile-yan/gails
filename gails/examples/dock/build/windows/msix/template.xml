@@ -25,7 +25,7 @@
         </Capabilities>
         <Applications>
             <Application
-                Id="com.wails.dock"
+                Id="com.gails.dock"
                 Description="My Product Description"
                 DisplayName="My Product"
                 ExecutableName="dock"

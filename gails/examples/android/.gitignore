@@ -9,7 +9,7 @@ build/android/app/build/
 build/android/local.properties
 
 # JNI libraries (generated during build)
-build/android/app/src/main/jniLibs/*/libwails.so
+build/android/app/src/main/jniLibs/*/libgails.so
 
 # IDE
 .idea/

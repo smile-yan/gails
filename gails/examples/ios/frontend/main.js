@@ -1,5 +1,5 @@
 import {GreetService} from "./bindings/changeme";
-import * as Runtime from "@wailsio/runtime";
+import * as Runtime from "@gailsio/runtime";
 
 const resultElement = document.getElementById('result');
 const timeElement = document.getElementById('time');
@@ -21,7 +21,7 @@ window.doGreet = () => {
 
 window.doHaptic = (style) => {
     if (!IOS || !IOS.Haptics?.Impact) {
-        console.warn('IOS runtime not available in @wailsio/runtime. Skipping haptic call.');
+        console.warn('IOS runtime not available in @gailsio/runtime. Skipping haptic call.');
         return;
     }
     IOS.Haptics.Impact(style).catch((err) => {
@@ -45,7 +45,7 @@ window.getDeviceInfo = async () => {
 // Generic caller for IOS.<Group>.<Method>(args)
 window.iosJsSet = async (methodPath, args) => {
     if (!IOS) {
-        console.warn('IOS runtime not available in @wailsio/runtime.');
+        console.warn('IOS runtime not available in @gailsio/runtime.');
         return;
     }
     try {

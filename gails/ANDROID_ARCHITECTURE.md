@@ -56,7 +56,7 @@ Unlike iOS which uses CGO with Objective-C, Android uses JNI (Java Native Interf
 │                  JNI Bridge Layer                            │
 │            System.loadLibrary("gails")                       │
 ├─────────────────────────────────────────────────────────────┤
-│                    Go Runtime (libwails.so)                  │
+│                    Go Runtime (libgails.so)                  │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │                 Gails Application                     │  │
 │  │  ┌──────────┐  ┌──────────┐  ┌──────────────────┐  │  │
@@ -73,7 +73,7 @@ Unlike iOS which uses CGO with Objective-C, Android uses JNI (Java Native Interf
 | Native Language | Objective-C | Java |
 | Bridge Technology | CGO (C headers) | JNI |
 | Build Mode | `-buildmode=c-archive` (.a) | `-buildmode=c-shared` (.so) |
-| Entry Point | `main.m` calls `WailsIOSMain()` | `MainActivity` loads `libwails.so` |
+| Entry Point | `main.m` calls `WailsIOSMain()` | `MainActivity` loads `libgails.so` |
 | WebView | WKWebView | Android WebView |
 | URL Scheme | `gails://localhost` | `https://gails.localhost` |
 | Asset Interception | `WKURLSchemeHandler` | `WebViewAssetLoader` + `PathHandler` |
@@ -227,26 +227,26 @@ if (gails.platform() === 'android') { ... }
 
 **JNI Exports**:
 ```go
-//export Java_com_wails_app_WailsBridge_nativeInit
-func Java_com_wails_app_WailsBridge_nativeInit(env *C.JNIEnv, obj C.jobject, bridge C.jobject)
+//export Java_com_gails_app_WailsBridge_nativeInit
+func Java_com_gails_app_WailsBridge_nativeInit(env *C.JNIEnv, obj C.jobject, bridge C.jobject)
 
-//export Java_com_wails_app_WailsBridge_nativeShutdown
-func Java_com_wails_app_WailsBridge_nativeShutdown(env *C.JNIEnv, obj C.jobject)
+//export Java_com_gails_app_WailsBridge_nativeShutdown
+func Java_com_gails_app_WailsBridge_nativeShutdown(env *C.JNIEnv, obj C.jobject)
 
-//export Java_com_wails_app_WailsBridge_nativeOnResume
-func Java_com_wails_app_WailsBridge_nativeOnResume(env *C.JNIEnv, obj C.jobject)
+//export Java_com_gails_app_WailsBridge_nativeOnResume
+func Java_com_gails_app_WailsBridge_nativeOnResume(env *C.JNIEnv, obj C.jobject)
 
-//export Java_com_wails_app_WailsBridge_nativeOnPause
-func Java_com_wails_app_WailsBridge_nativeOnPause(env *C.JNIEnv, obj C.jobject)
+//export Java_com_gails_app_WailsBridge_nativeOnPause
+func Java_com_gails_app_WailsBridge_nativeOnPause(env *C.JNIEnv, obj C.jobject)
 
-//export Java_com_wails_app_WailsBridge_nativeServeAsset
-func Java_com_wails_app_WailsBridge_nativeServeAsset(env *C.JNIEnv, obj C.jobject, path, method, headers *C.char) *C.char
+//export Java_com_gails_app_WailsBridge_nativeServeAsset
+func Java_com_gails_app_WailsBridge_nativeServeAsset(env *C.JNIEnv, obj C.jobject, path, method, headers *C.char) *C.char
 
-//export Java_com_wails_app_WailsBridge_nativeHandleMessage
-func Java_com_wails_app_WailsBridge_nativeHandleMessage(env *C.JNIEnv, obj C.jobject, message *C.char) *C.char
+//export Java_com_gails_app_WailsBridge_nativeHandleMessage
+func Java_com_gails_app_WailsBridge_nativeHandleMessage(env *C.JNIEnv, obj C.jobject, message *C.char) *C.char
 
-//export Java_com_wails_app_WailsBridge_nativeGetAssetMimeType
-func Java_com_wails_app_WailsBridge_nativeGetAssetMimeType(env *C.JNIEnv, obj C.jobject, path *C.char) *C.char
+//export Java_com_gails_app_WailsBridge_nativeGetAssetMimeType
+func Java_com_gails_app_WailsBridge_nativeGetAssetMimeType(env *C.JNIEnv, obj C.jobject, path *C.char) *C.char
 ```
 
 **Platform Functions**:
@@ -393,9 +393,9 @@ v3/
             │               ├── assets/        # Frontend assets (copied)
             │               └── jniLibs/
             │                   ├── arm64-v8a/
-            │                   │   └── libwails.so  # Generated
+            │                   │   └── libgails.so  # Generated
             │                   └── x86_64/
-            │                       └── libwails.so  # Generated
+            │                       └── libgails.so  # Generated
             ├── darwin/              # macOS build files
             ├── linux/               # Linux build files
             └── windows/             # Windows build files
@@ -593,7 +593,7 @@ export CC=$NDK/toolchains/llvm/prebuilt/$HOST/bin/aarch64-linux-android21-clang
 # Build command
 go build -buildmode=c-shared \
     -tags android \
-    -o build/android/app/src/main/jniLibs/arm64-v8a/libwails.so
+    -o build/android/app/src/main/jniLibs/arm64-v8a/libgails.so
 ```
 
 #### 2. Gradle Build
@@ -643,8 +643,8 @@ Java_<package>_<class>_<method>
 
 Example:
 ```go
-//export Java_com_wails_app_WailsBridge_nativeInit
-func Java_com_wails_app_WailsBridge_nativeInit(env *C.JNIEnv, obj C.jobject, bridge C.jobject)
+//export Java_com_gails_app_WailsBridge_nativeInit
+func Java_com_gails_app_WailsBridge_nativeInit(env *C.JNIEnv, obj C.jobject, bridge C.jobject)
 ```
 
 Corresponds to Java:

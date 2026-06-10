@@ -40,7 +40,7 @@ func main() {
 		Mac: application.MacOptions{
 			ApplicationShouldTerminateAfterLastWindowClosed: true,
 		},
-		FileAssociations: []string{".wails"},
+		FileAssociations: []string{".gails"},
 	})
 
 	// Create a new window with the necessary options.

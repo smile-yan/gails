@@ -5,21 +5,21 @@ version: "3"
 tasks:
   install-deps:
     internal: true
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     sources:
       - package.json
     cmds:
       - npm install
 
   check:
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     deps:
       - install-deps
     cmds:
       - npm run check
 
   test:
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     deps:
       - install-deps
     cmds:
@@ -28,16 +28,16 @@ tasks:
   build:debug:
     internal: true
     cmds:
-      - npx esbuild@latest desktop/@wailsio/runtime/src/index.ts --inject:desktop/compiled/main.js --format=esm --target=safari11 --bundle --ignore-annotations --tree-shaking=true --sourcemap=inline --outfile=../assetserver/bundledassets/runtime.debug.js --define:DEBUG=true
+      - npx esbuild@latest desktop/@gailsio/runtime/src/index.ts --inject:desktop/compiled/main.js --format=esm --target=safari11 --bundle --ignore-annotations --tree-shaking=true --sourcemap=inline --outfile=../assetserver/bundledassets/runtime.debug.js --define:DEBUG=true
 
   build:production:
     internal: true
     cmds:
-      - npx esbuild@latest desktop/@wailsio/runtime/src/index.ts --inject:desktop/compiled/main.js --format=esm --target=safari11 --bundle --ignore-annotations --tree-shaking=true --minify --outfile=../assetserver/bundledassets/runtime.js --define:DEBUG=false --drop:console
+      - npx esbuild@latest desktop/@gailsio/runtime/src/index.ts --inject:desktop/compiled/main.js --format=esm --target=safari11 --bundle --ignore-annotations --tree-shaking=true --minify --outfile=../assetserver/bundledassets/runtime.js --define:DEBUG=false --drop:console
 
   build:docs:
     internal: true
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     deps:
       - install-deps
     cmds:
@@ -45,7 +45,7 @@ tasks:
 
   build:docs:md:
     internal: true
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     deps:
       - install-deps
     cmds:
@@ -76,16 +76,16 @@ tasks:
 
   docs:
     summary: Generate TypeDoc documentation for the runtime
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     deps:
       - install-deps
     cmds:
       - npm run build:docs
-      - echo "Documentation generated at desktop/@wailsio/runtime/docs/"
+      - echo "Documentation generated at desktop/@gailsio/runtime/docs/"
 
   docs:md:
     summary: Generate markdown documentation for the runtime
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     deps:
       - install-deps
     cmds:
@@ -100,7 +100,7 @@ tasks:
 
   clean:
     summary: Clean built artifacts and documentation
-    dir: desktop/@wailsio/runtime
+    dir: desktop/@gailsio/runtime
     cmds:
       - npm run clean
       - echo "Cleaned runtime artifacts"
@@ -109,4 +109,4 @@ tasks:
     summary: Generate events only (use runtime:build to rebuild everything)
     cmds:
       - task: generate:events
-      - echo "Events generated. Run 'gails3 task runtime:build' to rebuild runtime with updated documentation"
+      - echo "Events generated. Run 'gails task runtime:build' to rebuild runtime with updated documentation"

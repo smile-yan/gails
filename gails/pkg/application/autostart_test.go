@@ -14,11 +14,11 @@ func TestAutostartSlug(t *testing.T) {
 		"Foo/Bar":            "foobar",
 		"  trim me  ":        "trim-me",
 		"All Punc!@#$":       "all-punc",
-		"":                   "wails-app",
+		"":                   "gails-app",
 		"héllo":              "hllo",
 		"v1.2.3":             "v1.2.3",
 		"___leading_under":   "leading_under",
-		"...":                "wails-app",
+		"...":                "gails-app",
 	}
 	for in, want := range cases {
 		t.Run(in, func(t *testing.T) {

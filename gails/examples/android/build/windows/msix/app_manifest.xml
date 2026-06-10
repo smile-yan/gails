@@ -6,7 +6,7 @@
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10">
 
   <Identity
-    Name="com.wails.ios"
+    Name="com.gails.ios"
     Publisher="CN=My Company"
     Version="0.1.0.0"
     ProcessorArchitecture="x64" />
@@ -27,7 +27,7 @@
   </Resources>
 
   <Applications>
-    <Application Id="com.wails.ios" Executable="ios" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="com.gails.ios" Executable="ios" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
         DisplayName="My Product"
         Description="My Product Description"

@@ -6,10 +6,10 @@ import (
 )
 
 // inlineEventShimJS is a small ES5 script that installs
-// `window.wails.Events.On / Emit` and `window._wails.dispatchWailsEvent`
+// `window.gails.Events.On / Emit` and `window._gails.dispatchWailsEvent`
 // for windows whose HTML is loaded directly via WebviewWindowOptions.HTML
 // rather than served by the asset server. Those pages can't import
-// `/wails/runtime.js` (their origin is the literal string "null"), so
+// `/gails/runtime.js` (their origin is the literal string "null"), so
 // the framework injects this fallback at construction time when the
 // owning code asked for it.
 //
@@ -27,12 +27,12 @@ var inlineEventShimJS string
 //
 // The injected `<script>` is placed at the very top of the document so
 // that any inline event handlers registered later in the page can rely
-// on `window.wails.Events` being present.
+// on `window.gails.Events` being present.
 func maybeInjectInlineEventShim(html string, allow bool) string {
 	if !allow || html == "" {
 		return html
 	}
-	const marker = "data-wails-inline-event-shim"
+	const marker = "data-gails-inline-event-shim"
 	if strings.Contains(html, marker) {
 		// Already injected (e.g. caller wrapped manually). Don't duplicate.
 		return html

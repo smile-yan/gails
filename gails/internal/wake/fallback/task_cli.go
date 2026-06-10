@@ -1,7 +1,7 @@
 // Package fallback drives the embedded Task runtime as a backstop when wake
 // encounters a Taskfile feature it doesn't implement itself (dotenv, requires,
 // interval, run modes other than "always", short, defer, non-interleaved
-// output). The Task runtime is compiled into gails3 — there is no external
+// output). The Task runtime is compiled into gails — there is no external
 // `task` binary to look for — so this is an in-process call, not a subprocess.
 package fallback
 

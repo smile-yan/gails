@@ -59,9 +59,9 @@ func (h *serverApp) run() error {
 	// Create WebSocket broadcaster for events
 	h.broadcaster = NewWebSocketBroadcaster(h.app)
 	globalBroadcaster = h.broadcaster // Set global reference for browser ID lookups
-	h.app.wailsEventListenerLock.Lock()
-	h.app.wailsEventListeners = append(h.app.wailsEventListeners, h.broadcaster)
-	h.app.wailsEventListenerLock.Unlock()
+	h.app.gailsEventListenerLock.Lock()
+	h.app.gailsEventListeners = append(h.app.gailsEventListeners, h.broadcaster)
+	h.app.gailsEventListenerLock.Unlock()
 
 	opts := h.app.options.Server
 
@@ -168,8 +168,8 @@ func (h *serverApp) run() error {
 // This WebSocket is only for receiving broadcast events FROM backend TO all frontends.
 const customJS = `(function() {
 	var protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-	var clientId = window._wails && window._wails.clientId ? window._wails.clientId : '';
-	var wsUrl = protocol + '//' + location.host + '/wails/events' + (clientId ? '?clientId=' + encodeURIComponent(clientId) : '');
+	var clientId = window._gails && window._gails.clientId ? window._gails.clientId : '';
+	var wsUrl = protocol + '//' + location.host + '/gails/events' + (clientId ? '?clientId=' + encodeURIComponent(clientId) : '');
 	var ws;
 
 	function connect() {
@@ -180,8 +180,8 @@ const customJS = `(function() {
 		ws.onmessage = function(e) {
 			try {
 				var event = JSON.parse(e.data);
-				if (window._wails && window._wails.dispatchWailsEvent) {
-					window._wails.dispatchWailsEvent(event);
+				if (window._gails && window._gails.dispatchWailsEvent) {
+					window._gails.dispatchWailsEvent(event);
 				}
 			} catch (err) {
 				console.error('[Wails] Failed to parse event:', err);
@@ -211,14 +211,14 @@ func (h *serverApp) createHandler() http.Handler {
 	})
 
 	// Serve custom.js for server mode (WebSocket event connection)
-	mux.HandleFunc("/wails/custom.js", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/gails/custom.js", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/javascript")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(customJS))
 	})
 
 	// WebSocket endpoint for events
-	mux.Handle("/wails/events", h.broadcaster)
+	mux.Handle("/gails/events", h.broadcaster)
 
 	// Serve all other requests through the asset server
 	mux.Handle("/", h.app.assets)

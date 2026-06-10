@@ -227,7 +227,7 @@ task test:examples:linux:docker
 
 #### 2. **Go Module Resolution**
 - **Issue**: Inconsistent replace directives across examples
-- **Fix**: Standardized all examples to use `replace github.com/wailsapp/gails/v3 => ../..`
+- **Fix**: Standardized all examples to use `replace github.com/gailsapp/gails/v3 => ../..`
 - **Examples Fixed**: gin-example, gin-routing, notifications
 
 #### 3. **Frontend Asset Embedding**
@@ -314,7 +314,7 @@ task test:examples           # Current platform only (43 builds)
 ```bash
 Error: replacement directory ../gails/v3 does not exist
 ```
-**Solution**: All examples now use standardized `replace github.com/wailsapp/gails/v3 => ../..`
+**Solution**: All examples now use standardized `replace github.com/gailsapp/gails/v3 => ../..`
 
 #### **Frontend Asset Embedding Errors**
 ```bash

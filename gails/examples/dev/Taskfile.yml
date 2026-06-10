@@ -105,7 +105,7 @@ tasks:
     dir: build
     cmds:
       # Generates both .ico and .icns files
-      - wails generate icons -input appicon.png
+      - gails generate icons -input appicon.png
 
   build-app-prod-darwin:
     summary: Creates a production build of the application
@@ -138,8 +138,8 @@ tasks:
     summary: Runs the application in development mode
     watch: true
     preconditions:
-      - sh: 'gails3 tool checkport -p 5173'
-        msg: "Vite does not appear to be running. Please run `gails3 task frontend:dev` in another terminal."
+      - sh: 'gails tool checkport -p 5173'
+        msg: "Vite does not appear to be running. Please run `gails task frontend:dev` in another terminal."
     cmds:
       - task: build:backend
 
@@ -166,7 +166,7 @@ tasks:
     dir: build
     platform: windows
     cmds:
-      - wails generate syso -arch {{.ARCH}} -icon icon.ico -manifest wails.exe.manifest -info info.json
+      - gails generate syso -arch {{.ARCH}} -icon icon.ico -manifest gails.exe.manifest -info info.json
     vars:
       ARCH: $GOARCH
 

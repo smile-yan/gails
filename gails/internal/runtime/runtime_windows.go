@@ -2,4 +2,4 @@
 
 package runtime
 
-var invoke = `window._wails.invoke=window.chrome.webview.postMessage;`
+var invoke = `window._gails.invoke=window.chrome.webview.postMessage;`

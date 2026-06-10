@@ -22,7 +22,7 @@ var buildAssets embed.FS
 //go:embed updatable_build_assets
 var updatableBuildAssets embed.FS
 
-// ProtocolConfig defines the structure for a custom protocol in gails.json/wails.yaml
+// ProtocolConfig defines the structure for a custom protocol in gails.json/gails.yaml
 type ProtocolConfig struct {
 	Scheme      string `yaml:"scheme"                json:"scheme"`
 	Description string `yaml:"description,omitempty" json:"description,omitempty"`
@@ -110,7 +110,7 @@ func GenerateBuildAssets(options *BuildAssetsOptions) error {
 	}
 
 	if options.ProductIdentifier == "" {
-		options.ProductIdentifier = "com.wails." + normaliseName(options.Name)
+		options.ProductIdentifier = "com.gails." + normaliseName(options.Name)
 	}
 
 	if options.BinaryName == "" {
@@ -446,7 +446,7 @@ func cleanupBackups(backups []plistBackup) {
 }
 
 // sanitizePlistDict recursively removes any plist entries whose string values
-// contain Go template syntax (e.g. "{{.Ext}}"). Older wails projects stored
+// contain Go template syntax (e.g. "{{.Ext}}"). Older gails projects stored
 // the darwin Info.plist as a raw Go template; when that file is parsed as a
 // plain plist the block-level directives ({{if}}, {{range}}, {{end}}) are
 // silently dropped as XML text nodes, but inner field references inside

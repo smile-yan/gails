@@ -2,7 +2,7 @@
 
 ## Overview
 
-Wake is a Go-native Taskfile executor embedded in `wailsapp/gails/v3/internal/wake/`. It replaces the external `task` CLI dependency, executing `Taskfile.yml` files directly in Go. Enabled via `WAILS_USE_WAKE=true` env var; falls back to `task` CLI when unset or unsupported features are used.
+Wake is a Go-native Taskfile executor embedded in `gailsapp/gails/v3/internal/wake/`. It replaces the external `task` CLI dependency, executing `Taskfile.yml` files directly in Go. Enabled via `WAILS_USE_WAKE=true` env var; falls back to `task` CLI when unset or unsupported features are used.
 
 ## Architecture
 
@@ -112,7 +112,7 @@ pruned tasks as `cached` (`reportPrunedCached`) so an incremental build still
 reaches `[N/N]` truthfully.
 
 **Producer feedback (cross-process):** the executor sets `WAKE_REPORT=1` for
-child processes. `gails3 generate bindings` (a subprocess) detects it and routes
+child processes. `gails generate bindings` (a subprocess) detects it and routes
 its `config.Logger` through `commands.wakeLogger`, emitting wire events on stdout
 instead of drawing its own spinner. The parent's `captureWriter` decodes those
 events and forwards them to the live step as `StepInfo` sub-lines. In-process
@@ -120,7 +120,7 @@ producers can instead use `report.Active()`.
 
 **Failures:** a failed command's captured output, command string and exit code
 are rendered in a bordered panel; `wake.Execute` wraps the error as
-`errReported` and `cmd/gails3/main.go` skips re-printing it (no double output).
+`errReported` and `cmd/gails/main.go` skips re-printing it (no double output).
 
 ## Unsupported Features (triggers fallback)
 

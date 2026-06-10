@@ -32,7 +32,7 @@ type Executor struct {
 	// when false, sequentially.
 	Parallel        bool
 	// Force, when true, makes every task re-run regardless of cache state.
-	// Wired up from WAKE_FORCE=true (or a `gails3 build --clean` flag) at
+	// Wired up from WAKE_FORCE=true (or a `gails build --clean` flag) at
 	// the wake.Execute boundary. Bypasses both the Taskfile-declared cache
 	// check (sources/generates/status) and the implicit native-Go cache.
 	Force           bool
@@ -317,7 +317,7 @@ func (e *Executor) runTask(ctx context.Context, task *ast.Task, depVars map[stri
 		expanded := parse.ExpandTemplates(v, mergedVars)
 		env = append(env, k+"="+expanded)
 	}
-	// Tell wails subprocess producers (e.g. `gails3 generate bindings`) to emit
+	// Tell gails subprocess producers (e.g. `gails generate bindings`) to emit
 	// live feedback as wire events on stdout instead of printing their own UI;
 	// the output capture decodes and routes them to this build's reporter.
 	env = append(env, "WAKE_REPORT=1")
@@ -417,7 +417,7 @@ func (e *Executor) runTask(ctx context.Context, task *ast.Task, depVars map[stri
 // expanded command string and registers the resulting file as a build
 // artifact. We deliberately do NOT walk task `generates:` patterns: those
 // produce intermediate outputs (icons, bindings) that aren't what the user
-// asks for at the end of `gails3 build` — they want the binary. Catching
+// asks for at the end of `gails build` — they want the binary. Catching
 // go-build's `-o` argument hits exactly that.
 //
 // Called after a real-cmd execution succeeds. dir is the task's resolved

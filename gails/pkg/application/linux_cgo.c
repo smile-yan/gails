@@ -15,21 +15,21 @@ typedef Bool (*WailsXTranslateCoordinatesFunc)(Display*, Window, Window, int, in
 typedef Status (*WailsXSendEventFunc)(Display*, Window, Bool, long, XEvent*);
 typedef Atom (*WailsXInternAtomFunc)(Display*, const char*, Bool);
 
-static WailsXMoveWindowFunc wails_XMoveWindow = NULL;
-static WailsXFlushFunc wails_XFlush = NULL;
-static WailsXTranslateCoordinatesFunc wails_XTranslateCoordinates = NULL;
-static WailsXSendEventFunc wails_XSendEvent = NULL;
-static WailsXInternAtomFunc wails_XInternAtom = NULL;
+static WailsXMoveWindowFunc gails_XMoveWindow = NULL;
+static WailsXFlushFunc gails_XFlush = NULL;
+static WailsXTranslateCoordinatesFunc gails_XTranslateCoordinates = NULL;
+static WailsXSendEventFunc gails_XSendEvent = NULL;
+static WailsXInternAtomFunc gails_XInternAtom = NULL;
 static gboolean x11_funcs_resolved = FALSE;
 
 static void resolve_x11_funcs(void) {
     if (x11_funcs_resolved) return;
     x11_funcs_resolved = TRUE;
-    wails_XMoveWindow = (WailsXMoveWindowFunc)dlsym(RTLD_DEFAULT, "XMoveWindow");
-    wails_XFlush = (WailsXFlushFunc)dlsym(RTLD_DEFAULT, "XFlush");
-    wails_XTranslateCoordinates = (WailsXTranslateCoordinatesFunc)dlsym(RTLD_DEFAULT, "XTranslateCoordinates");
-    wails_XSendEvent = (WailsXSendEventFunc)dlsym(RTLD_DEFAULT, "XSendEvent");
-    wails_XInternAtom = (WailsXInternAtomFunc)dlsym(RTLD_DEFAULT, "XInternAtom");
+    gails_XMoveWindow = (WailsXMoveWindowFunc)dlsym(RTLD_DEFAULT, "XMoveWindow");
+    gails_XFlush = (WailsXFlushFunc)dlsym(RTLD_DEFAULT, "XFlush");
+    gails_XTranslateCoordinates = (WailsXTranslateCoordinatesFunc)dlsym(RTLD_DEFAULT, "XTranslateCoordinates");
+    gails_XSendEvent = (WailsXSendEventFunc)dlsym(RTLD_DEFAULT, "XSendEvent");
+    gails_XInternAtom = (WailsXInternAtomFunc)dlsym(RTLD_DEFAULT, "XInternAtom");
 }
 #endif
 
@@ -82,7 +82,7 @@ static void fix_signal(int signum) {
 fix_signal_error:
     fprintf(stderr, "error fixing handler for signal %d, please "
             "report this issue to "
-            "https://github.com/wailsapp/wails: %s\n",
+            "https://github.com/gailsapp/gails: %s\n",
             signum, strerror(errno));
 }
 
@@ -965,12 +965,12 @@ void window_move_x11(GtkWindow *window, int x, int y) {
     if (!GDK_IS_X11_DISPLAY(display)) return;
 
     resolve_x11_funcs();
-    if (wails_XMoveWindow == NULL) return;
+    if (gails_XMoveWindow == NULL) return;
 
     Display *xdisplay = gdk_x11_display_get_xdisplay(display);
     Window xwindow = gdk_x11_surface_get_xid(GDK_X11_SURFACE(surface));
-    wails_XMoveWindow(xdisplay, xwindow, x, y);
-    if (wails_XFlush != NULL) wails_XFlush(xdisplay);
+    gails_XMoveWindow(xdisplay, xwindow, x, y);
+    if (gails_XFlush != NULL) gails_XFlush(xdisplay);
 #endif
 }
 
@@ -988,7 +988,7 @@ void window_get_position_x11(GtkWindow *window, int *x, int *y) {
     if (!GDK_IS_X11_DISPLAY(display)) return;
 
     resolve_x11_funcs();
-    if (wails_XTranslateCoordinates == NULL) return;
+    if (gails_XTranslateCoordinates == NULL) return;
 
     Display *xdisplay = gdk_x11_display_get_xdisplay(display);
     Window xwindow = gdk_x11_surface_get_xid(GDK_X11_SURFACE(surface));
@@ -996,7 +996,7 @@ void window_get_position_x11(GtkWindow *window, int *x, int *y) {
     Window child;
     Window root = DefaultRootWindow(xdisplay);
     int abs_x, abs_y;
-    if (wails_XTranslateCoordinates(xdisplay, xwindow, root, 0, 0, &abs_x, &abs_y, &child)) {
+    if (gails_XTranslateCoordinates(xdisplay, xwindow, root, 0, 0, &abs_x, &abs_y, &child)) {
         *x = abs_x;
         *y = abs_y;
     }
@@ -1019,14 +1019,14 @@ static void window_send_always_on_top_x11(GtkWindow *window, gboolean always_on_
     if (!GDK_IS_X11_DISPLAY(display)) return;
 
     resolve_x11_funcs();
-    if (wails_XSendEvent == NULL || wails_XInternAtom == NULL) return;
+    if (gails_XSendEvent == NULL || gails_XInternAtom == NULL) return;
 
     Display *xdisplay = gdk_x11_display_get_xdisplay(display);
     Window xwindow = gdk_x11_surface_get_xid(GDK_X11_SURFACE(surface));
     Window root = DefaultRootWindow(xdisplay);
 
-    Atom net_wm_state = wails_XInternAtom(xdisplay, "_NET_WM_STATE", False);
-    Atom net_wm_state_above = wails_XInternAtom(xdisplay, "_NET_WM_STATE_ABOVE", False);
+    Atom net_wm_state = gails_XInternAtom(xdisplay, "_NET_WM_STATE", False);
+    Atom net_wm_state_above = gails_XInternAtom(xdisplay, "_NET_WM_STATE_ABOVE", False);
 
     XEvent xev = {0};
     xev.type = ClientMessage;
@@ -1039,16 +1039,16 @@ static void window_send_always_on_top_x11(GtkWindow *window, gboolean always_on_
     xev.xclient.data.l[2] = 0;
     xev.xclient.data.l[3] = 1; // source: normal application
 
-    wails_XSendEvent(xdisplay, root, False,
+    gails_XSendEvent(xdisplay, root, False,
                      SubstructureRedirectMask | SubstructureNotifyMask, &xev);
-    if (wails_XFlush != NULL) wails_XFlush(xdisplay);
+    if (gails_XFlush != NULL) gails_XFlush(xdisplay);
 #endif
 }
 
 void window_set_always_on_top(GtkWindow *window, gboolean always_on_top) {
     // Store the desired state so windowShow can re-apply it if the surface
     // doesn't exist yet. Use 1=true, 2=false as sentinels (NULL means never set).
-    g_object_set_data(G_OBJECT(window), "wails-always-on-top",
+    g_object_set_data(G_OBJECT(window), "gails-always-on-top",
                       GINT_TO_POINTER(always_on_top ? 1 : 2));
     window_send_always_on_top_x11(window, always_on_top);
 }
@@ -1056,7 +1056,7 @@ void window_set_always_on_top(GtkWindow *window, gboolean always_on_top) {
 // Apply a previously-set always-on-top state once the window surface exists.
 // Called from windowShow after gtk_window_present.
 void window_apply_pending_always_on_top(GtkWindow *window) {
-    gpointer stored = g_object_get_data(G_OBJECT(window), "wails-always-on-top");
+    gpointer stored = g_object_get_data(G_OBJECT(window), "gails-always-on-top");
     if (stored == NULL) return; // never been set
     window_send_always_on_top_x11(window, GPOINTER_TO_INT(stored) == 1 ? TRUE : FALSE);
 }
@@ -1072,8 +1072,8 @@ static void on_window_size_changed(GObject *object, GParamSpec *pspec, gpointer 
     // constraints, matching V2 behaviour where geometry hints are suspended.
     if (gtk_window_is_fullscreen(window) || gtk_window_is_maximized(window)) return;
 
-    int maxW = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(window), "wails-max-width"));
-    int maxH = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(window), "wails-max-height"));
+    int maxW = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(window), "gails-max-width"));
+    int maxH = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(window), "gails-max-height"));
 
     if (maxW <= 0 && maxH <= 0) return;
 
@@ -1090,15 +1090,15 @@ static void on_window_size_changed(GObject *object, GParamSpec *pspec, gpointer 
 }
 
 void window_set_max_size(GtkWindow *window, int maxWidth, int maxHeight) {
-    g_object_set_data(G_OBJECT(window), "wails-max-width", GINT_TO_POINTER(maxWidth));
-    g_object_set_data(G_OBJECT(window), "wails-max-height", GINT_TO_POINTER(maxHeight));
+    g_object_set_data(G_OBJECT(window), "gails-max-width", GINT_TO_POINTER(maxWidth));
+    g_object_set_data(G_OBJECT(window), "gails-max-height", GINT_TO_POINTER(maxHeight));
 
     // Check if we already connected the signal
-    gpointer connected = g_object_get_data(G_OBJECT(window), "wails-max-size-connected");
+    gpointer connected = g_object_get_data(G_OBJECT(window), "gails-max-size-connected");
     if (connected == NULL) {
         g_signal_connect(window, "notify::default-width", G_CALLBACK(on_window_size_changed), NULL);
         g_signal_connect(window, "notify::default-height", G_CALLBACK(on_window_size_changed), NULL);
-        g_object_set_data(G_OBJECT(window), "wails-max-size-connected", GINT_TO_POINTER(1));
+        g_object_set_data(G_OBJECT(window), "gails-max-size-connected", GINT_TO_POINTER(1));
     }
 
 }

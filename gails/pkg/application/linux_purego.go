@@ -425,7 +425,7 @@ func appNew(name string) pointer {
 	GApplicationNonUnique := uint(32)
 
 	// Name is already sanitized by sanitizeAppName() in application_linux.go
-	identifier := fmt.Sprintf("org.wails.%s", name)
+	identifier := fmt.Sprintf("org.gails.%s", name)
 
 	return pointer(gtkApplicationNew(identifier, GApplicationNonUnique))
 }
@@ -895,7 +895,7 @@ func windowNewWebview(parentId uint, gpuPolicy int) pointer {
 	if !registered {
 		webkitRegisterUriScheme(
 			webkitWebContextGetDefault(),
-			"wails",
+			"gails",
 			pointer(purego.NewCallback(func(request uintptr) {
 				webviewRequests <- &webViewAssetRequest{
 					Request:  webview.NewRequest(request),

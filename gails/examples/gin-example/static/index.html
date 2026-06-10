@@ -56,7 +56,7 @@
             </div>
         </div>
         <script type="module">
-            import * as wails from '/wails/runtime.js';
+            import * as gails from '/gails/runtime.js';
 
             // Wait for the Wails runtime to be ready
             document.addEventListener('DOMContentLoaded', () => {
@@ -67,7 +67,7 @@
                 document.getElementById('triggerEvent').addEventListener('click', async () => {
                     try {
                         console.log('Attempting to emit event...');
-                        await wails.Events.Emit('gin-button-clicked', {
+                        await gails.Events.Emit('gin-button-clicked', {
                             message: 'Hello from Gin!'
                         });
                         console.log('Event emitted successfully');

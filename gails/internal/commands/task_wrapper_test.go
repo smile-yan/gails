@@ -30,7 +30,7 @@ func TestWrapTask(t *testing.T) {
 			otherArgs:        []string{"CONFIG=debug"},
 			expectedTaskName: currentOS + ":build",
 			expectedArgs:     []string{"CONFIG=debug", "ARCH=" + currentArch},
-			expectedOsArgs:   []string{"gails3", "task", currentOS + ":build", "CONFIG=debug", "ARCH=" + currentArch},
+			expectedOsArgs:   []string{"gails", "task", currentOS + ":build", "CONFIG=debug", "ARCH=" + currentArch},
 		},
 		{
 			name:             "Package with parameters uses current platform",
@@ -38,7 +38,7 @@ func TestWrapTask(t *testing.T) {
 			otherArgs:        []string{"VERSION=1.0.0", "OUTPUT=app.pkg"},
 			expectedTaskName: currentOS + ":package",
 			expectedArgs:     []string{"VERSION=1.0.0", "OUTPUT=app.pkg", "ARCH=" + currentArch},
-			expectedOsArgs:   []string{"gails3", "task", currentOS + ":package", "VERSION=1.0.0", "OUTPUT=app.pkg", "ARCH=" + currentArch},
+			expectedOsArgs:   []string{"gails", "task", currentOS + ":package", "VERSION=1.0.0", "OUTPUT=app.pkg", "ARCH=" + currentArch},
 		},
 		{
 			name:             "Build without parameters",
@@ -46,7 +46,7 @@ func TestWrapTask(t *testing.T) {
 			otherArgs:        []string{},
 			expectedTaskName: currentOS + ":build",
 			expectedArgs:     []string{"ARCH=" + currentArch},
-			expectedOsArgs:   []string{"gails3", "task", currentOS + ":build", "ARCH=" + currentArch},
+			expectedOsArgs:   []string{"gails", "task", currentOS + ":build", "ARCH=" + currentArch},
 		},
 		{
 			name:             "GOOS override changes task prefix",
@@ -54,7 +54,7 @@ func TestWrapTask(t *testing.T) {
 			otherArgs:        []string{"GOOS=darwin", "CONFIG=release"},
 			expectedTaskName: "darwin:build",
 			expectedArgs:     []string{"CONFIG=release", "ARCH=" + currentArch},
-			expectedOsArgs:   []string{"gails3", "task", "darwin:build", "CONFIG=release", "ARCH=" + currentArch},
+			expectedOsArgs:   []string{"gails", "task", "darwin:build", "CONFIG=release", "ARCH=" + currentArch},
 		},
 		{
 			name:             "GOARCH override changes ARCH arg",
@@ -62,7 +62,7 @@ func TestWrapTask(t *testing.T) {
 			otherArgs:        []string{"GOARCH=arm64"},
 			expectedTaskName: currentOS + ":build",
 			expectedArgs:     []string{"ARCH=arm64"},
-			expectedOsArgs:   []string{"gails3", "task", currentOS + ":build", "ARCH=arm64"},
+			expectedOsArgs:   []string{"gails", "task", currentOS + ":build", "ARCH=arm64"},
 		},
 		{
 			name:             "Both GOOS and GOARCH override",
@@ -70,7 +70,7 @@ func TestWrapTask(t *testing.T) {
 			otherArgs:        []string{"GOOS=windows", "GOARCH=386", "VERSION=2.0"},
 			expectedTaskName: "windows:package",
 			expectedArgs:     []string{"VERSION=2.0", "ARCH=386"},
-			expectedOsArgs:   []string{"gails3", "task", "windows:package", "VERSION=2.0", "ARCH=386"},
+			expectedOsArgs:   []string{"gails", "task", "windows:package", "VERSION=2.0", "ARCH=386"},
 		},
 		{
 			name:             "Environment GOOS is used when no arg override",
@@ -79,7 +79,7 @@ func TestWrapTask(t *testing.T) {
 			envGOOS:          "darwin",
 			expectedTaskName: "darwin:build",
 			expectedArgs:     []string{"CONFIG=debug", "ARCH=" + currentArch},
-			expectedOsArgs:   []string{"gails3", "task", "darwin:build", "CONFIG=debug", "ARCH=" + currentArch},
+			expectedOsArgs:   []string{"gails", "task", "darwin:build", "CONFIG=debug", "ARCH=" + currentArch},
 		},
 		{
 			name:             "Arg GOOS overrides environment GOOS",
@@ -88,7 +88,7 @@ func TestWrapTask(t *testing.T) {
 			envGOOS:          "darwin",
 			expectedTaskName: "linux:build",
 			expectedArgs:     []string{"ARCH=" + currentArch},
-			expectedOsArgs:   []string{"gails3", "task", "linux:build", "ARCH=" + currentArch},
+			expectedOsArgs:   []string{"gails", "task", "linux:build", "ARCH=" + currentArch},
 		},
 	}
 

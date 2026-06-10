@@ -35,7 +35,7 @@ func (m *windowsApp) initMainLoop() {
 	m.mainThreadWindowHWND = w32.CreateWindowEx(
 		0,
 		w32.MustStringToUTF16Ptr(m.parent.options.Windows.WndClass),
-		w32.MustStringToUTF16Ptr("__wails_hidden_mainthread"),
+		w32.MustStringToUTF16Ptr("__gails_hidden_mainthread"),
 		w32.WS_DISABLED,
 		w32.CW_USEDEFAULT,
 		w32.CW_USEDEFAULT,

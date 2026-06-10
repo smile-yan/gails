@@ -115,7 +115,7 @@ func (ns *NotificationService) ServiceName() string {
 // OnNotificationResponse registers a callback function that will be called when
 // a notification response is received from the user.
 //
-//wails:ignore
+//gails:ignore
 func (ns *NotificationService) OnNotificationResponse(callback func(result NotificationResult)) {
 	ns.callbackLock.Lock()
 	defer ns.callbackLock.Unlock()

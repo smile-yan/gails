@@ -1,6 +1,6 @@
 import {css, html, LitElement} from 'lit'
 import {customElement, property} from 'lit/decorators.js'
-import {Events} from "@wailsio/runtime";
+import {Events} from "@gailsio/runtime";
 import {GreetService} from '../bindings/{{js .ModulePath}}';
 
 /**
@@ -45,8 +45,8 @@ export class MyElement extends LitElement {
         return html`
             <div class="container">
                 <div>
-                    <a data-wml-openURL="https://wails.io">
-                        <img src="/wails.png" class="logo" alt="Wails logo"/>
+                    <a data-wml-openURL="https://gails.io">
+                        <img src="/gails.png" class="logo" alt="Wails logo"/>
                     </a>
                     <a data-wml-openURL="https://lit.dev">
                         <img src="/lit.svg" class="logo lit" alt="Lit logo"/>

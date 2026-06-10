@@ -52,9 +52,9 @@ func checkDocker(result map[string]string) {
 	version := strings.TrimSpace(string(dockerVersion))
 
 	// Check for the unified cross-compilation image
-	imageCheck, _ := exec.Command("docker", "image", "inspect", "wails-cross").Output()
+	imageCheck, _ := exec.Command("docker", "image", "inspect", "gails-cross").Output()
 	if len(imageCheck) == 0 {
-		result["docker"] = "*" + version + " (wails-cross image not built - run: gails3 task setup:docker)"
+		result["docker"] = "*" + version + " (gails-cross image not built - run: gails task setup:docker)"
 	} else {
 		result["docker"] = "*" + version + " (cross-compilation ready)"
 	}

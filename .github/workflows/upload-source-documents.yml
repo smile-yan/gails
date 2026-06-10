@@ -11,7 +11,7 @@ on:
 jobs:
   push_files_to_crowdin:
     name: Push files to Crowdin
-    if: github.repository == 'wailsapp/wails'
+    if: github.repository == 'gailsapp/gails'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

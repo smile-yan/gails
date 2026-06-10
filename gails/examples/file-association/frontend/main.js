@@ -1,5 +1,5 @@
 import {GreetService} from "./bindings/changeme";
-import {Events} from "@wailsio/runtime";
+import {Events} from "@gailsio/runtime";
 
 const resultElement = document.getElementById('result');
 const timeElement = document.getElementById('time');

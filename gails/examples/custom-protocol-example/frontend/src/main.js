@@ -1,5 +1,5 @@
 import './style.css'
-import { Events } from '@wailsio/runtime'
+import { Events } from '@gailsio/runtime'
 
 document.addEventListener('DOMContentLoaded', () => {
   const appDiv = document.getElementById('app');
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="label">Example Link:</span>
             Try opening this URL (e.g., by pasting it into your browser's address bar or using <code>open your-app-scheme://...</code> in terminal):
             <br>
-            <a href="wailsexample://test/path?value=123&message=hello" id="example-url">wailsexample://test/path?value=123&message=hello</a>
+            <a href="gailsexample://test/path?value=123&message=hello" id="example-url">gailsexample://test/path?value=123&message=hello</a>
         </p>
 
         <div class="url-display">

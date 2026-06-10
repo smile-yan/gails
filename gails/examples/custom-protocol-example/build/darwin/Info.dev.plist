@@ -32,10 +32,10 @@
         <array>
             <dict>
                 <key>CFBundleURLName</key>
-                <string>wails.com.wailsexample</string>
+                <string>gails.com.gailsexample</string>
                 <key>CFBundleURLSchemes</key>
                 <array>
-                    <string>wailsexample</string>
+                    <string>gailsexample</string>
                 </array>
             </dict>
         </array>

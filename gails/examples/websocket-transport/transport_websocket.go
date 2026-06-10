@@ -101,7 +101,7 @@ func (w *WebSocketTransport) ServeAssets(assetHandler http.Handler) error {
 	mux := http.NewServeMux()
 
 	// Mount WebSocket endpoint for IPC
-	mux.HandleFunc("/wails/ws", w.handleWebSocket)
+	mux.HandleFunc("/gails/ws", w.handleWebSocket)
 
 	// Mount asset server for all other requests
 	mux.Handle("/", assetHandler)
@@ -113,7 +113,7 @@ func (w *WebSocketTransport) ServeAssets(assetHandler http.Handler) error {
 	go func() {
 		log.Printf("WebSocket transport serving assets and IPC on %s", w.addr)
 		log.Printf("  - Assets: http://%s/", w.addr)
-		log.Printf("  - WebSocket IPC: ws://%s/wails/ws", w.addr)
+		log.Printf("  - WebSocket IPC: ws://%s/gails/ws", w.addr)
 		if err := w.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Printf("WebSocket server error: %v", err)
 		}

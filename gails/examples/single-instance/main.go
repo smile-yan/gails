@@ -40,7 +40,7 @@ func main() {
 			application.NewService(&App{}),
 		},
 		SingleInstance: &application.SingleInstanceOptions{
-			UniqueID:      "com.wails.example.single-instance",
+			UniqueID:      "com.gails.example.single-instance",
 			EncryptionKey: encryptionKey,
 			OnSecondInstanceLaunch: func(data application.SecondInstanceData) {
 				if window != nil {
