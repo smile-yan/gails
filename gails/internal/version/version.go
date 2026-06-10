@@ -8,7 +8,7 @@ import (
 //go:embed version.txt
 var versionString string
 
-const DevVersion = "v3.0.0-dev"
+const DevVersion = "v1.0.0-dev"
 
 func String() string {
 	if !IsDev() {

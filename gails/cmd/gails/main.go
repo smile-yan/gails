@@ -31,7 +31,7 @@ func init() {
 }
 
 func main() {
-	app := clir.NewCli("gails", "The Gails CLI", "v3")
+	app := clir.NewCli("gails", "The Gails CLI", "v1")
 	app.NewSubCommand("docs", "Open the docs").Action(openDocs)
 	app.NewSubCommandFunction("init", "Initialise a new project", commands.Init)
 

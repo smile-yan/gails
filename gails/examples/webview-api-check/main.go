@@ -45,7 +45,7 @@ func (s *APICheckService) GetPlatformInfo() PlatformInfo {
 		OS:        runtime.GOOS,
 		Arch:      runtime.GOARCH,
 		GoVersion: runtime.Version(),
-		GailsInfo: "v3.0.0-dev",
+		GailsInfo: "v1.0.0-dev",
 		Timestamp: time.Now().Format(time.RFC3339),
 	}
 

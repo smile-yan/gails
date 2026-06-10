@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/gin-gonic/gin v1.11.0
-	github.com/gailsapp/gails v3.0.0
+	github.com/gailsapp/gails v1.0.0-dev
 )
 
 require (
