@@ -322,7 +322,9 @@ git commit -m "feat(webview2): port bridge.IUnknown from upstream combridge"
 - Create: `gails/internal/webview2/bridge/iunknown_impl.go`
 - Create: `gails/internal/webview2/bridge/iunknown_impl_test.go`
 
-- [ ] **Step 1: Write the failing test**
+**NOTE (correction from Task 4 implementer):** The upstream `pkg/combridge/iunknown_impl.go` does **not** use `sync/atomic.Int32` or `runtime.AddCleanup` for ref counting. The actual ref-count is stored in `comObject.refCount` in `pkg/combridge/bridge.go` (Task 6 in this plan). The port should faithfully mirror the upstream — there is no `NewIUnknownImpl` constructor, no AddCleanup, and no atomic ref count. The IUnknownImpl is allocated by `bridge.new()` (Task 6) and cast back via `IUnknownFromPointer`. Implementers should read `/Users/yanshili/go/pkg/mod/github.com/wailsapp/wails/webview2@v1.0.24/pkg/combridge/iunknown_impl.go` first and replicate the upstream structure exactly.
+
+- [ ] **Step 1: Write the failing test (public-surface compile-time test)**
 
 Create `gails/internal/webview2/bridge/iunknown_impl_test.go`:
 ```go
@@ -330,22 +332,42 @@ Create `gails/internal/webview2/bridge/iunknown_impl_test.go`:
 
 package bridge
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+	"unsafe"
+)
 
-func TestIUnknownImpl_QueryInterfaceRoundTrip(t *testing.T) {
-	// IUnknownImpl is a Go-side IUnknown; the test only asserts that
-	// constructing one does not panic and that QueryInterface for the
-	// IUnknown IID returns a usable pointer.
-	impl := NewIUnknownImpl()
-	defer impl.Release()
-
-	iidUnknown := &GUID{0x00000000, 0x0000, 0x0000, [8]byte{0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46}}
-	unk, err := impl.QueryInterface(iidUnknown)
-	if err != nil {
-		t.Fatalf("QueryInterface(IUnknown): %v", err)
+func TestIUnknownImpl_PublicSurface(t *testing.T) {
+	// Public-surface test: assert the type, its method set, and the
+	// underlying struct shape. We can't do a runtime QueryInterface
+	// roundtrip here because the vtable for IUnknownImpl is registered
+	// in Task 5/6 — that test will land when the IUnknown vtable is
+	// in place.
+	var impl IUnknownImpl
+	typ := reflect.TypeOf(&impl).Elem()
+	if typ.NumField() != 1 {
+		t.Fatalf("IUnknownImpl has %d fields, want 1", typ.NumField())
 	}
-	if unk == nil || unk.Raw == 0 {
-		t.Fatal("QueryInterface returned nil/zero")
+	if typ.Field(0).Name != "vtbl" {
+		t.Errorf("field 0: got %q, want %q", typ.Field(0).Name, "vtbl")
+	}
+	if got := unsafe.Sizeof(impl); got != unsafe.Sizeof(uintptr(0)) {
+		t.Errorf("IUnknownImpl size = %d, want %d", got, unsafe.Sizeof(uintptr(0)))
+	}
+
+	// Method set: QueryInterface, AddRef, Release
+	wantMethods := map[string]bool{"QueryInterface": false, "AddRef": false, "Release": false}
+	for i := 0; i < typ.NumMethod(); i++ {
+		m := typ.Method(i).Name
+		if _, ok := wantMethods[m]; ok {
+			wantMethods[m] = true
+		}
+	}
+	for m, seen := range wantMethods {
+		if !seen {
+			t.Errorf("missing method: %s", m)
+		}
 	}
 }
 ```
@@ -353,28 +375,26 @@ func TestIUnknownImpl_QueryInterfaceRoundTrip(t *testing.T) {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `cd /Users/yanshili/me/projects/wails/gails && GOOS=windows go test ./internal/webview2/bridge/...`
-Expected: build failure (`NewIUnknownImpl` undefined).
+Expected: build failure (iunknown_impl.go does not exist yet).
 
 - [ ] **Step 3: Port the implementation**
 
-Create `gails/internal/webview2/bridge/iunknown_impl.go`. Port the body from upstream `pkg/combridge/iunknown_impl.go`. Key invariants:
-- Use `sync/atomic.Int32` for ref counting.
-- Register `runtime.AddCleanup(impl, ...)` so a forgotten `Release` is recovered.
-- Expose constructor `NewIUnknownImpl() *IUnknownImpl`.
-- Expose `QueryInterface`, `AddRef`, `Release` matching the upstream signatures.
-
-The `QueryInterface` implementation must recognize the IUnknown IID (`{00000000-0000-0000-C000-000000000046}`) and return a new IUnknown pointing at the same underlying impl.
+Create `gails/internal/webview2/bridge/iunknown_impl.go`. Read upstream `pkg/combridge/iunknown_impl.go` first; the upstream structure is:
+- `IUnknownImpl` struct: single `vtbl *iunknownVtable` field
+- `QueryInterface(iid *windows.GUID) (*IUnknown, error)`: reuses the `(*IUnknown).QueryInterface` dispatch by `unsafe.Pointer` cast (the two types are layout-compatible)
+- `AddRef() int32` and `Release() int32`: forward to vtable slots
+- No constructor, no `runtime.AddCleanup`, no atomic ref count (the ref count is owned by the `comObject` allocated in Task 6's `bridge.new()`).
 
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `cd /Users/yanshili/me/projects/wails/gails && GOOS=windows go test ./internal/webview2/bridge/...`
-Expected: PASS.
+Expected: PASS (or compile-pass on macOS).
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add internal/webview2/bridge/iunknown_impl.go internal/webview2/bridge/iunknown_impl_test.go
-git commit -m "feat(webview2): port bridge.IUnknownImpl with atomic ref count + cleanup"
+git commit -m "feat(webview2): port bridge.IUnknownImpl from upstream combridge"
 ```
 
 ### Task 5: Port `bridge.VTable` and `RegisterVTable`
