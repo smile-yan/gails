@@ -183,11 +183,13 @@ func navigationCompletedInvokeTrampoline(this uintptr, sender uintptr, args uint
 	if !ok || cb == nil {
 		return 0 // S_OK; nothing to do
 	}
-	// The "sender" argument is an ICoreWebView2*. The Gails View
-	// wrapper is not yet implemented in this task; we pass a
-	// nil view for now and let the callback deal with it. Later
-	// tasks (View) will populate this.
-	_ = sender
-	cb(nil, &NavigationCompletedEventArgs{Raw: args})
+	// The "sender" argument is an ICoreWebView2*. Wrap it in a
+	// Gails View so the callback can issue further webview calls
+	// (e.g. Navigate) if it needs to.
+	var view *View
+	if sender != 0 {
+		view = &View{Raw: sender}
+	}
+	cb(view, &NavigationCompletedEventArgs{Raw: args})
 	return 0
 }

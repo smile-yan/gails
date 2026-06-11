@@ -10,26 +10,6 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-// View is the Go-side ICoreWebView2 wrapper. It is declared as a
-// forward reference here so the MessageReceivedEventHandler callback
-// signature can name *View before pkg/webview2/view.go (Task 19)
-// is implemented. view.go replaces this declaration with the real
-// one.
-type View struct {
-	Raw  uintptr
-	vtbl *iCoreWebView2Vtable
-}
-
-type iCoreWebView2Vtable struct {
-	QueryInterface uintptr
-	AddRef         uintptr
-	Release        uintptr
-	// ... 50+ slots in upstream order. See view.go (Task 19) for
-	// the full layout. Only the first three are needed here for
-	// the forward type to be usable in the MessageReceivedEventArgs
-	// callback signature.
-}
-
 // MessageReceivedEventArgs is the COM ICoreWebView2WebMessageReceivedEventArgs
 // wrapper. Call TryGetWebMessageAsString to read the message body.
 type MessageReceivedEventArgs struct {
@@ -111,11 +91,13 @@ func messageReceivedInvokeTrampoline(this uintptr, sender uintptr, args uintptr)
 	if !ok || cb == nil {
 		return 0 // S_OK; nothing to do
 	}
-	// The "sender" argument is an ICoreWebView2*. The Gails View
-	// wrapper is not yet implemented in this task; we pass a
-	// nil view for now and let the callback deal with it. Later
-	// tasks (View) will populate this.
-	_ = sender
-	cb(nil, &MessageReceivedEventArgs{Raw: args})
+	// The "sender" argument is an ICoreWebView2*. Wrap it in a
+	// Gails View so the callback can issue further webview calls
+	// (e.g. PostWebMessageAsString) if it needs to.
+	var view *View
+	if sender != 0 {
+		view = &View{Raw: sender}
+	}
+	cb(view, &MessageReceivedEventArgs{Raw: args})
 	return 0
 }
