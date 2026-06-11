@@ -32,11 +32,11 @@ var (
 	uintptrSize = unsafe.Sizeof(uintptr(0))
 )
 
-// allocUintptrObject allocates a native block of `size` uintptrs and
+// AllocUintptrObject allocates a native block of `size` uintptrs and
 // returns the raw uintptr handle plus a Go slice aliasing the
 // memory. The caller is responsible for releasing the block with
-// globalFree once no more views into it remain.
-func allocUintptrObject(size int) (uintptr, []uintptr) {
+// GlobalFree once no more views into it remain.
+func AllocUintptrObject(size int) (uintptr, []uintptr) {
 	v := globalAlloc(uintptr(size) * uintptrSize)
 	slice := unsafe.Slice((*uintptr)(unsafe.Pointer(v)), size)
 	return v, slice
@@ -51,7 +51,10 @@ func globalAlloc(dwBytes uintptr) uintptr {
 	return ret
 }
 
-func globalFree(data uintptr) {
+// GlobalFree releases a block of native memory previously returned
+// by AllocUintptrObject (or by globalAlloc directly). The pointer
+// must not be used after the call.
+func GlobalFree(data uintptr) {
 	ret, _, _ := procGlobalFree.Call(data)
 	if ret != 0 {
 		panic("globalFree failed")
