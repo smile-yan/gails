@@ -93,51 +93,6 @@ func (e *Environment) CreateCoreWebView2Controller(parentHWND uintptr, handler *
 	return nil
 }
 
-// Controller is a forward declaration for the ICoreWebView2Controller
-// wrapper. Task 21 (Plan Task 21) replaces this stub with the real
-// implementation. The callback signature for
-// CreateControllerCompletedHandler references *Controller, so a stub
-// must exist before that handler can be constructed.
-type Controller struct {
-	Raw  uintptr
-	vtbl *iCoreWebView2ControllerVtable
-}
-
-// iCoreWebView2ControllerVtable is the forward-declared ICoreWebView2Controller
-// vtable. Real layout (with all slot positions) is defined in
-// controller.go (Task 21); only the type is needed here so the
-// CreateControllerCompletedHandler callback can take a *Controller.
-type iCoreWebView2ControllerVtable struct {
-	QueryInterface                     uintptr
-	AddRef                             uintptr
-	Release                            uintptr
-	GetICoreWebView2                   uintptr
-	SetBounds                          uintptr
-	GetBounds                          uintptr
-	GetVisible                         uintptr
-	SetVisible                         uintptr
-	GetIsVisible                       uintptr
-	GetParentWindow                    uintptr
-	put_ParentWindow                   uintptr
-	NotifyParentWindowPositionChanged  uintptr
-	Close                              uintptr
-	GetCoreWebView2Controller          uintptr
-	AddAcceleratorKeyPressed           uintptr
-	RemoveAcceleratorKeyPressed        uintptr
-	MoveFocus                          uintptr
-	AddGotFocus                        uintptr
-	RemoveGotFocus                     uintptr
-	AddLostFocus                       uintptr
-	RemoveLostFocus                    uintptr
-	AddZoomFactorChanged               uintptr
-	RemoveZoomFactorChanged            uintptr
-	GetZoomFactor                      uintptr
-	put_ZoomFactor                     uintptr
-	SetBoundsAndZoomFactor             uintptr
-	MoveFocusReason                    uintptr
-	NotifyParentWindowPositionChanged2 uintptr
-}
-
 // CreateControllerCompletedHandler is the Go-side implementation of
 // ICoreWebView2CreateCoreWebView2ControllerCompletedHandler.
 // Construct one with NewCreateControllerCompletedHandler and pass to
@@ -187,11 +142,12 @@ func createControllerCompletedInvokeTrampoline(this uintptr, errorCode uintptr, 
 	}
 	var controller *Controller
 	if createdController != 0 {
-		// Task 21 will populate the ICoreWebView2Controller vtable
-		// slots on Controller. For now, only Raw is set so the
-		// callback can at least inspect whether the pointer is
-		// non-nil.
-		controller = &Controller{Raw: createdController}
+		// Allocate a fresh Controller to hand back to the caller. The
+		// caller is responsible for releasing the ICoreWebView2Controller
+		// COM pointer it stores on the Controller. The raw pointer is
+		// stashed in the unexported `host` field so the Gails port can
+		// wrap it in a dedicated COM-wrapper type in a later task.
+		controller = newControllerFromCOMPointer(createdController)
 	}
 	cb(int32(errorCode), controller)
 	return 0
