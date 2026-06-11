@@ -125,6 +125,58 @@ func newControllerFromCOMPointer(raw uintptr) *Controller {
 	}
 }
 
+// AddWebResourceRequestedFilter registers a URI wildcard + context
+// filter that causes WebResourceRequested to fire for matching
+// requests. Mirrors upstream edge.Chromium.AddWebResourceRequestedFilter.
+//
+// If the controller is not yet attached (View is nil) the call is a
+// no-op; the filter would have no live webview to register against.
+// Gails port note: the underlying View.AddWebResourceRequestedFilter
+// takes a uint32 context (COREWEBVIEW2_WEB_RESOURCE_CONTEXT); we cast
+// the typed WebResourceContext here so callers pass the enum.
+func (c *Controller) AddWebResourceRequestedFilter(uri string, ctx WebResourceContext) {
+	if c.View == nil {
+		return // not yet attached
+	}
+	_ = c.View.AddWebResourceRequestedFilter(uri, uint32(ctx))
+}
+
+// HasCapability reports whether the running WebView2 runtime supports
+// the given capability. Returns false if the controller is not yet
+// attached (no runtime version to compare against) or the capability
+// is unknown. Mirrors upstream edge.Chromium.HasCapability.
+//
+// Gails port note: full version-gate logic (comparing
+// webview2RuntimeVersion against each Capability's minimum version)
+// will be added when the webviewloader port (Plan Task 23+) lands;
+// today we conservatively return false until a real runtime version
+// is bound to the controller. This preserves upstream's "unknown
+// version ⇒ no capability" semantics.
+func (c *Controller) HasCapability(cap Capability) bool {
+	if c.View == nil {
+		return false
+	}
+	if c.webview2RuntimeVersion == "" {
+		return false
+	}
+	// TODO(port): replace with webviewloader.CompareBrowserVersions
+	// once the webviewloader port lands.
+	_ = cap
+	return false
+}
+
+// OpenDevToolsWindow opens the WebView2 DevTools window in a separate
+// browser window. Mirrors upstream edge.Chromium.OpenDevToolsWindow.
+//
+// If the controller is not yet attached (View is nil) the call is a
+// no-op; there is no live webview to open devtools for.
+func (c *Controller) OpenDevToolsWindow() {
+	if c.View == nil {
+		return
+	}
+	_ = c.View.OpenDevToolsWindow()
+}
+
 // --- Forward-declared handler types ---------------------------------
 //
 // The fields above reference types that other tasks own. The forward
