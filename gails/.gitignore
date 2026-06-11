@@ -11,3 +11,4 @@ cmd/gails/gails
 internal/commands/appimage_testfiles/appimage_testfiles
 testiosapp/
 test/manual/systray/bin/
+output/
