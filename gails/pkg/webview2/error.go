@@ -4,14 +4,6 @@ package webview2
 
 import "fmt"
 
-// Capability is a placeholder forward-declaration for the WebView2 capability
-// enumeration. The canonical definition of Capability lives in
-// pkg/webview2/context.go (Task 10) and is expected to be `type Capability
-// int32`. This declaration will be removed when Task 10 lands and the real
-// definition is introduced. It exists now so that this file compiles
-// independently in the TDD red-green cycle.
-type Capability int32
-
 // UnsupportedCapabilityError is returned when a WebView2 capability is
 // requested that the running WebView2 runtime version does not support.
 type UnsupportedCapabilityError struct {
