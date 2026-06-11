@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/gailsapp/gails/internal/lo"
-	"github.com/wailsapp/wails/webview2/webviewloader"
+	"github.com/gailsapp/gails/pkg/webview2"
 )
 
 type windowsPackageManager int
@@ -61,9 +61,9 @@ func windowsInstallCmd(winget, scoop, choco, manual string) string {
 func collectPlatformExtras() map[string]string {
 	extras := make(map[string]string)
 
-	extras["Go WebView2Loader"] = lo.Ternary(webviewloader.UsingGoWebview2Loader, "true", "false")
+	extras["Go WebView2Loader"] = lo.Ternary(webview2.UsingGoWebview2Loader, "true", "false")
 
-	webviewVersion, err := webviewloader.GetAvailableCoreWebView2BrowserVersionString("")
+	webviewVersion, err := webview2.GetAvailableCoreWebView2BrowserVersionString("")
 	if err != nil {
 		extras["WebView2 Version"] = "Error: " + err.Error()
 	} else {
@@ -204,7 +204,7 @@ func (d *Doctor) checkGoInstallation() {
 }
 
 func (d *Doctor) checkWebView2() {
-	_, err := webviewloader.GetAvailableCoreWebView2BrowserVersionString("")
+	_, err := webview2.GetAvailableCoreWebView2BrowserVersionString("")
 	if err != nil {
 		d.report.Diagnostics = append(d.report.Diagnostics, DiagnosticResult{
 			Name:     "WebView2 Runtime",

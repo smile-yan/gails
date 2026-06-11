@@ -2,12 +2,12 @@
 
 package capabilities
 
-import "github.com/wailsapp/wails/webview2/webviewloader"
+import "github.com/gailsapp/gails/pkg/webview2"
 
 type version string
 
 func (v version) IsAtLeast(input string) bool {
-	result, err := webviewloader.CompareBrowserVersions(string(v), input)
+	result, err := webview2.CompareBrowserVersions(string(v), input)
 	if err != nil {
 		return false
 	}

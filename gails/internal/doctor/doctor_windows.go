@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	"github.com/gailsapp/gails/internal/lo"
-	"github.com/wailsapp/wails/webview2/webviewloader"
+	"github.com/gailsapp/gails/pkg/webview2"
 )
 
 func getInfo() (map[string]string, bool) {
 	ok := true
 	result := make(map[string]string)
-	result["Go WebView2Loader"] = lo.Ternary(webviewloader.UsingGoWebview2Loader, "true", "false")
-	webviewVersion, err := webviewloader.GetAvailableCoreWebView2BrowserVersionString("")
+	result["Go WebView2Loader"] = lo.Ternary(webview2.UsingGoWebview2Loader, "true", "false")
+	webviewVersion, err := webview2.GetAvailableCoreWebView2BrowserVersionString("")
 	if err != nil {
 		ok = false
 		webviewVersion = "Error:" + err.Error()

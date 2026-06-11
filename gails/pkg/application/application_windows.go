@@ -14,7 +14,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/wailsapp/wails/webview2/webviewloader"
+	"github.com/gailsapp/gails/pkg/webview2"
 
 	"github.com/gailsapp/gails/internal/operatingsystem"
 
@@ -427,8 +427,8 @@ func newPlatformApp(app *App) *windowsApp {
 
 func (a *App) logPlatformInfo() {
 	var args []any
-	args = append(args, "Go-WebView2Loader", webviewloader.UsingGoWebview2Loader)
-	webviewVersion, err := webviewloader.GetAvailableCoreWebView2BrowserVersionString(
+	args = append(args, "Go-WebView2Loader", webview2.UsingGoWebview2Loader)
+	webviewVersion, err := webview2.GetAvailableCoreWebView2BrowserVersionString(
 		a.options.Windows.WebviewBrowserPath,
 	)
 	if err != nil {
@@ -445,10 +445,10 @@ func (a *App) logPlatformInfo() {
 
 func (a *App) platformEnvironment() map[string]any {
 	result := map[string]any{}
-	webviewVersion, _ := webviewloader.GetAvailableCoreWebView2BrowserVersionString(
+	webviewVersion, _ := webview2.GetAvailableCoreWebView2BrowserVersionString(
 		a.options.Windows.WebviewBrowserPath,
 	)
-	result["Go-WebView2Loader"] = webviewloader.UsingGoWebview2Loader
+	result["Go-WebView2Loader"] = webview2.UsingGoWebview2Loader
 	result["WebView2"] = webviewVersion
 	return result
 }
