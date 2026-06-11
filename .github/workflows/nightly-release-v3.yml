@@ -1,4 +1,4 @@
-name: Nightly Release v3-alpha
+name: Nightly Release
 
 on:
   schedule:
@@ -118,7 +118,7 @@ jobs:
           fi
         else
           # No current tag, check against latest release
-          LATEST_TAG=$(git tag --list "v3.0.0-alpha.*" | sort -V | tail -1)
+          LATEST_TAG=$(git tag --list "v*.*.*-alpha.*" | sort -V | tail -1)
           if [ -z "$LATEST_TAG" ]; then
             echo "No previous release found, proceeding with release"
             echo "has_changes=true" >> $GITHUB_OUTPUT

@@ -1,8 +1,8 @@
-name: Bump webview2 in v3
+name: Bump webview2
 
 on:
   repository_dispatch:
-    types: [bump-webview2-v3]
+    types: [bump-webview2]
   workflow_dispatch:
     inputs:
       version:
@@ -53,10 +53,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: bump/webview2-${{ steps.version.outputs.version }}
-          title: "chore(v3): bump webview2 to ${{ steps.version.outputs.version }}"
+          title: "chore: bump webview2 to ${{ steps.version.outputs.version }}"
           body: |
             Bumps webview2 to version ${{ steps.version.outputs.version }}
 
             Triggered by release-webview2 workflow.
-          commit-message: "chore(v3): bump webview2 to ${{ steps.version.outputs.version }}"
-          labels: dependencies, v3
+          commit-message: "chore: bump webview2 to ${{ steps.version.outputs.version }}"
+          labels: dependencies

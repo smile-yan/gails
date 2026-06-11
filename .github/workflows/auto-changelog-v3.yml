@@ -1,4 +1,4 @@
-name: Auto Changelog (v3)
+name: Auto Changelog
 
 on:
   pull_request_target:
@@ -22,7 +22,7 @@ jobs:
       contents: write
 
     steps:
-    - name: Checkout v3-alpha
+    - name: Checkout master
       uses: actions/checkout@v4
       with:
         ref: master

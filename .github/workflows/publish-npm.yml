@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: publish-npm-v3
+  group: publish-npm
   cancel-in-progress: true
 
 jobs:
