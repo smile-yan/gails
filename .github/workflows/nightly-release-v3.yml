@@ -1,4 +1,4 @@
-name: Nightly Release v3-alpha
+name: Nightly Release
 
 on:
   schedule:
@@ -40,7 +40,7 @@ jobs:
       with:
         go-version: '1.25'
         cache: true
-        cache-dependency-path: 'v3/go.sum'
+        cache-dependency-path: 'gails/go.sum'
     
     - name: Install Task
       uses: arduino/setup-task@v2
@@ -73,7 +73,7 @@ jobs:
         echo "🔍 Checking UNRELEASED_CHANGELOG.md for content..."
         
         # Run the release script in check mode to see if there's content
-        cd v3/tasks/release
+        cd gails/tasks/release
         
         # Use the release script itself to check for content
         if go run release.go --check-only 2>/dev/null; then
@@ -118,7 +118,7 @@ jobs:
           fi
         else
           # No current tag, check against latest release
-          LATEST_TAG=$(git tag --list "v3.0.0-alpha.*" | sort -V | tail -1)
+          LATEST_TAG=$(git tag --list "v*.*.*-alpha.*" | sort -V | tail -1)
           if [ -z "$LATEST_TAG" ]; then
             echo "No previous release found, proceeding with release"
             echo "has_changes=true" >> $GITHUB_OUTPUT
@@ -174,7 +174,7 @@ jobs:
         WAILS_REPO_TOKEN: ${{ secrets.WAILS_REPO_TOKEN || github.token }}
         GITHUB_TOKEN: ${{ secrets.WAILS_REPO_TOKEN || github.token }}
       run: |
-        cd v3/tasks/release
+        cd gails/tasks/release
         ARGS=()
         if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
           ARGS+=(--dry-run)

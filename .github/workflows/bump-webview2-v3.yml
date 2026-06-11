@@ -1,8 +1,8 @@
-name: Bump webview2 in v3
+name: Bump webview2
 
 on:
   repository_dispatch:
-    types: [bump-webview2-v3]
+    types: [bump-webview2]
   workflow_dispatch:
     inputs:
       version:
@@ -29,7 +29,7 @@ jobs:
         with:
           go-version: '1.25'
           cache: true
-          cache-dependency-path: "v3/go.sum"
+          cache-dependency-path: "gails/go.sum"
 
       - name: Determine version
         id: version
@@ -42,8 +42,8 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Bumping webview2 to version: $VERSION"
 
-      - name: Update v3 go.mod
-        working-directory: v3
+      - name: Update gails go.mod
+        working-directory: gails
         run: |
           go get github.com/wailsapp/wails/webview2@${{ steps.version.outputs.version }}
           go mod tidy
@@ -53,10 +53,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: bump/webview2-${{ steps.version.outputs.version }}
-          title: "chore(v3): bump webview2 to ${{ steps.version.outputs.version }}"
+          title: "chore: bump webview2 to ${{ steps.version.outputs.version }}"
           body: |
             Bumps webview2 to version ${{ steps.version.outputs.version }}
 
             Triggered by release-webview2 workflow.
-          commit-message: "chore(v3): bump webview2 to ${{ steps.version.outputs.version }}"
-          labels: dependencies, v3
+          commit-message: "chore: bump webview2 to ${{ steps.version.outputs.version }}"
+          labels: dependencies

@@ -86,6 +86,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          event-type: bump-webview2-v3
+          event-type: bump-webview2
           client-payload:
             version: ${{ steps.version.outputs.version }}

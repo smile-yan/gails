@@ -28,7 +28,7 @@ on:
     branches:
       - master
     paths:
-      - 'v3/internal/commands/build_assets/docker/Dockerfile.cross'
+      - 'gails/internal/commands/build_assets/docker/Dockerfile.cross'
 
 env:
   REGISTRY: ghcr.io
@@ -84,8 +84,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: v3/internal/commands/build_assets/docker
-          file: v3/internal/commands/build_assets/docker/Dockerfile.cross
+          context: gails/internal/commands/build_assets/docker
+          file: gails/internal/commands/build_assets/docker/Dockerfile.cross
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -161,7 +161,7 @@ jobs:
 
       - name: Install gails CLI
         run: |
-          cd v3
+          cd gails
           go install ./cmd/gails
 
       - name: Set up QEMU
@@ -197,7 +197,7 @@ jobs:
           cd test-gails-app
 
           # Update replace directive to use absolute path (gails init adds relative path)
-          sed -i 's|replace github.com/gailsapp/gails => .*|replace github.com/gailsapp/gails => ${{ github.workspace }}/v3|' go.mod
+          sed -i 's|replace github.com/gailsapp/gails => .*|replace github.com/gailsapp/gails => ${{ github.workspace }}/gails|' go.mod
 
       - name: Cross-compile ${{ matrix.os }}/${{ matrix.arch }} via task
         run: |

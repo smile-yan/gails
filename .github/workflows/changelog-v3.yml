@@ -1,4 +1,4 @@
-name: Changelog Validation (v3)
+name: Changelog Validation
 
 on:
   pull_request:
@@ -30,14 +30,14 @@ jobs:
         fetch-depth: 0
         token: ${{ secrets.GITHUB_TOKEN || github.token }}
         
-    - name: Get REAL validation script from v3-alpha
+    - name: Get REAL validation script from master
       run: |
-        echo "Fetching the REAL validation script from v3-alpha branch..."
+        echo "Fetching the REAL validation script from master branch..."
         git fetch origin master
-        git checkout origin/master -- v3/scripts/validate-changelog.go
-        
+        git checkout origin/master -- gails/scripts/validate-changelog.go
+
         echo "Validation script fetched successfully:"
-        ls -la v3/scripts/
+        ls -la gails/scripts/
         
     - name: Setup Go
       uses: actions/setup-go@v4
@@ -85,7 +85,7 @@ jobs:
       if: steps.changelog_check.outputs.changelog_modified == 'true'
       run: |
         echo "Running changelog validation..."
-        cd v3/scripts
+        cd gails/scripts
         OUTPUT=$(go run validate-changelog.go ../../docs/src/content/docs/changelog.mdx /tmp/pr_added_lines.txt 2>&1)
         echo "$OUTPUT"
         
@@ -106,7 +106,7 @@ jobs:
           echo "committed=false" >> $GITHUB_OUTPUT
         else
           # Ensure validation script doesn't get committed
-          echo "v3/scripts/validate-changelog.go" >> .git/info/exclude
+          echo "gails/scripts/validate-changelog.go" >> .git/info/exclude
           # Get the correct branch name to push to
           REPO_OWNER="gailsapp"  # Always gailsapp for this repo
           
@@ -121,9 +121,9 @@ jobs:
             echo "🔍 PR source branch: $BRANCH_NAME"
             echo "🔍 Head repository: $HEAD_REPO"
             
-            # Don't push if this is from a fork or if branch is v3-alpha (main branch)
+            # Don't push if this is from a fork or if branch is master (main branch)
             if [ "$HEAD_REPO" != "gails" ] || [ "$BRANCH_NAME" = "master" ]; then
-              echo "⚠️ Cannot push - either fork or direct v3-alpha branch. Manual fix required."
+              echo "⚠️ Cannot push - either fork or direct master branch. Manual fix required."
               echo "committed=false" >> $GITHUB_OUTPUT
               exit 0
             fi
@@ -198,7 +198,7 @@ jobs:
               '\\n```\\n\\n' +
               '</details>\\n\\n' +
               '**What happened?** \\n' +
-              'The validation script detected that you added changelog entries to a version section that has already been released (like `v3.0.0-alpha.10`). All new entries should go in the `[Unreleased]` section under the appropriate category (`### Added`, `### Fixed`, etc.).\\n\\n' +
+              'The validation script detected that you added changelog entries to a version section that has already been released. All new entries should go in the `[Unreleased]` section under the appropriate category (`### Added`, `### Fixed`, etc.).\\n\\n' +
               (committed !== 'true' ? '**Action needed:** Please copy the corrected content from above and replace your changelog file.' : '');
           }
           
