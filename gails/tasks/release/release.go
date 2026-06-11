@@ -20,9 +20,9 @@ import (
 const (
 	versionFile          = "../../internal/version/version.txt"
 	changelogFile        = "../../../docs/src/content/docs/changelog.mdx"
-	defaultReleaseBranch = "master"
+	defaultReleaseBranch = "main"
 	defaultReleaseTitle  = "Gails %s"
-	defaultReleaseTarget = "master"
+	defaultReleaseTarget = "main"
 	githubDefaultAPI     = "https://api.github.com"
 	githubAPIVersion     = "2022-11-28"
 )
@@ -562,9 +562,9 @@ func runRelease(opts releaseOptions) error {
 	}
 
 	filesToAdd := []string{
-		"v3/internal/version/version.txt",
+		"internal/version/version.txt",
 		"docs/src/content/docs/changelog.mdx",
-		"v3/UNRELEASED_CHANGELOG.md",
+		"UNRELEASED_CHANGELOG.md",
 	}
 	if err := git.add(filesToAdd...); err != nil {
 		return fmt.Errorf("failed to stage release files: %w", err)
@@ -661,7 +661,7 @@ func buildReleaseBody(version, changelogContent string) string {
 		"",
 		"---",
 		"",
-		"🤖 This is an automated nightly release generated from the latest changes on master.",
+		"🤖 This is an automated nightly release generated from the latest changes on main.",
 		"",
 		"**Installation:**",
 		"```bash",
