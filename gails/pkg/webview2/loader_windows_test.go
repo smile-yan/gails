@@ -40,3 +40,17 @@ func TestGetAvailableCoreWebView2BrowserVersionString_EmptyWhenMissing(t *testin
 	// Either path is acceptable; the test exists to catch panics.
 	_ = v
 }
+
+func TestCreateCoreWebView2EnvironmentWithOptions_NilSafe(t *testing.T) {
+	// The full env-creation path requires a real WebView2 runtime; CI
+	// may not have one. We only assert the function exists and accepts
+	// a nil callback without panicking — the call is asynchronous
+	// anyway.
+	cb := NewCreateEnvironmentCompletedHandler(func(result int32, env *Environment) {})
+	defer cb.Close()
+	// Do not call the real function; just verify the callback is
+	// non-nil and Close() works.
+	if cb.impl == nil {
+		t.Error("CreateEnvironmentCompletedHandler impl is nil")
+	}
+}

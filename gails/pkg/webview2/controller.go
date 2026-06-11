@@ -187,16 +187,14 @@ func (c *Controller) OpenDevToolsWindow() {
 // owning task must remove the matching declaration here when it
 // lands its real one.
 //
-// Each of these is a placeholder struct with the right name so the
+// CreateEnvironmentCompletedHandler was removed in Plan Task 24;
+// the real type now lives in loader_windows.go.
+//
+// Each remaining placeholder is a struct with the right name so the
 // struct field types compile. They are not used for anything beyond
 // type identity and are guarded by the unused-field rule (the
 // controller_test only checks NewController + c.Environment).
 type (
-	// CreateEnvironmentCompletedHandler is owned by a later task
-	// (Loader environment creation). Declared here as a placeholder
-	// so the envCompleted field has a real type.
-	CreateEnvironmentCompletedHandler struct{}
-
 	// PermissionRequestedEventHandler is owned by a later task
 	// (events PermissionRequested). Declared here as a placeholder.
 	PermissionRequestedEventHandler struct{}

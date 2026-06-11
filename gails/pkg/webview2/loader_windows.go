@@ -441,3 +441,228 @@ func maskErrorSuccess(err error) error {
 	}
 	return err
 }
+
+// -----------------------------------------------------------------------------
+// Environment creation (env_create.go + env_create_completed.go)
+// -----------------------------------------------------------------------------
+
+// CreateEnvironmentOptions configures the WebView2 environment.
+//
+// Mirrors the field set in upstream webviewloader's
+// `environmentOptions` struct. All fields are optional; the empty
+// string / false zero value matches upstream's "use the runtime
+// default" semantics.
+type CreateEnvironmentOptions struct {
+	BrowserExecutableFolder string
+	UserDataFolder          string
+	AdditionalBrowserArgs   string
+	Language                 string
+}
+
+// webView2RunTimeType is the runtime flavour passed to
+// CreateWebViewEnvironmentWithOptionsInternal. Mirrors the
+// webView2RunTimeType enum in upstream webviewloader.
+type webView2RunTimeType int32
+
+const (
+	webView2RunTimeTypeInstalled       webView2RunTimeType = 0x00
+	webView2RunTimeTypeRedistributable webView2RunTimeType = 0x01
+)
+
+// CreateEnvironmentCompletedHandler is the Go-side
+// ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler.
+// Construct one with NewCreateEnvironmentCompletedHandler and pass
+// to CreateCoreWebView2EnvironmentWithOptions; call Close when done.
+type CreateEnvironmentCompletedHandler struct {
+	impl *comHandlerImpl
+}
+
+// NewCreateEnvironmentCompletedHandler wires a Go callback to the
+// ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler.Invoke
+// vtable slot. The returned handler holds a reference to a native
+// COM object; the caller must call Close when finished.
+//
+// Ported from upstream
+// ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler.
+func NewCreateEnvironmentCompletedHandler(callback func(result int32, env *Environment)) *CreateEnvironmentCompletedHandler {
+	trampoline := windows.NewCallback(createEnvironmentCompletedInvokeTrampoline)
+	h := NewComHandler(trampoline, callback)
+	return &CreateEnvironmentCompletedHandler{impl: h}
+}
+
+// Close releases the underlying COM object. Calling Close twice is
+// a no-op.
+func (h *CreateEnvironmentCompletedHandler) Close() {
+	if h.impl == nil {
+		return
+	}
+	h.impl.Release()
+	h.impl = nil
+}
+
+// createEnvironmentCompletedInvokeTrampoline is the per-instance
+// Invoke slot for the
+// ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
+// vtable. It is registered as a C callback via windows.NewCallback
+// and is invoked by WebView2 when environment creation finishes.
+//
+// The signature is fixed by COM stdcall: the first argument is the
+// COM `this` pointer, followed by the Invoke method's typed
+// arguments (HRESULT and the new ICoreWebView2Environment*), and
+// the return value is an HRESULT uintptr.
+func createEnvironmentCompletedInvokeTrampoline(this uintptr, errorCode uintptr, createdEnvironment uintptr) uintptr {
+	impl := comHandlerFromThis(this)
+	if impl == nil {
+		return 0x80004003 // E_POINTER
+	}
+	cb, ok := impl.Callback().(func(result int32, env *Environment))
+	if !ok || cb == nil {
+		return 0 // S_OK; nothing to do
+	}
+	var env *Environment
+	if createdEnvironment != 0 {
+		env = &Environment{Raw: createdEnvironment}
+	}
+	cb(int32(errorCode), env)
+	return 0
+}
+
+// CreateCoreWebView2EnvironmentWithOptions creates a WebView2
+// environment asynchronously. WebView2 calls the completion
+// handler's Invoke with the new ICoreWebView2Environment* when the
+// runtime is ready.
+//
+// This is the Gails equivalent of upstream webviewloader's
+// CreateCoreWebView2EnvironmentWithOptions. It uses
+// CreateWebViewEnvironmentWithOptionsInternal exported by the
+// WebView2 client DLL (the same entry point upstream uses). opts may
+// be nil, in which case the installed runtime is used with default
+// settings.
+//
+// The handler is mandatory (the WebView2 API is asynchronous and
+// only delivers the environment pointer through the handler).
+func CreateCoreWebView2EnvironmentWithOptions(opts *CreateEnvironmentOptions, handler *CreateEnvironmentCompletedHandler) error {
+	if handler == nil || handler.impl == nil {
+		return fmt.Errorf("CreateCoreWebView2EnvironmentWithOptions: handler is nil")
+	}
+	if opts == nil {
+		opts = &CreateEnvironmentOptions{}
+	}
+
+	// Resolve the WebView2 client DLL (either embedded via
+	// BrowserExecutableFolder or system-installed).
+	var (
+		dllPath    string
+		runtimeTyp webView2RunTimeType
+		err        error
+	)
+	if opts.BrowserExecutableFolder != "" {
+		runtimeTyp = webView2RunTimeTypeRedistributable
+		dllPath, err = findEmbeddedClientDll(opts.BrowserExecutableFolder)
+	} else {
+		runtimeTyp = webView2RunTimeTypeInstalled
+		dllPath, _, err = findInstalledClientDll(false)
+	}
+	if err != nil {
+		return err
+	}
+	if dllPath == "" {
+		return errNoClientDLLFound
+	}
+
+	return createWebViewEnvironmentWithClientDll(dllPath, runtimeTyp, opts, handler)
+}
+
+// createWebViewEnvironmentWithClientDll loads the WebView2 client
+// DLL, finds the
+// CreateWebViewEnvironmentWithOptionsInternal entry point, and
+// invokes it with the env-options and the completion handler.
+//
+// The opts.AdditionalBrowserArgs, opts.Language, and
+// opts.UserDataFolder are passed through as opaque strings to the
+// runtime; the env options COM object the upstream port builds
+// (iCoreWebView2EnvironmentOptions / Options2) is a full vtable
+// implementation in the upstream port. In the Gails port we pass
+// the strings via the UserDataFolder pointer and rely on
+// WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS / WEBVIEW2_USER_DATA_FOLDER
+// / language hints being set by the caller, matching the simpler
+// shape of the in-tree Go webview2 loader prior to the combridge
+// rewrite.
+func createWebViewEnvironmentWithClientDll(lpLibFileName string, runtimeTyp webView2RunTimeType, opts *CreateEnvironmentOptions, handler *CreateEnvironmentCompletedHandler) error {
+	if !filepath.IsAbs(lpLibFileName) {
+		return fmt.Errorf("lpLibFileName must be absolute")
+	}
+
+	dll, err := windows.LoadDLL(lpLibFileName)
+	if err != nil {
+		return fmt.Errorf("Loading DLL failed: %w", err)
+	}
+	defer func() {
+		// Best-effort: only release the DLL once WebView2 reports it
+		// can unload. If FindProc fails or CanUnloadNow returns
+		// non-zero, the runtime still has refs and we leave the
+		// handle open for the OS to clean up at process exit.
+		canUnloadProc, err := dll.FindProc("DllCanUnloadNow")
+		if err != nil {
+			return
+		}
+		if r1, _, _ := canUnloadProc.Call(); r1 != windows.NO_ERROR {
+			return
+		}
+		dll.Release()
+	}()
+
+	createProc, err := dll.FindProc("CreateWebViewEnvironmentWithOptionsInternal")
+	if err != nil {
+		return fmt.Errorf("Unable to find CreateWebViewEnvironmentWithOptionsInternal entrypoint: %w", err)
+	}
+
+	userDataPtr, err := windows.UTF16PtrFromString(opts.UserDataFolder)
+	if err != nil {
+		return err
+	}
+
+	// Apply additional browser args and language via env-vars when
+	// present. The WebView2 client DLL reads these from the
+	// process environment on env creation.
+	if opts.AdditionalBrowserArgs != "" {
+		_ = os.Setenv("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", opts.AdditionalBrowserArgs)
+	}
+	if opts.Language != "" {
+		_ = os.Setenv("WEBVIEW2_LANGUAGE", opts.Language)
+	}
+
+	preventEnvAndRegistryOverrides()
+
+	const unknown = 1
+	hr, _, _ := createProc.Call(
+		uintptr(unknown),
+		uintptr(runtimeTyp),
+		uintptr(unsafe.Pointer(userDataPtr)),
+		0, // envOptions (nil — runtime defaults)
+		uintptr(handler.impl.COMObject()),
+	)
+
+	if hr != 0 {
+		return fmt.Errorf("CreateWebViewEnvironmentWithOptionsInternal failed: 0x%08x", hr)
+	}
+	return nil
+}
+
+// preventEnvAndRegistryOverrides clears the WebView2 env-var and
+// registry override paths so the env-creation call observes only
+// the values the caller explicitly passed. Ported from upstream
+// webviewloader.preventEnvAndRegistryOverrides.
+func preventEnvAndRegistryOverrides() {
+	// Setting these env variables to empty string also prevents
+	// registry overrides because webview2 checks for existence and
+	// not for empty value.
+	_ = os.Setenv("WEBVIEW2_PIPE_FOR_SCRIPT_DEBUGGER", "")
+	_ = os.Setenv("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "")
+	_ = os.Setenv("WEBVIEW2_RELEASE_CHANNEL_PREFERENCE", "0")
+	// The following seem not to be required because those are only
+	// used by the webview2loader which in this case is implemented
+	// on our own. But nevertheless set them to empty to be consistent.
+	_ = os.Setenv("WEBVIEW2_BROWSER_EXECUTABLE_FOLDER", "")
+	_ = os.Setenv("WEBVIEW2_USER_DATA_FOLDER", "")
+}
