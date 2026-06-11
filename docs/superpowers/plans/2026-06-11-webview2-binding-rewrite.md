@@ -14,6 +14,65 @@
 
 ---
 
+## Porting Protocol (read this once; applies to every port task)
+
+Each porting task follows the same pattern. Read this section once, then apply it to every task that says "[PORT FROM UPSTREAM ...]".
+
+### Vtable struct pattern (CRITICAL)
+
+The Microsoft COM IDL defines the method order for every interface. The vtable struct in Go must list all those methods **in the same order** even if some are unused. Unused methods get a `0` (or `nil`) vtable slot; they will never be invoked by WebView2 because Go never calls them.
+
+Example for `ICoreWebView2`:
+
+```go
+type iCoreWebView2Vtable struct {
+    QueryInterface          uintptr
+    AddRef                  uintptr
+    Release                 uintptr
+    get_Settings            uintptr // used: View.Settings()
+    get_Source              uintptr // unused: slot MUST be present, value MUST be 0
+    Navigate                uintptr // used: View.Navigate()
+    // ... 50+ more slots in upstream order, some populated, most 0
+}
+```
+
+**Rules:**
+1. Copy the vtable struct field-for-field from the upstream file. Field order is invariant.
+2. For every Go method we implement, set the matching vtable slot to a Go function pointer (typically a `func()` or `func(args ...uintptr) (r1, r2 uintptr)`).
+3. For methods we don't implement, the slot stays `0`.
+4. The constructor that builds the vtable (e.g. `newICoreWebView2()` in upstream) is the place where this happens; port that function too.
+
+**Why this matters:** if a slot is missing or in the wrong order, `QueryInterface` succeeds but every method call lands in the wrong vtable entry — silent UB.
+
+### File name reference corrections
+
+The plan sometimes refers to upstream files by what their **contents** describe rather than their actual file names. Use this table to find them:
+
+| Plan refers to                   | Actual upstream file path                                                                    |
+| -------------------------------- | -------------------------------------------------------------------------------------------- |
+| `pkg/edge/ICoreWebView2.go`       | `pkg/edge/corewebview2.go` (contains `iCoreWebView2Vtbl` AND `iCoreWebView2EnvironmentVtbl`)  |
+| `pkg/edge/ICoreWebView2Environment.go` | (same as above) — `iCoreWebView2EnvironmentVtbl` is in `corewebview2.go`              |
+| `pkg/edge/ICoreWebViewSettings.go` | `pkg/edge/ICoreWebViewSettings.go` (this name is correct)                                  |
+| `pkg/combridge/vtable.go`         | `pkg/combridge/vtables.go` (plural — contains `RegisterVTable` and `registerVTableInternal`) |
+| `pkg/edge/IStream.go`            | `pkg/edge/IStream.go` (this name is correct)                                                |
+
+### Controller struct pattern
+
+The upstream `edge.Chromium` struct has many fields beyond what the plan explicitly lists (e.g. `permissionRequested`, `processFailed`, `acceleratorKeyPressed`, `envCompleted`, `controllerCompleted` handlers, plus several state fields). These are all internal handler pointers and configuration.
+
+**For the rewrite:** copy the entire `Chromium` struct field-for-field. Methods that Gails doesn't call simply leave their handler field as `nil` and never bind it. This preserves the struct shape (important for any future code that pokes at the controller) without forcing us to implement the unused handlers.
+
+### Test-driven approach for porting
+
+For pure logic (errors, enums, version comparison, Rect), write a normal TDD test (failing test → impl → passing test). For COM dispatch ports (vtable, IUnknown, interfaces), the "failing test" is one of:
+- A compile-only test that asserts the public method surface (`TestController_PublicSurface`)
+- A structural assertion (`TestIUnknownVTableSize`)
+- A roundtrip test that constructs an IUnknownImpl and queries it back (Task 4)
+
+Don't try to mock the entire COM subsystem — the test would be larger than the port. The build itself catches the most common errors (undefined methods, wrong signatures). Run `GOOS=windows go build ./...` after every phase.
+
+---
+
 ## Phase 0: Reference Capture
 
 Before writing any code, capture the upstream symbols we will need to replicate exactly. This is read-only work but anchors every later task.
