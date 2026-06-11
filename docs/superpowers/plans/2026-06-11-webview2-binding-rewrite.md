@@ -475,9 +475,15 @@ git commit -m "feat(webview2): port bridge.VTable + RegisterVTable"
 - Create: `gails/internal/webview2/bridge/bridge.go`
 - Create: `gails/internal/webview2/bridge/bridge_test.go`
 
-- [ ] **Step 1: Write the failing test**
+**NOTE (correction from Tasks 4/5 implementers):** The upstream `pkg/combridge/bridge.go` is 239 lines and contains a **generic** registry — `Resolve[T IUnknown]`, `New[T IUnknown]`, `New2[T, T2]`, `ComObject[T]`, `comInterfaceDesc`, `comObject` (with the real ref counting), and `ifceImpl`/`ifceDef[T]` for the registration system. None of this is what the Gails port needs because:
 
-Create `gails/internal/webview2/bridge/bridge_test.go`:
+- Gails's `IUnknown` (Task 3) is a **struct** with a vtable pointer, not the upstream's empty `interface{}` type constraint. The upstream generics won't typecheck against it.
+- Gails's `IUnknownImpl` (Task 4) doesn't use a registry — it reuses `*IUnknown` dispatch.
+- The actual ref counting (upstream's `comObject.addRef`/`release`) is **only needed if the Gails port decides to allocate its own COM objects from Go**. The current port design doesn't.
+
+**Therefore this task ports only the SIMPLE `New(raw uintptr)` and `Resolve(p, iid)` helpers** that the Gails call sites need. The full generic registry is NOT ported. If a future Gails feature needs it, that's a new task.
+
+The test asserts the simple form:
 ```go
 //go:build windows
 
@@ -486,45 +492,62 @@ package bridge
 import "testing"
 
 func TestNew_ReturnsIUnknownWithVTable(t *testing.T) {
-	impl := NewIUnknownImpl()
-	defer impl.Release()
-
-	// New takes a raw COM pointer and wraps it. Use impl.Raw (the IUnknown
-	// vtable pointer of our own impl).
-	unk := New(impl.Raw)
+	// New takes a raw COM pointer (vtable pointer) and wraps it in an IUnknown.
+	// We use a synthetic pointer here; the test only asserts the wrapper
+	// preserves it.
+	const raw = uintptr(0xDEAD)
+	unk := New(raw)
 	if unk == nil {
 		t.Fatal("New returned nil")
 	}
-	if unk.Raw != impl.Raw {
-		t.Errorf("Raw = 0x%x, want 0x%x", unk.Raw, impl.Raw)
+	if unk.Raw != raw {
+		t.Errorf("Raw = 0x%x, want 0x%x", unk.Raw, raw)
 	}
 }
+
+func TestResolve_DelegatesToQueryInterface(t *testing.T) {
+	// Resolve is a thin wrapper around (*IUnknown).QueryInterface. We
+	// don't do a real roundtrip here (would need Windows COM runtime);
+	// we assert the function exists and has the right signature.
+	var _ func(*IUnknown, *windows.GUID) (*IUnknown, error) = Resolve
+}
 ```
+
+- [ ] **Step 1: Write the failing test**
+
+Create `gails/internal/webview2/bridge/bridge_test.go` (use the test code above).
 
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `cd /Users/yanshili/me/projects/wails/gails && GOOS=windows go test ./internal/webview2/bridge/...`
-Expected: build failure.
+Expected: build failure (bridge.go does not exist yet).
 
 - [ ] **Step 3: Port the implementation**
 
-Create `gails/internal/webview2/bridge/bridge.go`. Port from upstream `pkg/combridge/bridge.go`:
+Create `gails/internal/webview2/bridge/bridge.go`:
 ```go
 //go:build windows
 
+// Package bridge — see ../README or the plan file for design notes.
+// The simple New/Resolve helpers below are the minimum the Gails port
+// needs. They are NOT a port of the upstream generic registry in
+// pkg/combridge/bridge.go (that 239-line file is intentionally not
+// ported; see plan Task 6 for rationale).
 package bridge
 
+import "golang.org/x/sys/windows"
+
 // New wraps a raw COM pointer (vtable pointer) in an IUnknown.
-// The returned IUnknown does NOT take ownership — the caller is responsible
-// for managing the underlying COM object's lifetime.
+// The returned IUnknown does NOT take ownership — the caller is
+// responsible for managing the underlying COM object's lifetime.
 func New(raw uintptr) *IUnknown {
 	return &IUnknown{Raw: raw}
 }
 
 // Resolve looks up a child interface on the given IUnknown. The returned
-// pointer is a new IUnknown with its own vtable; the caller is responsible
-// for releasing it.
-func Resolve(p *IUnknown, iid *GUID) (*IUnknown, error) {
+// pointer is a new IUnknown with its own vtable; the caller is
+// responsible for releasing it.
+func Resolve(p *IUnknown, iid *windows.GUID) (*IUnknown, error) {
 	return p.QueryInterface(iid)
 }
 ```
@@ -532,13 +555,13 @@ func Resolve(p *IUnknown, iid *GUID) (*IUnknown, error) {
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `cd /Users/yanshili/me/projects/wails/gails && GOOS=windows go test ./internal/webview2/bridge/...`
-Expected: PASS.
+Expected: PASS (or compile-pass on macOS).
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add internal/webview2/bridge/bridge.go internal/webview2/bridge/bridge_test.go
-git commit -m "feat(webview2): port bridge.New and bridge.Resolve"
+git commit -m "feat(webview2): port bridge.New and bridge.Resolve (simple forms)"
 ```
 
 ### Task 7: Port `bridge.Syscall` helpers and `GUID` type
