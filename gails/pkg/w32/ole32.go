@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/wailsapp/wails/webview2/pkg/combridge"
+	"github.com/gailsapp/gails/internal/webview2/bridge"
 )
 
 var (
@@ -95,7 +95,7 @@ func OleInitialise() {
 
 func RegisterDragDrop(hwnd HWND, dropTarget *DropTarget) error {
 
-	dt := combridge.New[iDropTarget](dropTarget)
+	dt := bridge.New[iDropTarget](dropTarget)
 	hr, _, _ := procRegisterDragDrop.Call(
 		hwnd,
 		dt.Ref(),

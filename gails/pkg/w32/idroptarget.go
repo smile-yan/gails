@@ -3,7 +3,7 @@
 package w32
 
 import (
-	"github.com/wailsapp/wails/webview2/pkg/combridge"
+	"github.com/gailsapp/gails/internal/webview2/bridge"
 	"golang.org/x/sys/windows"
 )
 
@@ -24,7 +24,7 @@ func _NOP(_ uintptr) uintptr {
 }
 
 func init() {
-	combridge.RegisterVTable[combridge.IUnknown, iDropTarget](
+	bridge.RegisterVTable[bridge.IUnknownInterface, iDropTarget](
 		"{00000122-0000-0000-C000-000000000046}",
 		_iDropTargetDragEnter,
 		_iDropTargetDragOver,
@@ -40,23 +40,23 @@ func _iDropTargetDragEnter(
 	point POINT,
 	pdfEffect *DWORD,
 ) uintptr {
-	return combridge.Resolve[iDropTarget](this).DragEnter(dataObject, grfKeyState, point, pdfEffect)
+	return bridge.Resolve[iDropTarget](this).DragEnter(dataObject, grfKeyState, point, pdfEffect)
 }
 
 func _iDropTargetDragOver(this uintptr, grfKeyState DWORD, point POINT, pdfEffect *DWORD) uintptr {
-	return combridge.Resolve[iDropTarget](this).DragOver(grfKeyState, point, pdfEffect)
+	return bridge.Resolve[iDropTarget](this).DragOver(grfKeyState, point, pdfEffect)
 }
 
 func _iDropTargetDragLeave(this uintptr) uintptr {
-	return combridge.Resolve[iDropTarget](this).DragLeave()
+	return bridge.Resolve[iDropTarget](this).DragLeave()
 }
 
 func _iDropTargetDrop(this uintptr, dataObject *IDataObject, grfKeyState DWORD, point POINT, pdfEffect *DWORD) uintptr {
-	return combridge.Resolve[iDropTarget](this).Drop(dataObject, grfKeyState, point, pdfEffect)
+	return bridge.Resolve[iDropTarget](this).Drop(dataObject, grfKeyState, point, pdfEffect)
 }
 
 type iDropTarget interface {
-	combridge.IUnknown
+	bridge.IUnknownInterface
 
 	DragEnter(dataObject *IDataObject, grfKeyState DWORD, point POINT, pdfEffect *DWORD) uintptr
 	DragOver(grfKeyState DWORD, point POINT, pdfEffect *DWORD) uintptr
@@ -67,7 +67,7 @@ type iDropTarget interface {
 var _ iDropTarget = &DropTarget{}
 
 type DropTarget struct {
-	combridge.IUnknownImpl
+	bridge.IUnknownImpl
 	OnEnterEffect DWORD
 	OnOverEffect  DWORD
 	OnEnter       func()
