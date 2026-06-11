@@ -6,7 +6,7 @@ on:
     branches:
       - master
     paths:
-      - 'v3/**'
+      - 'gails/**'
       - '.github/workflows/build-and-test-v3.yml'
   pull_request_review:
     types: [submitted]
@@ -40,38 +40,38 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-runtime-${{ hashFiles('v3/internal/runtime/desktop/@gailsio/runtime/package-lock.json') }}
+          key: ${{ runner.os }}-npm-runtime-${{ hashFiles('gails/internal/runtime/desktop/@gailsio/runtime/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-runtime-
 
       - name: Install dependencies
-        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
+        working-directory: gails/internal/runtime/desktop/@gailsio/runtime
         run: |
           npm ci
           npx --yes esbuild@latest --version
 
       - name: Clean build artifacts
-        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
+        working-directory: gails/internal/runtime/desktop/@gailsio/runtime
         run: npm run clean
 
       - name: Type-check runtime
-        working-directory: v3
+        working-directory: gails
         run: task runtime:check
 
       - name: Test runtime
-        working-directory: v3
+        working-directory: gails
         run: task runtime:test
 
       - name: Check that the bundled runtime builds
-        working-directory: v3
+        working-directory: gails
         run: task runtime:build
 
       - name: Check that the npm package builds
-        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
+        working-directory: gails/internal/runtime/desktop/@gailsio/runtime
         run: npm run build
 
       - name: Pack runtime for template tests
-        working-directory: v3/internal/runtime/desktop/@gailsio/runtime
+        working-directory: gails/internal/runtime/desktop/@gailsio/runtime
         run: npm pack
 
       - name: Store runtime build artifacts
@@ -79,15 +79,15 @@ jobs:
         with:
           name: runtime-build-artifacts
           path: |
-            v3/internal/runtime/desktop/@gailsio/runtime/dist/
-            v3/internal/runtime/desktop/@gailsio/runtime/types/
-            v3/internal/runtime/desktop/@gailsio/runtime/tsconfig.tsbuildinfo
+            gails/internal/runtime/desktop/@gailsio/runtime/dist/
+            gails/internal/runtime/desktop/@gailsio/runtime/types/
+            gails/internal/runtime/desktop/@gailsio/runtime/tsconfig.tsbuildinfo
 
       - name: Store runtime package
         uses: actions/upload-artifact@v4
         with:
           name: runtime-package
-          path: v3/internal/runtime/desktop/@gailsio/runtime/*.tgz
+          path: gails/internal/runtime/desktop/@gailsio/runtime/*.tgz
 
   test_go:
     name: Run Go Tests v3
@@ -126,7 +126,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
-          cache-dependency-path: "v3/go.sum"
+          cache-dependency-path: "gails/go.sum"
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -138,10 +138,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: runtime-build-artifacts
-          path: v3/internal/runtime/desktop/@gailsio/runtime/
+          path: gails/internal/runtime/desktop/@gailsio/runtime/
 
       - name: Build Examples (GTK4 default)
-        working-directory: v3
+        working-directory: gails
         run: |
           echo "Starting example compilation tests (GTK4 default)..."
           task test:examples
@@ -149,7 +149,7 @@ jobs:
 
       - name: Build Examples (GTK3 legacy)
         if: matrix.os == 'ubuntu-latest'
-        working-directory: v3
+        working-directory: gails
         run: |
           echo "Starting example compilation tests (GTK3 legacy)..."
           BUILD_TAGS=gtk3 task test:examples
@@ -159,27 +159,27 @@ jobs:
         if: matrix.os == 'macos-latest'
         env:
           CGO_LDFLAGS: -framework UniformTypeIdentifiers -mmacosx-version-min=10.13
-        working-directory: v3
+        working-directory: gails
         run: go test -v -timeout 10m ./...
 
       - name: Run tests (windows)
         if: matrix.os == 'windows-latest'
-        working-directory: v3
+        working-directory: gails
         run: go test -v -timeout 10m ./...
 
       - name: Run tests (ubuntu) - GTK4 default
         if: matrix.os == 'ubuntu-latest'
-        working-directory: v3
+        working-directory: gails
         # Skip service tests that hang in CI due to GTK4 display requirements
         run: dbus-run-session -- xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" go test -v -timeout 10m -skip "TestService" ./...
 
       - name: Run tests (ubuntu) - GTK3 legacy
         if: matrix.os == 'ubuntu-latest'
-        working-directory: v3
+        working-directory: gails
         run: dbus-run-session -- xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" go test -tags gtk3 -v -timeout 10m ./...
 
       - name: Typecheck binding generator output
-        working-directory: v3
+        working-directory: gails
         run: task generator:test:check
 
   cleanup:
@@ -243,7 +243,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
-          cache-dependency-path: "v3/go.sum"
+          cache-dependency-path: "gails/go.sum"
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -252,7 +252,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Wails3 CLI
-        working-directory: v3
+        working-directory: gails
         run: |
           task install
           gails doctor

@@ -49,7 +49,7 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/files?per_page=100" \
           | jq -r '.[].filename')
-        if echo "$FILES" | grep -q "^v3/UNRELEASED_CHANGELOG.md$"; then
+        if echo "$FILES" | grep -q "^gails/UNRELEASED_CHANGELOG.md$"; then
           echo "skip=true" >> $GITHUB_OUTPUT
           echo "✅ Changelog was updated in PR — skipping auto-fill."
         else
@@ -70,7 +70,7 @@ jobs:
         OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         GITHUB_REPOSITORY: ${{ github.repository }}
         PR_NUMBER: ${{ steps.pr.outputs.number }}
-      run: go run v3/scripts/auto-changelog.go
+      run: go run gails/scripts/auto-changelog.go
 
     - name: Commit and push
       if: steps.check.outputs.skip == 'false'
@@ -80,6 +80,6 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add v3/UNRELEASED_CHANGELOG.md
+        git add gails/UNRELEASED_CHANGELOG.md
         git commit -m "chore(changelog): auto-add entry for PR #${PR_NUMBER} — ${PR_TITLE}"
         git push https://x-access-token:${{ secrets.CHANGELOG_PUSH_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git master
