@@ -76,7 +76,7 @@ func (rw *responseWriter) Finish() error {
 	rw.req.invokeSync(func() {
 		resp := rw.req.response
 
-		hdrs, err := resp.GetHeaders()
+		hdrs, err := resp.Headers()
 		if err != nil {
 			errs = append(errs, fmt.Errorf("Resp.GetHeaders failed: %s", err))
 		} else {
@@ -88,11 +88,11 @@ func (rw *responseWriter) Finish() error {
 			hdrs.Release()
 		}
 
-		if err := resp.PutStatusCode(code); err != nil {
+		if err := resp.SetStatusCode(code); err != nil {
 			errs = append(errs, fmt.Errorf("Resp.PutStatusCode failed: %s", err))
 		}
 
-		if err := resp.PutByteContent(rw.body.Bytes()); err != nil {
+		if err := resp.SetByteContent(rw.body.Bytes()); err != nil {
 			errs = append(errs, fmt.Errorf("Resp.PutByteContent failed: %s", err))
 		}
 

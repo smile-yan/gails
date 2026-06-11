@@ -8,12 +8,12 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/wailsapp/wails/webview2/pkg/edge"
+	"github.com/gailsapp/gails/pkg/webview2"
 )
 
 // NewRequest creates as new WebViewRequest for chromium. This Method must be called from the Main-Thread!
-func NewRequest(env *edge.ICoreWebView2Environment, args *edge.ICoreWebView2WebResourceRequestedEventArgs, invokeSync func(fn func())) (Request, error) {
-	req, err := args.GetRequest()
+func NewRequest(env *webview2.Environment, args *webview2.WebResourceRequestedEventArgs, invokeSync func(fn func())) (Request, error) {
+	req, err := args.Request()
 	if err != nil {
 		return nil, fmt.Errorf("GetRequest failed: %s", err)
 	}
@@ -29,22 +29,22 @@ func NewRequest(env *edge.ICoreWebView2Environment, args *edge.ICoreWebView2WebR
 		return nil, fmt.Errorf("CreateWebResourceResponse failed: %s", err)
 	}
 
-	if err := args.PutResponse(r.response); err != nil {
+	if err := args.SetResponse(r.response); err != nil {
 		r.finishResponse()
 		return nil, fmt.Errorf("PutResponse failed: %s", err)
 	}
 
-	r.deferral, err = args.GetDeferral()
+	r.deferral, err = args.Deferral()
 	if err != nil {
 		r.finishResponse()
 		return nil, fmt.Errorf("GetDeferral failed: %s", err)
 	}
 
-	r.url, r.urlErr = req.GetUri()
-	r.method, r.methodErr = req.GetMethod()
+	r.url, r.urlErr = req.Uri()
+	r.method, r.methodErr = req.Method()
 	r.header, r.headerErr = getHeaders(req)
 
-	if content, err := req.GetContent(); err != nil {
+	if content, err := req.Content(); err != nil {
 		r.bodyErr = err
 	} else if content != nil {
 		// It is safe to access Content from another Thread: https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/threading-model#thread-safety
@@ -57,8 +57,8 @@ func NewRequest(env *edge.ICoreWebView2Environment, args *edge.ICoreWebView2WebR
 var _ Request = &request{}
 
 type request struct {
-	response *edge.ICoreWebView2WebResourceResponse
-	deferral *edge.ICoreWebView2Deferral
+	response *webview2.WebResourceResponse
+	deferral *webview2.Deferral
 
 	url    string
 	urlErr error
@@ -140,7 +140,7 @@ func (r *request) finishResponse() error {
 }
 
 type iStreamReleaseCloser struct {
-	stream *edge.IStream
+	stream *webview2.Stream
 	closed bool
 }
 
@@ -159,22 +159,22 @@ func (i *iStreamReleaseCloser) Close() error {
 	return i.stream.Release()
 }
 
-func getHeaders(req *edge.ICoreWebView2WebResourceRequest) (http.Header, error) {
+func getHeaders(req *webview2.WebResourceRequest) (http.Header, error) {
 	header := http.Header{}
-	headers, err := req.GetHeaders()
+	headers, err := req.Headers()
 	if err != nil {
 		return nil, fmt.Errorf("GetHeaders Error: %s", err)
 	}
 	defer headers.Release()
 
-	headersIt, err := headers.GetIterator()
+	headersIt, err := headers.Iterator()
 	if err != nil {
 		return nil, fmt.Errorf("GetIterator Error: %s", err)
 	}
 	defer headersIt.Release()
 
 	for {
-		has, err := headersIt.HasCurrentHeader()
+		has, err := headersIt.HasCurrent()
 		if err != nil {
 			return nil, fmt.Errorf("HasCurrentHeader Error: %s", err)
 		}
@@ -182,13 +182,13 @@ func getHeaders(req *edge.ICoreWebView2WebResourceRequest) (http.Header, error) 
 			break
 		}
 
-		name, value, err := headersIt.GetCurrentHeader()
+		name, value, err := headersIt.Current()
 		if err != nil {
 			return nil, fmt.Errorf("GetCurrentHeader Error: %s", err)
 		}
 
 		header.Set(name, value)
-		if _, err := headersIt.MoveNext(); err != nil {
+		if _, err := headersIt.Next(); err != nil {
 			return nil, fmt.Errorf("MoveNext Error: %s", err)
 		}
 	}

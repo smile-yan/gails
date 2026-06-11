@@ -39,3 +39,17 @@ func (d *Deferral) Complete() error {
 	}
 	return nil
 }
+
+// Release decrements the COM refcount. Mirrors the IUnknown::Release
+// slot inherited by ICoreWebView2Deferral.
+func (d *Deferral) Release() error {
+	if d.vtbl == nil {
+		vtblPtr := *(*uintptr)(unsafe.Pointer(d.Raw))
+		d.vtbl = (*iCoreWebView2DeferralVtable)(unsafe.Pointer(vtblPtr))
+	}
+	_, _, _ = syscall.SyscallN(
+		d.vtbl.Release,
+		uintptr(unsafe.Pointer(d)),
+	)
+	return nil
+}

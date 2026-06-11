@@ -30,6 +30,11 @@ type iCoreWebView2HttpRequestHeadersVtable struct {
 	// follow upstream. The full vtable layout is owned by the
 	// HttpRequestHeaders port task; for now we only model the
 	// three IUnknown slots so a forward declaration compiles.
+	GetHeader  uintptr
+	GetHeaders uintptr
+	SetHeader  uintptr
+	RemoveHeader uintptr
+	GetIterator uintptr
 }
 
 // AddRef increments the COM refcount. Provided so the
@@ -86,6 +91,144 @@ func (h *HttpRequestHeaders) Header(name string) (string, error) {
 // stub returns nil so the call site compiles.
 func (h *HttpRequestHeaders) SetHeader(_, _ string) error {
 	return nil
+}
+
+// Iterator returns an HttpRequestHeadersIterator over the request
+// headers. Mirrors ICoreWebView2HttpRequestHeaders::GetIterator.
+// The caller is responsible for calling Release on the iterator.
+func (h *HttpRequestHeaders) Iterator() (*HttpRequestHeadersIterator, error) {
+	vtbl, err := h.vtable()
+	if err != nil {
+		return nil, err
+	}
+	var raw uintptr
+	hr, _, _ := syscall.SyscallN(
+		vtbl.GetIterator,
+		uintptr(unsafe.Pointer(h)),
+		uintptr(unsafe.Pointer(&raw)),
+	)
+	if hr != 0 {
+		return nil, fmt.Errorf("ICoreWebView2HttpRequestHeaders::GetIterator failed: 0x%08x", hr)
+	}
+	if raw == 0 {
+		return nil, nil
+	}
+	return &HttpRequestHeadersIterator{Raw: raw}, nil
+}
+
+// HttpRequestHeadersIterator is a Go wrapper over the COM
+// ICoreWebView2HttpRequestHeadersIterator interface. Gails uses it
+// to enumerate request headers one (name, value) pair at a time.
+type HttpRequestHeadersIterator struct {
+	Raw  uintptr
+	vtbl *iCoreWebView2HttpRequestHeadersIteratorVtable
+}
+
+type iCoreWebView2HttpRequestHeadersIteratorVtable struct {
+	QueryInterface uintptr
+	AddRef         uintptr
+	Release        uintptr
+	GetCurrentHeader uintptr
+	GetHasCurrentHeader uintptr
+	MoveNext       uintptr
+}
+
+// AddRef increments the COM refcount.
+func (it *HttpRequestHeadersIterator) AddRef() error {
+	vtbl, err := it.vtable()
+	if err != nil {
+		return err
+	}
+	_, _, _ = syscall.SyscallN(
+		vtbl.AddRef,
+		uintptr(unsafe.Pointer(it)),
+	)
+	return nil
+}
+
+// Release decrements the COM refcount.
+func (it *HttpRequestHeadersIterator) Release() error {
+	vtbl, err := it.vtable()
+	if err != nil {
+		return err
+	}
+	_, _, _ = syscall.SyscallN(
+		vtbl.Release,
+		uintptr(unsafe.Pointer(it)),
+	)
+	return nil
+}
+
+// HasCurrent reports whether the iterator currently points at a
+// header entry. Mirrors GetHasCurrentHeader on
+// ICoreWebView2HttpRequestHeadersIterator.
+func (it *HttpRequestHeadersIterator) HasCurrent() (bool, error) {
+	vtbl, err := it.vtable()
+	if err != nil {
+		return false, err
+	}
+	var has int32
+	hr, _, _ := syscall.SyscallN(
+		vtbl.GetHasCurrentHeader,
+		uintptr(unsafe.Pointer(it)),
+		uintptr(unsafe.Pointer(&has)),
+	)
+	if hr != 0 {
+		return false, fmt.Errorf("ICoreWebView2HttpRequestHeadersIterator::GetHasCurrentHeader failed: 0x%08x", hr)
+	}
+	return has != 0, nil
+}
+
+// Current returns the (name, value) pair the iterator is currently
+// pointing at. Mirrors GetCurrentHeader on
+// ICoreWebView2HttpRequestHeadersIterator.
+func (it *HttpRequestHeadersIterator) Current() (string, string, error) {
+	vtbl, err := it.vtable()
+	if err != nil {
+		return "", "", err
+	}
+	var namePtr, valuePtr *uint16
+	hr, _, _ := syscall.SyscallN(
+		vtbl.GetCurrentHeader,
+		uintptr(unsafe.Pointer(it)),
+		uintptr(unsafe.Pointer(&namePtr)),
+		uintptr(unsafe.Pointer(&valuePtr)),
+	)
+	if hr != 0 {
+		return "", "", fmt.Errorf("ICoreWebView2HttpRequestHeadersIterator::GetCurrentHeader failed: 0x%08x", hr)
+	}
+	return windows.UTF16PtrToString(namePtr), windows.UTF16PtrToString(valuePtr), nil
+}
+
+// Next advances the iterator. Mirrors MoveNext on
+// ICoreWebView2HttpRequestHeadersIterator.
+func (it *HttpRequestHeadersIterator) Next() (bool, error) {
+	vtbl, err := it.vtable()
+	if err != nil {
+		return false, err
+	}
+	var has int32
+	hr, _, _ := syscall.SyscallN(
+		vtbl.MoveNext,
+		uintptr(unsafe.Pointer(it)),
+		uintptr(unsafe.Pointer(&has)),
+	)
+	if hr != 0 {
+		return false, fmt.Errorf("ICoreWebView2HttpRequestHeadersIterator::MoveNext failed: 0x%08x", hr)
+	}
+	return has != 0, nil
+}
+
+func (it *HttpRequestHeadersIterator) vtable() (*iCoreWebView2HttpRequestHeadersIteratorVtable, error) {
+	if it.vtbl != nil {
+		return it.vtbl, nil
+	}
+	if it.Raw == 0 {
+		return nil, fmt.Errorf("ICoreWebView2HttpRequestHeadersIterator: nil COM pointer")
+	}
+	vtblPtr := *(*uintptr)(unsafe.Pointer(it.Raw))
+	it.vtbl = (*iCoreWebView2HttpRequestHeadersIteratorVtable)(unsafe.Pointer(vtblPtr))
+	return it.vtbl, nil
 }
 
 func (h *HttpRequestHeaders) vtable() (*iCoreWebView2HttpRequestHeadersVtable, error) {
@@ -379,6 +522,47 @@ func (r *WebResourceResponse) SetContent(content *Stream) error {
 	return nil
 }
 
+// SetByteContent installs a byte slice as the response body. The
+// WebView2 runtime takes ownership of the resulting IStream after
+// this call returns. Mirrors
+// ICoreWebView2WebResourceResponse::PutContent.
+//
+// TODO(port): full implementation needs an HGLOBAL-backed IStream;
+// the current stub returns an error so callers know this is not
+// yet implemented. Callers should fall back to SetContent with a
+// real Stream produced elsewhere.
+func (r *WebResourceResponse) SetByteContent(content []byte) error {
+	// Defer to SetContent: this needs an HGLOBAL-backed IStream to
+	// wrap `content`. The full helper is a follow-up task; for now
+	// emit a stub error so the response writer fails loudly.
+	if len(content) == 0 {
+		return r.SetContent(nil)
+	}
+	return fmt.Errorf("WebResourceResponse.SetByteContent: not yet implemented (need HGLOBAL IStream helper)")
+}
+
+// Headers returns the mutable HTTP response headers. The caller
+// is responsible for releasing the returned headers object.
+func (r *WebResourceResponse) Headers() (*HttpResponseHeaders, error) {
+	vtbl, err := r.vtable()
+	if err != nil {
+		return nil, err
+	}
+	var raw uintptr
+	hr, _, _ := syscall.SyscallN(
+		vtbl.GetHeaders,
+		uintptr(unsafe.Pointer(r)),
+		uintptr(unsafe.Pointer(&raw)),
+	)
+	if hr != 0 {
+		return nil, fmt.Errorf("ICoreWebView2WebResourceResponse::GetHeaders failed: 0x%08x", hr)
+	}
+	if raw == 0 {
+		return nil, nil
+	}
+	return &HttpResponseHeaders{Raw: raw}, nil
+}
+
 func (r *WebResourceResponse) vtable() (*iCoreWebView2WebResourceResponseVtable, error) {
 	if r.vtbl != nil {
 		return r.vtbl, nil
@@ -560,3 +744,97 @@ func webResourceRequestedInvokeTrampoline(this uintptr, sender uintptr, args uin
 // httpStatusText removed: SetStatusCode uses net/http.StatusText
 // directly to keep parity with upstream and avoid a duplicated
 // status-code-to-phrase table.
+
+// HttpResponseHeaders is a Go wrapper over the COM
+// ICoreWebView2HttpResponseHeaders interface. Gails uses it to
+// append response headers before delivering a synthesized response
+// to a WebResourceRequestedEventArgs.
+//
+// The full vtable layout is not yet modeled; the only slot Gails
+// currently invokes is AppendHeader. The stub keeps the call site
+// compiling while a follow-up task wires the proper vtable.
+type HttpResponseHeaders struct {
+	Raw  uintptr
+	vtbl *iCoreWebView2HttpResponseHeadersVtable
+}
+
+type iCoreWebView2HttpResponseHeadersVtable struct {
+	QueryInterface uintptr
+	AddRef         uintptr
+	Release        uintptr
+	AppendHeader   uintptr
+	// Other slots (ContentDisposition, ContentType, Append, etc.)
+	// follow upstream and are not currently invoked.
+}
+
+// AddRef increments the COM refcount.
+func (h *HttpResponseHeaders) AddRef() error {
+	vtbl, err := h.vtable()
+	if err != nil {
+		return err
+	}
+	_, _, _ = syscall.SyscallN(
+		vtbl.AddRef,
+		uintptr(unsafe.Pointer(h)),
+	)
+	return nil
+}
+
+// Release decrements the COM refcount.
+func (h *HttpResponseHeaders) Release() error {
+	vtbl, err := h.vtable()
+	if err != nil {
+		return err
+	}
+	_, _, _ = syscall.SyscallN(
+		vtbl.Release,
+		uintptr(unsafe.Pointer(h)),
+	)
+	return nil
+}
+
+// AppendHeader appends a value to the named header. Mirrors
+// ICoreWebView2HttpResponseHeaders::AppendHeader.
+//
+// TODO(port): the vtable slot for AppendHeader is not yet
+// populated; the stub returns an error so the response writer
+// can surface the failure instead of silently dropping headers.
+func (h *HttpResponseHeaders) AppendHeader(name, value string) error {
+	if h.vtbl == nil {
+		vtblPtr := *(*uintptr)(unsafe.Pointer(h.Raw))
+		h.vtbl = (*iCoreWebView2HttpResponseHeadersVtable)(unsafe.Pointer(vtblPtr))
+	}
+	if h.vtbl.AppendHeader == 0 {
+		return fmt.Errorf("HttpResponseHeaders.AppendHeader: vtable slot not populated")
+	}
+	namePtr, err := windows.UTF16PtrFromString(name)
+	if err != nil {
+		return err
+	}
+	valuePtr, err := windows.UTF16PtrFromString(value)
+	if err != nil {
+		return err
+	}
+	hr, _, _ := syscall.SyscallN(
+		h.vtbl.AppendHeader,
+		uintptr(unsafe.Pointer(h)),
+		uintptr(unsafe.Pointer(namePtr)),
+		uintptr(unsafe.Pointer(valuePtr)),
+	)
+	if hr != 0 {
+		return fmt.Errorf("ICoreWebView2HttpResponseHeaders::AppendHeader failed: 0x%08x", hr)
+	}
+	return nil
+}
+
+func (h *HttpResponseHeaders) vtable() (*iCoreWebView2HttpResponseHeadersVtable, error) {
+	if h.vtbl != nil {
+		return h.vtbl, nil
+	}
+	if h.Raw == 0 {
+		return nil, fmt.Errorf("ICoreWebView2HttpResponseHeaders: nil COM pointer")
+	}
+	vtblPtr := *(*uintptr)(unsafe.Pointer(h.Raw))
+	h.vtbl = (*iCoreWebView2HttpResponseHeadersVtable)(unsafe.Pointer(vtblPtr))
+	return h.vtbl, nil
+}

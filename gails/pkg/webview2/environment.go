@@ -93,6 +93,58 @@ func (e *Environment) CreateCoreWebView2Controller(parentHWND uintptr, handler *
 	return nil
 }
 
+// CreateWebResourceResponse creates an in-memory WebResourceResponse
+// that the caller can install on a WebResourceRequestedEventArgs via
+// SetResponse. The content stream may be nil (for an empty body),
+// statusCode is the HTTP status code, reasonPhrase is the textual
+// reason ("OK", "Not Found", etc), and headers is an optional
+// CRLF-separated string of response headers.
+//
+// Mirrors ICoreWebView2Environment::CreateWebResourceResponse.
+func (e *Environment) CreateWebResourceResponse(content *Stream, statusCode int, reasonPhrase, headers string) (*WebResourceResponse, error) {
+	vtbl, err := e.vtable()
+	if err != nil {
+		return nil, err
+	}
+	var streamPtr uintptr
+	if content != nil {
+		streamPtr = content.Raw
+	}
+	var reasonPtr *uint16
+	if reasonPhrase != "" {
+		p, err := windows.UTF16PtrFromString(reasonPhrase)
+		if err != nil {
+			return nil, fmt.Errorf("CreateWebResourceResponse: invalid reason phrase: %w", err)
+		}
+		reasonPtr = p
+	}
+	var headersPtr *uint16
+	if headers != "" {
+		p, err := windows.UTF16PtrFromString(headers)
+		if err != nil {
+			return nil, fmt.Errorf("CreateWebResourceResponse: invalid headers string: %w", err)
+		}
+		headersPtr = p
+	}
+	var raw uintptr
+	hr, _, _ := syscall.SyscallN(
+		vtbl.CreateWebResourceResponse,
+		uintptr(unsafe.Pointer(e)),
+		streamPtr,
+		uintptr(statusCode),
+		uintptr(unsafe.Pointer(reasonPtr)),
+		uintptr(unsafe.Pointer(headersPtr)),
+		uintptr(unsafe.Pointer(&raw)),
+	)
+	if hr != 0 {
+		return nil, fmt.Errorf("ICoreWebView2Environment::CreateWebResourceResponse failed: 0x%08x", hr)
+	}
+	if raw == 0 {
+		return nil, nil
+	}
+	return &WebResourceResponse{Raw: raw}, nil
+}
+
 // CreateControllerCompletedHandler is the Go-side implementation of
 // ICoreWebView2CreateCoreWebView2ControllerCompletedHandler.
 // Construct one with NewCreateControllerCompletedHandler and pass to
