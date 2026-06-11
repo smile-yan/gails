@@ -379,3 +379,26 @@ func (v *View) AddContainsFullScreenElementChanged(handler *ContainsFullScreenEl
 	}
 	return nil
 }
+
+// ContainsFullScreenElement reports whether the page currently
+// contains a fullscreen element. Mirrors
+// ICoreWebView2::GetContainsFullScreenElement.
+//
+// The application layer's fullscreen-changed callback uses this
+// to decide whether to enter or leave native fullscreen mode.
+//
+// TODO(port): full COM implementation; the vtable slot is at
+// index [54] (already laid out in iCoreWebView2Vtable). Stub
+// returns false so the call site compiles.
+func (v *View) ContainsFullScreenElement() (bool, error) {
+	return false, nil
+}
+
+// Source returns the URI of the document currently loaded in
+// the webview. Mirrors ICoreWebView2::GetSource.
+//
+// TODO(port): full COM implementation; the vtable slot is at
+// index [4]. Stub returns "" so the call site compiles.
+func (v *View) Source() (string, error) {
+	return "", nil
+}

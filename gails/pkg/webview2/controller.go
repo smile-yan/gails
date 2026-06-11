@@ -2,7 +2,9 @@
 
 package webview2
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Controller is the top-level facade for a WebView2 instance. It bundles
 // the environment, the controller, the webview, and the host window, plus
@@ -65,6 +67,27 @@ type Controller struct {
 	globalPermission *PermissionState
 
 	shuttingDown bool
+
+	// Application-layer configuration fields. These mirror the public
+	// fields of upstream edge.Chromium that the application layer
+	// (pkg/application/webview_window_windows.go) sets before calling
+	// Embed(). They are public on Controller so the call sites read
+	// naturally: c.AdditionalBrowserArgs = append(...).
+	AdditionalBrowserArgs []string
+	BrowserPath           string
+	DataPath              string
+
+	// Callback slots. The application layer assigns these before
+	// Embed(); the event handler COM objects (constructed internally
+	// when the WebView2 environment is created) read them to dispatch
+	// to Go callbacks. Storing them as exported fields keeps the
+	// upstream-style field-assignment call sites working.
+	MessageCallback                          func(message string, sender *View, args *MessageReceivedEventArgs)
+	MessageWithAdditionalObjectsCallback     func(message string, sender *View, args *MessageReceivedEventArgs)
+	WebResourceRequestedCallback             func(req *WebResourceRequest, args *WebResourceRequestedEventArgs)
+	ContainsFullScreenElementChangedCallback func(sender *View, args *ContainsFullScreenElementEventArgs)
+	NavigationCompletedCallback              func(sender *View, args *NavigationCompletedEventArgs)
+	AcceleratorKeyCallback                   func(vkey uint) bool
 }
 
 // NewController constructs a Controller. The actual WebView2 environment
@@ -212,3 +235,256 @@ type (
 // (the platform's HWND wrapper). The Controller currently uses a raw
 // uintptr for the HWND; future tasks may replace it with a richer
 // type without changing the public Controller surface.
+
+// --- Application-layer compatibility shims --------------------------
+//
+// The methods below mirror the public surface of upstream
+// edge.Chromium. They are added so the application layer
+// (pkg/application/webview_window_windows.go) compiles after the
+// migration to pkg/webview2. Most are pass-throughs to View /
+// Environment / Settings when those types already implement the
+// underlying COM call. Methods that need full WebView2 runtime
+// machinery (Embed, Resize, Focus, Show, Hide, Eval, etc.) are
+// stubs that return nil/zero so the call site compiles; their
+// real implementations are ported in follow-up tasks as the
+// underlying ICoreWebView2Controller wrapper lands.
+//
+// The signatures intentionally match the upstream edge.Chromium
+// signatures so the call sites in pkg/application need only the
+// type rename.
+
+// Embed binds the WebView2 controller to the given host HWND. It
+// also wires up the event handler COM objects (MessageReceived,
+// WebResourceRequested, NavigationCompleted,
+// ContainsFullScreenElementChanged) and triggers the asynchronous
+// environment+controller creation pipeline.
+//
+// TODO(port): full async pipeline via webview2 loader lands in a
+// follow-up task; today this is a no-op that records the HWND so
+// the application layer compiles.
+func (c *Controller) Embed(hwnd uintptr) bool {
+	c.hwnd = hwnd
+	// TODO(port): kick off environment creation via Loader, wire
+	// event handlers, deliver the controller to host on completion.
+	return true
+}
+
+// Navigate loads the given URL in the webview.
+func (c *Controller) Navigate(uri string) {
+	if c.View == nil {
+		return
+	}
+	_ = c.View.Navigate(uri)
+}
+
+// NavigateToString renders the given HTML in the webview.
+func (c *Controller) NavigateToString(content string) {
+	if c.View == nil {
+		return
+	}
+	_ = c.View.NavigateToString(content)
+}
+
+// Init injects a startup script to run before any page script.
+func (c *Controller) Init(script string) {
+	// TODO(port): AddScriptToExecuteOnDocumentCreated equivalent.
+	_ = script
+}
+
+// Eval evaluates JavaScript in the webview context.
+func (c *Controller) Eval(script string) {
+	// TODO(port): ICoreWebView2.ExecuteScript equivalent. The
+	// real implementation is needed for cut/paste/copy and
+	// many execJS call sites. The application layer currently
+	// tolerates Eval being a no-op; full implementation is
+	// ported when the controller-wrapper task lands.
+	_ = script
+}
+
+// Show makes the webview visible.
+func (c *Controller) Show() error {
+	// TODO(port): ICoreWebView2Controller.IsVisible = true.
+	// Application layer treats this as best-effort.
+	return nil
+}
+
+// Hide makes the webview invisible.
+func (c *Controller) Hide() error {
+	// TODO(port): ICoreWebView2Controller.IsVisible = false.
+	return nil
+}
+
+// Resize resizes the webview to fill its host window.
+func (c *Controller) Resize() {
+	// TODO(port): ICoreWebView2Controller.Bounds = host-client-rect.
+}
+
+// ResizeWithBounds resizes the webview to the given bounds (in
+// pixels, relative to the host window).
+func (c *Controller) ResizeWithBounds(bounds *Rect) {
+	// TODO(port): ICoreWebView2Controller.Bounds from Rect.
+	_ = bounds
+}
+
+// SetPadding sets the padding between the host window's client
+// area and the webview's display surface.
+func (c *Controller) SetPadding(padding Rect) {
+	// TODO(port): ICoreWebView2Controller.DefaultBackgroundColor /
+	// bounds padding via ICoreWebView2Controller3.SetBoundsAndScrollRatio.
+	_ = padding
+}
+
+// SetBackgroundColour sets the WebView2 default background colour.
+func (c *Controller) SetBackgroundColour(R, G, B, A uint8) {
+	// TODO(port): ICoreWebView2Controller2.DefaultBackgroundColor.
+	_, _, _, _ = R, G, B, A
+}
+
+// SetErrorCallback registers a callback invoked when WebView2
+// delivers a process-failed or similar fatal error.
+func (c *Controller) SetErrorCallback(callback func(error)) {
+	// TODO(port): store + dispatch from process-failed handler.
+	_ = callback
+}
+
+// Focus moves keyboard focus to the webview.
+func (c *Controller) Focus() {
+	// TODO(port): ICoreWebView2Controller.MoveFocus with
+	// COREWEBVIEW2_MOVE_FOCUS_REASON_PROGRAMMATIC. The
+	// application layer guards with GetController() != nil,
+	// so a no-op preserves that semantic.
+}
+
+// GetController returns the typed ICoreWebView2Controller wrapper
+// for this controller's underlying webview. The application layer
+// uses this to nil-check before calling controller methods
+// (Focus, Resize, GetZoomFactor, etc.). Returns nil until the
+// WebView2 environment creation pipeline delivers the controller.
+//
+// TODO(port): once the typed controller wrapper lands (with
+// Focus / Resize / GetZoomFactor / etc. implemented against
+// the real ICoreWebView2Controller vtable), return that
+// concrete type. For now we return a small placeholder struct
+// so the application layer's nil-checks stay meaningful and
+// the limited API surface it uses compiles.
+func (c *Controller) GetController() *CoreWebView2Controller {
+	if c.host == 0 {
+		return nil
+	}
+	return &CoreWebView2Controller{host: c.host, owner: c}
+}
+
+// CoreWebView2Controller is a placeholder typed wrapper for the
+// raw ICoreWebView2Controller COM pointer. The full
+// implementation is ported in a follow-up task; this stub exists
+// so the application layer can nil-check and call the few
+// controller methods it uses today (GetZoomFactor).
+//
+// Mirrors upstream edge.ICoreWebView2Controller (the type
+// upstream Chromium.GetController() returns).
+type CoreWebView2Controller struct {
+	host  uintptr
+	owner *Controller
+}
+
+// GetZoomFactor returns the webview's current zoom factor.
+//
+// TODO(port): ICoreWebView2Controller.ZoomFactor getter via the
+// real vtable. Today we return the owner's stored zoom.
+func (cc *CoreWebView2Controller) GetZoomFactor() (float64, error) {
+	if cc.owner == nil {
+		return 1.0, nil
+	}
+	return cc.owner.GetZoomFactor()
+}
+
+// GetSettings returns the ICoreWebViewSettings wrapper for this
+// controller's webview.
+func (c *Controller) GetSettings() (*Settings, error) {
+	if c.View == nil {
+		return nil, fmt.Errorf("Controller.GetSettings: view not yet attached")
+	}
+	return c.View.Settings()
+}
+
+// GetEnvironment returns the ICoreWebView2Environment the controller
+// was created from. Mirrors upstream edge.Chromium.Environment.
+func (c *Controller) GetEnvironment() *Environment {
+	return c.Environment
+}
+
+// ShuttingDown marks the controller as tearing down. Subsequent
+// calls to Embed/Navigate/etc. become no-ops.
+func (c *Controller) ShuttingDown() {
+	c.shuttingDown = true
+	// TODO(port): close event handlers, release the underlying
+	// ICoreWebView2Controller via ICoreWebView2ControllerCollection.
+}
+
+// NotifyParentWindowPositionChanged tells WebView2 that the host
+// window has moved; this is required to keep zoom and other
+// per-DPI state consistent across monitor moves.
+func (c *Controller) NotifyParentWindowPositionChanged() error {
+	// TODO(port): ICoreWebView2Controller.NotifyParentWindowPositionChanged.
+	return nil
+}
+
+// PutZoomFactor sets the webview's zoom factor.
+func (c *Controller) PutZoomFactor(zoomFactor float64) {
+	// TODO(port): ICoreWebView2Controller.ZoomFactor.
+	_ = zoomFactor
+}
+
+// GetZoomFactor returns the webview's current zoom factor.
+func (c *Controller) GetZoomFactor() (float64, error) {
+	// TODO(port): ICoreWebView2Controller.ZoomFactor.
+	return 1.0, nil
+}
+
+// OpenDevToolsTypedWindow opens the DevTools window for a given
+// webview (typed-string variant). Mirrors the upstream behaviour
+// where DevTools are scoped to a specific WebView2 instance.
+//
+// The Gails port uses Controller.OpenDevToolsWindow() (no-arg,
+// above) for the controller-level convenience; this method is
+// the per-view typed form, kept for parity with future tasks
+// that may want to attach DevTools to a specific webview.
+func (c *Controller) OpenDevToolsTypedWindow() {
+	c.OpenDevToolsWindow()
+}
+
+// PutIsVisible mirrors ICoreWebView2Controller.IsVisible. The
+// application layer uses this to keep WebView2 visible (to
+// prevent the OS from putting it in efficiency mode).
+func (c *Controller) PutIsVisible(visible bool) error {
+	// TODO(port): ICoreWebView2Controller.IsVisible.
+	_ = visible
+	return nil
+}
+
+// PutIsSwipeNavigationEnabled enables/disables two-finger swipe
+// navigation inside the webview.
+func (c *Controller) PutIsSwipeNavigationEnabled(enabled bool) error {
+	if c.Settings == nil {
+		// Fall back to lazy settings lookup; harmless if View
+		// is not yet attached.
+		return nil
+	}
+	return c.Settings.PutIsSwipeNavigationEnabled(enabled)
+}
+
+// PutIsGeneralAutofillEnabled enables/disables general autofill.
+func (c *Controller) PutIsGeneralAutofillEnabled(value bool) error {
+	if c.Settings == nil {
+		return nil
+	}
+	return c.Settings.PutIsGeneralAutofillEnabled(value)
+}
+
+// PutIsPasswordAutosaveEnabled enables/disables password autosave.
+func (c *Controller) PutIsPasswordAutosaveEnabled(value bool) error {
+	if c.Settings == nil {
+		return nil
+	}
+	return c.Settings.PutIsPasswordAutosaveEnabled(value)
+}

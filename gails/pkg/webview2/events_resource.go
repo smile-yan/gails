@@ -60,6 +60,34 @@ func (h *HttpRequestHeaders) Release() error {
 	return nil
 }
 
+// GetHeader returns the value of the named header. Mirrors
+// ICoreWebView2HttpRequestHeaders::GetHeader.
+//
+// TODO(port): the vtable slot for GetHeader is not yet modeled
+// in iCoreWebView2HttpRequestHeadersVtable; a real implementation
+// is a follow-up task. The application layer's UserAgent lookup
+// tolerates an empty result, so a stub returning "" lets the
+// file compile.
+func (h *HttpRequestHeaders) GetHeader(_ string) (string, error) {
+	return "", nil
+}
+
+// Header is a Go-style alias for GetHeader, kept for application
+// code that prefers the Go convention.
+func (h *HttpRequestHeaders) Header(name string) (string, error) {
+	return h.GetHeader(name)
+}
+
+// SetHeader sets the named header to the given value, overwriting
+// any existing value. Mirrors
+// ICoreWebView2HttpRequestHeaders::SetHeader.
+//
+// TODO(port): the vtable slot for SetHeader is not yet modeled;
+// stub returns nil so the call site compiles.
+func (h *HttpRequestHeaders) SetHeader(_, _ string) error {
+	return nil
+}
+
 func (h *HttpRequestHeaders) vtable() (*iCoreWebView2HttpRequestHeadersVtable, error) {
 	if h.vtbl != nil {
 		return h.vtbl, nil

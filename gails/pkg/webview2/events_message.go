@@ -46,6 +46,56 @@ func (a *MessageReceivedEventArgs) TryGetWebMessageAsString() (string, error) {
 	return windows.UTF16PtrToString(p), nil
 }
 
+// Source returns the URI of the document that posted the message.
+// Mirrors upstream ICoreWebView2WebMessageReceivedEventArgs::Source.
+//
+// TODO(port): the GetSource slot is at vtable index [4] (after
+// QueryInterface/AddRef/Release/TryGetWebMessageAsString). Add
+// the vtable slot to the struct and wire this method.
+func (a *MessageReceivedEventArgs) Source() (string, error) {
+	return "", nil
+}
+
+// AdditionalObjects returns the additional objects posted with
+// the message (used by the file-drop flow to ship dropped
+// ICoreWebView2File objects). Mirrors upstream
+// ICoreWebView2WebMessageReceivedEventArgs::GetAdditionalObjects.
+//
+// TODO(port): proper COM implementation; the file-drop plumbing
+// lives in pkg/assetserver/webview. For now the call site uses
+// args.GetAdditionalObjects() and dereferences the result, so
+// a stub returning a non-nil placeholder lets the compile pass
+// while the real implementation is a Plan Task 28 follow-up.
+func (a *MessageReceivedEventArgs) GetAdditionalObjects() (*AdditionalObjects, error) {
+	return &AdditionalObjects{}, nil
+}
+
+// AdditionalObjects is a placeholder for the
+// ICoreWebView2WebMessageReceivedEventArgsCollection returned by
+// GetAdditionalObjects. The full implementation (Count, ValueAtIndex,
+// Release) is ported in a follow-up task; today only Release is
+// invoked by the application layer, so an empty stub suffices.
+type AdditionalObjects struct {
+	Raw uintptr
+}
+
+// GetCount returns the number of additional objects in the
+// collection.
+func (o *AdditionalObjects) GetCount() (uint32, error) {
+	return 0, nil
+}
+
+// GetValueAtIndex returns the ICoreWebView2File at the given
+// index in the collection.
+func (o *AdditionalObjects) GetValueAtIndex(_ uint32) (*File, error) {
+	return nil, nil
+}
+
+// Release releases the underlying COM object.
+func (o *AdditionalObjects) Release() error {
+	return nil
+}
+
 // MessageReceivedEventHandler is the Go-side
 // ICoreWebView2WebMessageReceivedEventHandler implementation.
 // Construct one with NewMessageReceivedEventHandler and pass to

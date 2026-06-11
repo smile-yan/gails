@@ -14,16 +14,15 @@ import (
 	"unsafe"
 
 	"github.com/gailsapp/gails/internal/debounce"
-	"github.com/wailsapp/wails/webview2/webviewloader"
 	"github.com/gailsapp/gails/internal/assetserver"
 	"github.com/gailsapp/gails/internal/assetserver/webview"
 	"github.com/gailsapp/gails/internal/capabilities"
 	"github.com/gailsapp/gails/internal/runtime"
 	"github.com/gailsapp/gails/internal/sliceutil"
 
-	"github.com/wailsapp/wails/webview2/pkg/edge"
 	"github.com/gailsapp/gails/pkg/events"
 	"github.com/gailsapp/gails/pkg/w32"
+	"github.com/gailsapp/gails/pkg/webview2"
 )
 
 var edgeMap = map[string]uintptr{
@@ -52,7 +51,7 @@ type windowsWebviewWindow struct {
 	previousWindowPlacement w32.WINDOWPLACEMENT
 
 	// Webview
-	chromium                   *edge.Chromium
+	chromium                   *webview2.Controller
 	webviewNavigationCompleted bool
 
 	// Window visibility management - robust fallback for issue #2861
@@ -349,7 +348,7 @@ func (w *windowsWebviewWindow) run() {
 	// Non-hidden windows should be shown by default
 	w.showRequested = !options.Hidden
 
-	w.chromium = edge.NewChromium()
+	w.chromium = webview2.NewController()
 	if globalApplication.options.ErrorHandler != nil {
 		w.chromium.SetErrorCallback(globalApplication.options.ErrorHandler)
 	}
@@ -1664,7 +1663,7 @@ func (w *windowsWebviewWindow) WndProc(msg uint32, wparam, lparam uintptr) uintp
 			// Get the new size from lparam
 			width := int32(lparam & 0xFFFF)
 			height := int32((lparam >> 16) & 0xFFFF)
-			bounds := &edge.Rect{
+			bounds := &webview2.Rect{
 				Left:   0,
 				Top:    0,
 				Right:  width,
@@ -1809,7 +1808,7 @@ func (w *windowsWebviewWindow) WndProc(msg uint32, wparam, lparam uintptr) uintp
 					// In Full-Screen mode we don't need to adjust anything
 					// It essential we have the flag here, that is set before SetWindowPos in fullscreen/unfullscreen
 					// because the native size might not yet reflect we are in fullscreen during this event!
-					w.setPadding(edge.Rect{})
+					w.setPadding(webview2.Rect{})
 				} else if w.isMaximised() {
 					// If the window is maximized we must adjust the client area to the work area of the monitor. Otherwise
 					// some content goes beyond the visible part of the monitor.
@@ -1848,7 +1847,7 @@ func (w *windowsWebviewWindow) WndProc(msg uint32, wparam, lparam uintptr) uintp
 						Right:  int32(rect.X + rect.Width),
 						Bottom: int32(rect.Y + rect.Height),
 					}
-					w.setPadding(edge.Rect{})
+					w.setPadding(webview2.Rect{})
 				} else {
 					// This is needed to work around the resize flickering in frameless mode with WindowDecorations
 					// See: https://stackoverflow.com/a/6558508
@@ -1857,7 +1856,7 @@ func (w *windowsWebviewWindow) WndProc(msg uint32, wparam, lparam uintptr) uintp
 					// Increasing the bottom also worksaround the flickering, but we would lose 1px of the WebView content
 					// therefore let's pad the content with 1px at the bottom.
 					rgrc.Bottom += 1
-					w.setPadding(edge.Rect{Bottom: 1})
+					w.setPadding(webview2.Rect{Bottom: 1})
 				}
 				return 0
 			}
@@ -1951,14 +1950,14 @@ func (w *windowsWebviewWindow) isAlwaysOnTop() bool {
 
 // processMessage is given a message sent from JS via the postMessage API
 // We put it on the global window message buffer to be processed centrally
-func (w *windowsWebviewWindow) processMessage(message string, sender *edge.ICoreWebView2, args *edge.ICoreWebView2WebMessageReceivedEventArgs) {
-	topSource, err := sender.GetSource()
+func (w *windowsWebviewWindow) processMessage(message string, sender *webview2.View, args *webview2.MessageReceivedEventArgs) {
+	topSource, err := sender.Source()
 	if err != nil {
 		globalApplication.error("Unable to get source from sender: %s", err.Error())
 		topSource = ""
 	}
 
-	senderSource, err := args.GetSource()
+	senderSource, err := args.Source()
 	if err != nil {
 		globalApplication.error("Unable to get source from args: %s", err.Error())
 		senderSource = ""
@@ -1976,14 +1975,14 @@ func (w *windowsWebviewWindow) processMessage(message string, sender *edge.ICore
 }
 
 func (w *windowsWebviewWindow) processRequest(
-	req *edge.ICoreWebView2WebResourceRequest,
-	args *edge.ICoreWebView2WebResourceRequestedEventArgs,
+	req *webview2.WebResourceRequest,
+	args *webview2.WebResourceRequestedEventArgs,
 ) {
 
 	// Setting the UserAgent on the CoreWebView2Settings clears the whole default UserAgent of the Edge browser, but
 	// we want to just append our ApplicationIdentifier. So we adjust the UserAgent for every request.
-	if reqHeaders, err := req.GetHeaders(); err == nil {
-		useragent, _ := reqHeaders.GetHeader(assetserver.HeaderUserAgent)
+	if reqHeaders, err := req.Headers(); err == nil {
+		useragent, _ := reqHeaders.Header(assetserver.HeaderUserAgent)
 		useragent = strings.Join([]string{useragent, assetserver.GailsUserAgentValue}, " ")
 		err = reqHeaders.SetHeader(assetserver.HeaderUserAgent, useragent)
 		if err != nil {
@@ -2008,7 +2007,7 @@ func (w *windowsWebviewWindow) processRequest(
 	}
 
 	//Get the request
-	uri, _ := req.GetUri()
+	uri, _ := req.Uri()
 	reqUri, err := url.ParseRequestURI(uri)
 	if err != nil {
 		globalApplication.error("unable to parse request uri: uri='%s' error='%w'", uri, err)
@@ -2024,7 +2023,7 @@ func (w *windowsWebviewWindow) processRequest(
 	}
 
 	webviewRequest, err := webview.NewRequest(
-		w.chromium.Environment(),
+		w.chromium.GetEnvironment(),
 		args,
 		func(fn func()) {
 			InvokeSync(fn)
@@ -2047,7 +2046,7 @@ func (w *windowsWebviewWindow) setupChromium() {
 
 	opts := w.parent.options.Windows
 
-	webview2version, err := webviewloader.GetAvailableCoreWebView2BrowserVersionString(
+	webview2version, err := webview2.GetAvailableCoreWebView2BrowserVersionString(
 		globalApplication.options.Windows.WebviewBrowserPath,
 	)
 	if err != nil {
@@ -2084,8 +2083,8 @@ func (w *windowsWebviewWindow) setupChromium() {
 
 	if opts.Permissions != nil {
 		for permission, state := range opts.Permissions {
-			chromium.SetPermission(edge.CoreWebView2PermissionKind(permission),
-				edge.CoreWebView2PermissionState(state))
+			chromium.SetPermission(webview2.PermissionKind(permission),
+				webview2.PermissionState(state))
 		}
 	}
 
@@ -2107,7 +2106,7 @@ func (w *windowsWebviewWindow) setupChromium() {
 	//	globalApplication.error("Failed to set WebView2 visibility for efficiency mode prevention: %v", err)
 	// }
 
-	if chromium.HasCapability(edge.SwipeNavigation) {
+	if chromium.HasCapability(webview2.CapabilitySwipeNavigation) {
 		err := chromium.PutIsSwipeNavigationEnabled(opts.EnableSwipeGestures)
 		if err != nil {
 			globalApplication.handleFatalError(err)
@@ -2131,7 +2130,7 @@ func (w *windowsWebviewWindow) setupChromium() {
 
 	err = chromium.PutIsGeneralAutofillEnabled(opts.GeneralAutofillEnabled)
 	if err != nil {
-		if errors.Is(err, edge.UnsupportedCapabilityError) {
+		if errors.Is(err, &webview2.UnsupportedCapabilityError{}) {
 			globalApplication.warning("unsupported capability: GeneralAutofillEnabled")
 		} else {
 			globalApplication.handleFatalError(err)
@@ -2140,7 +2139,7 @@ func (w *windowsWebviewWindow) setupChromium() {
 
 	err = chromium.PutIsPasswordAutosaveEnabled(opts.PasswordAutosaveEnabled)
 	if err != nil {
-		if errors.Is(err, edge.UnsupportedCapabilityError) {
+		if errors.Is(err, &webview2.UnsupportedCapabilityError{}) {
 			globalApplication.warning("unsupported capability: PasswordAutosaveEnabled")
 		} else {
 			globalApplication.handleFatalError(err)
@@ -2198,8 +2197,8 @@ func (w *windowsWebviewWindow) setupChromium() {
 		w.parent.options.BackgroundColour.Alpha,
 	)
 
-	chromium.SetGlobalPermission(edge.CoreWebView2PermissionStateAllow)
-	chromium.AddWebResourceRequestedFilter("*", edge.COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL)
+	chromium.SetGlobalPermission(webview2.PermissionStateAllow)
+	chromium.AddWebResourceRequestedFilter("*", webview2.WebResourceContextAll)
 
 	if w.parent.options.HTML != "" {
 		var script string
@@ -2228,10 +2227,10 @@ func (w *windowsWebviewWindow) setupChromium() {
 }
 
 func (w *windowsWebviewWindow) fullscreenChanged(
-	sender *edge.ICoreWebView2,
-	_ *edge.ICoreWebView2ContainsFullScreenElementChangedEventArgs,
+	sender *webview2.View,
+	_ *webview2.ContainsFullScreenElementEventArgs,
 ) {
-	isFullscreen, err := sender.GetContainsFullScreenElement()
+	isFullscreen, err := sender.ContainsFullScreenElement()
 	if err != nil {
 		globalApplication.fatal("fatal error in callback fullscreenChanged: %w", err)
 	}
@@ -2247,8 +2246,8 @@ func (w *windowsWebviewWindow) flash(enabled bool) {
 }
 
 func (w *windowsWebviewWindow) navigationCompleted(
-	sender *edge.ICoreWebView2,
-	args *edge.ICoreWebView2NavigationCompletedEventArgs,
+	sender *webview2.View,
+	args *webview2.NavigationCompletedEventArgs,
 ) {
 
 	// Install the runtime core
@@ -2356,8 +2355,8 @@ func (w *windowsWebviewWindow) processKeyBinding(vkey uint) bool {
 
 func (w *windowsWebviewWindow) processMessageWithAdditionalObjects(
 	message string,
-	sender *edge.ICoreWebView2,
-	args *edge.ICoreWebView2WebMessageReceivedEventArgs,
+	sender *webview2.View,
+	args *webview2.MessageReceivedEventArgs,
 ) {
 	if strings.HasPrefix(message, "file:drop:") {
 		objs, err := args.GetAdditionalObjects()
@@ -2387,7 +2386,7 @@ func (w *windowsWebviewWindow) processMessageWithAdditionalObjects(
 				return
 			}
 
-			file := (*edge.ICoreWebView2File)(unsafe.Pointer(_file))
+			file := (*webview2.File)(unsafe.Pointer(_file))
 
 			// TODO: Fix this
 			defer file.Release()
@@ -2542,7 +2541,7 @@ func (w *windowsWebviewWindow) setIgnoreMouseEvents(ignore bool) {
 	w32.SetWindowLong(w.hwnd, w32.GWL_EXSTYLE, uint32(exStyle))
 }
 
-func (w *windowsWebviewWindow) setPadding(padding edge.Rect) {
+func (w *windowsWebviewWindow) setPadding(padding webview2.Rect) {
 	// Skip SetPadding if window is being minimized to prevent flickering
 	if w.isMinimizing {
 		return

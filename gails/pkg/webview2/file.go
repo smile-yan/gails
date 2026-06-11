@@ -43,3 +43,21 @@ func (f *File) Path() (string, error) {
 	}
 	return windows.UTF16PtrToString(p), nil
 }
+
+// GetPath is a COM-style alias for Path, kept for application
+// code that uses the upstream method name.
+func (f *File) GetPath() (string, error) {
+	return f.Path()
+}
+
+// Release decrements the COM refcount for this File. The
+// application layer's drop handler calls this after consuming
+// the file's path.
+//
+// TODO(port): the vtable slot for Release is at index [2] in
+// iCoreWebView2FileVtable (modeled but not yet invoked). The
+// stub returns nil so the call site compiles; real refcount
+// management is a follow-up task.
+func (f *File) Release() error {
+	return nil
+}
