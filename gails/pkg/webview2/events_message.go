@@ -1,0 +1,121 @@
+//go:build windows
+
+package webview2
+
+import (
+	"fmt"
+	"syscall"
+	"unsafe"
+
+	"golang.org/x/sys/windows"
+)
+
+// View is the Go-side ICoreWebView2 wrapper. It is declared as a
+// forward reference here so the MessageReceivedEventHandler callback
+// signature can name *View before pkg/webview2/view.go (Task 19)
+// is implemented. view.go replaces this declaration with the real
+// one.
+type View struct {
+	Raw  uintptr
+	vtbl *iCoreWebView2Vtable
+}
+
+type iCoreWebView2Vtable struct {
+	QueryInterface uintptr
+	AddRef         uintptr
+	Release        uintptr
+	// ... 50+ slots in upstream order. See view.go (Task 19) for
+	// the full layout. Only the first three are needed here for
+	// the forward type to be usable in the MessageReceivedEventArgs
+	// callback signature.
+}
+
+// MessageReceivedEventArgs is the COM ICoreWebView2WebMessageReceivedEventArgs
+// wrapper. Call TryGetWebMessageAsString to read the message body.
+type MessageReceivedEventArgs struct {
+	Raw  uintptr
+	vtbl *iCoreWebView2WebMessageReceivedEventArgsVtable
+}
+
+type iCoreWebView2WebMessageReceivedEventArgsVtable struct {
+	QueryInterface           uintptr
+	AddRef                   uintptr
+	Release                  uintptr
+	TryGetWebMessageAsString uintptr
+	GetAdditionalObjects     uintptr
+}
+
+// TryGetWebMessageAsString returns the WebMessage posted by the
+// webview as a UTF-8 string. The COM method allocates the string
+// with CoTaskMemAlloc; Gails is not responsible for freeing it
+// (the WebView2 runtime owns the buffer).
+func (a *MessageReceivedEventArgs) TryGetWebMessageAsString() (string, error) {
+	if a.vtbl == nil {
+		vtblPtr := *(*uintptr)(unsafe.Pointer(a.Raw))
+		a.vtbl = (*iCoreWebView2WebMessageReceivedEventArgsVtable)(unsafe.Pointer(vtblPtr))
+	}
+	var p *uint16
+	hr, _, _ := syscall.SyscallN(
+		a.vtbl.TryGetWebMessageAsString,
+		uintptr(unsafe.Pointer(a)),
+		uintptr(unsafe.Pointer(&p)),
+	)
+	if hr != 0 {
+		return "", fmt.Errorf("TryGetWebMessageAsString failed: 0x%08x", hr)
+	}
+	return windows.UTF16PtrToString(p), nil
+}
+
+// MessageReceivedEventHandler is the Go-side
+// ICoreWebView2WebMessageReceivedEventHandler implementation.
+// Construct one with NewMessageReceivedEventHandler and pass to
+// View.AddWebMessageReceived; call Close when done.
+type MessageReceivedEventHandler struct {
+	impl *comHandlerImpl
+}
+
+// NewMessageReceivedEventHandler wires a Go callback to the
+// ICoreWebView2WebMessageReceivedEventHandler.Invoke vtable slot.
+// The returned handler holds a reference to a native COM object;
+// the caller must call Close when finished.
+func NewMessageReceivedEventHandler(callback func(view *View, args *MessageReceivedEventArgs)) *MessageReceivedEventHandler {
+	trampoline := windows.NewCallback(messageReceivedInvokeTrampoline)
+	h := NewComHandler(trampoline, callback)
+	return &MessageReceivedEventHandler{impl: h}
+}
+
+// Close releases the underlying COM object. Calling Close twice is
+// a no-op.
+func (h *MessageReceivedEventHandler) Close() {
+	if h.impl == nil {
+		return
+	}
+	h.impl.Release()
+	h.impl = nil
+}
+
+// messageReceivedInvokeTrampoline is the per-instance Invoke slot
+// for the ICoreWebView2WebMessageReceivedEventHandler vtable. It
+// is registered as a C callback via windows.NewCallback and is
+// invoked by WebView2 when the frontend posts a message.
+//
+// The signature is fixed by COM stdcall: the first argument is the
+// COM `this` pointer, followed by the Invoke method's typed
+// arguments, and the return value is an HRESULT uintptr.
+func messageReceivedInvokeTrampoline(this uintptr, sender uintptr, args uintptr) uintptr {
+	impl := comHandlerFromThis(this)
+	if impl == nil {
+		return 0x80004003 // E_POINTER
+	}
+	cb, ok := impl.Callback().(func(view *View, args *MessageReceivedEventArgs))
+	if !ok || cb == nil {
+		return 0 // S_OK; nothing to do
+	}
+	// The "sender" argument is an ICoreWebView2*. The Gails View
+	// wrapper is not yet implemented in this task; we pass a
+	// nil view for now and let the callback deal with it. Later
+	// tasks (View) will populate this.
+	_ = sender
+	cb(nil, &MessageReceivedEventArgs{Raw: args})
+	return 0
+}
