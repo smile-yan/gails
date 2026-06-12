@@ -54,8 +54,15 @@ var BuildSettings = map[string]string{}
 
 func fatal(message string) {
 	term.Error(message)
-	os.Exit(1)
+	exitFunc(1)
 }
+
+// exitFunc is a package-level indirection over os.Exit so tests can stub
+// the exit without terminating the test binary.
+//
+// Mirrors the hook-override pattern from internal/s/s.go (checkError /
+// exitFunc) and internal/operatingsystem/os_linux.go (readOsReleaseFile).
+var exitFunc = os.Exit
 
 type RunTaskOptions struct {
 	Name             string `pos:"1"`

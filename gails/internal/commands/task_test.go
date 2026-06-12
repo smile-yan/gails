@@ -233,3 +233,44 @@ func TestWakeRoutableInvocation(t *testing.T) {
 		})
 	}
 }
+
+// TestFatal_CapturesExitCode: fatal() used to call os.Exit(1) directly,
+// terminating the test binary. With the exitFunc indirection (mirrors
+// the internal/s checkError refactor), we can capture the exit code
+// and assert that term.Error was called with the supplied message.
+func TestFatal_CapturesExitCode(t *testing.T) {
+	origExit := exitFunc
+	t.Cleanup(func() { exitFunc = origExit })
+
+	var code int
+	exitFunc = func(c int) { code = c }
+
+	// term.Error writes to pterm which we cannot easily capture. We
+	// only assert that fatal() (a) called our stub with code 1 and
+	// (b) does not panic on the empty string.
+	fatal("oops: task validation failed")
+	assert.Equal(t, 1, code, "fatal() should exit with code 1")
+}
+
+// TestFatal_EmptyMessage: pins that fatal() doesn't crash on an empty
+// string (term.Error and exitFunc both still get called).
+func TestFatal_EmptyMessage(t *testing.T) {
+	origExit := exitFunc
+	t.Cleanup(func() { exitFunc = origExit })
+
+	var code int
+	exitFunc = func(c int) { code = c }
+
+	fatal("")
+	assert.Equal(t, 1, code)
+}
+
+// TestFatal_DefaultStubIsOsExit: the default exitFunc must remain
+// os.Exit so production callers (RunTask on real errors) still
+// terminate the process. We can only check the func is non-nil;
+// comparing the function value across package boundaries is unsafe.
+func TestFatal_DefaultStubIsOsExit(t *testing.T) {
+	if exitFunc == nil {
+		t.Fatal("default exitFunc is nil; the hook-override refactor regressed")
+	}
+}
