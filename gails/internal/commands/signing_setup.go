@@ -440,7 +440,9 @@ func getMacOSSigningIdentities() ([]string, error) {
 	return identities, nil
 }
 
-// updateTaskfileVars updates the vars section of a Taskfile
+// updateTaskfileVars updates the vars section of a Taskfile. If no
+// `vars:` section exists, one is auto-inserted before `tasks:` (or
+// appended to the end of the file if `tasks:` is also absent).
 func updateTaskfileVars(path string, vars map[string]string) error {
 	content, err := os.ReadFile(path)
 	if err != nil {
@@ -506,12 +508,45 @@ func updateTaskfileVars(path string, vars map[string]string) error {
 			result = append(result, line)
 		}
 
-		// If we're at the end and haven't inserted vars yet, we need to add vars section
-		if i == len(lines)-1 && !varsInserted && len(remainingVars) > 0 {
-			// Find where to insert (after includes, before tasks)
-			// For simplicity, just append warning
-			pterm.Warning.Println("Could not find vars section in Taskfile, please add manually")
+		// If we never saw a vars: section and we still have remaining vars
+		// after the loop completes, the section was missing entirely.
+		// varsInserted is set when we EXIT an existing vars block; it
+		// stays false when we never entered one. We handle the insertion
+		// after the loop so we know the final result layout.
+		_ = i
+	}
+
+	// If no vars: section existed and we still have vars to insert,
+	// create a new vars: block before the tasks: line (or at EOF if
+	// tasks: is also missing).
+	if !varsInserted && len(remainingVars) > 0 {
+		// Find the first top-level `tasks:` line to insert before.
+		insertIdx := len(result)
+		for i, line := range result {
+			if strings.TrimSpace(line) == "tasks:" {
+				insertIdx = i
+				break
+			}
 		}
+
+		// Build the new vars block.
+		block := []string{"vars:"}
+		for k, v := range remainingVars {
+			if v != "" {
+				block = append(block, fmt.Sprintf("  %s: %q", k, v))
+			}
+		}
+		// Trailing blank line separates the new block from what follows.
+		block = append(block, "")
+
+		// Prepend a blank line if the line above the insertion point is
+		// not already blank (YAML convention; avoids running two blocks
+		// together).
+		if insertIdx > 0 && strings.TrimSpace(result[insertIdx-1]) != "" {
+			block = append([]string{""}, block...)
+		}
+
+		result = append(result[:insertIdx], append(block, result[insertIdx:]...)...)
 	}
 
 	return os.WriteFile(path, []byte(strings.Join(result, "\n")), 0644)

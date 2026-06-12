@@ -7,10 +7,11 @@ import (
 	"testing"
 )
 
-// TestUpdateTaskfileVars_NoVarsSection: a Taskfile without a `vars:`
-// section is left unchanged (the function prints a pterm warning rather
-// than auto-inserting the section). This pins the current behaviour.
-func TestUpdateTaskfileVars_NoVarsSection(t *testing.T) {
+// TestUpdateTaskfileVars_NoVarsSection_AutoInserts: a Taskfile without a
+// `vars:` section gets a new `vars:` block auto-inserted before `tasks:`.
+// This replaces the previous quirk where the function only printed a
+// pterm warning and left the file unchanged.
+func TestUpdateTaskfileVars_NoVarsSection_AutoInserts(t *testing.T) {
 	dir := t.TempDir()
 	tf := filepath.Join(dir, "Taskfile.yml")
 	original := "version: '3'\n\ntasks:\n  build:\n    cmds:\n      - go build\n"
@@ -24,11 +25,94 @@ func TestUpdateTaskfileVars_NoVarsSection(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// The file should be unchanged — the function does NOT auto-create a
-	// vars section. (This is a known limitation flagged with a pterm warning
-	// at signing_setup.go:513.)
-	if string(got) != original {
-		t.Errorf("file changed unexpectedly:\n--- want ---\n%s--- got ---\n%s", original, got)
+	s := string(got)
+	if !strings.Contains(s, "vars:") {
+		t.Errorf("vars: header missing:\n%s", s)
+	}
+	if !strings.Contains(s, `GOOS: "darwin"`) {
+		t.Errorf("GOOS var missing:\n%s", s)
+	}
+	// The vars block must come BEFORE tasks:
+	varsIdx := strings.Index(s, "vars:")
+	tasksIdx := strings.Index(s, "tasks:")
+	if varsIdx < 0 || tasksIdx < 0 || varsIdx > tasksIdx {
+		t.Errorf("vars: must appear before tasks: (vars=%d, tasks=%d):\n%s",
+			varsIdx, tasksIdx, s)
+	}
+}
+
+// TestUpdateTaskfileVars_NoVarsNoTasks: when there's neither vars: nor
+// tasks: the new vars block is appended at end of file.
+func TestUpdateTaskfileVars_NoVarsNoTasks(t *testing.T) {
+	dir := t.TempDir()
+	tf := filepath.Join(dir, "Taskfile.yml")
+	original := "version: '3'\n"
+	if err := os.WriteFile(tf, []byte(original), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := updateTaskfileVars(tf, map[string]string{"FOO": "bar"}); err != nil {
+		t.Fatal(err)
+	}
+	got, _ := os.ReadFile(tf)
+	s := string(got)
+	if !strings.Contains(s, "vars:") {
+		t.Errorf("vars: header missing:\n%s", s)
+	}
+	if !strings.Contains(s, `FOO: "bar"`) {
+		t.Errorf("FOO var missing:\n%s", s)
+	}
+}
+
+// TestUpdateTaskfileVars_NoVarsNoBlankLine: when the line before tasks:
+// is non-empty (no blank line separator), the new vars block gets its
+// own leading blank line so YAML readers see a clear block boundary.
+func TestUpdateTaskfileVars_NoVarsNoBlankLine(t *testing.T) {
+	dir := t.TempDir()
+	tf := filepath.Join(dir, "Taskfile.yml")
+	// No blank line between version and tasks
+	original := "version: '3'\ntasks:\n  build: {}\n"
+	if err := os.WriteFile(tf, []byte(original), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := updateTaskfileVars(tf, map[string]string{"X": "y"}); err != nil {
+		t.Fatal(err)
+	}
+	got, _ := os.ReadFile(tf)
+	s := string(got)
+	if !strings.Contains(s, "vars:") || !strings.Contains(s, `X: "y"`) {
+		t.Errorf("vars block missing:\n%s", s)
+	}
+	// Expect blank lines on both sides of the new vars block
+	if !strings.Contains(s, "version: '3'\n\nvars:") {
+		t.Errorf("expected blank line before vars:\n%s", s)
+	}
+	if !strings.Contains(s, "vars:\n  X: \"y\"\n\ntasks:") {
+		t.Errorf("expected blank line after vars:\n%s", s)
+	}
+}
+
+// TestUpdateTaskfileVars_MultiVarInsertion: a single call with multiple
+// vars adds all of them in order.
+func TestUpdateTaskfileVars_MultiVarInsertion(t *testing.T) {
+	dir := t.TempDir()
+	tf := filepath.Join(dir, "Taskfile.yml")
+	original := "version: '3'\n\ntasks:\n  build: {}\n"
+	if err := os.WriteFile(tf, []byte(original), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := updateTaskfileVars(tf, map[string]string{
+		"GOOS":   "linux",
+		"GOARCH": "amd64",
+	}); err != nil {
+		t.Fatal(err)
+	}
+	got, _ := os.ReadFile(tf)
+	s := string(got)
+	if !strings.Contains(s, `GOOS: "linux"`) {
+		t.Errorf("missing GOOS=linux:\n%s", s)
+	}
+	if !strings.Contains(s, `GOARCH: "amd64"`) {
+		t.Errorf("missing GOARCH=amd64:\n%s", s)
 	}
 }
 
