@@ -1,3 +1,4 @@
+// Main entry point for the gails CLI.
 package main
 
 import (
