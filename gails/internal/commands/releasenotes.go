@@ -28,7 +28,13 @@ func ReleaseNotes(options *ReleaseNotesOptions) error {
 		currentVersion = options.Version
 	}
 
-	releaseNotes := github.GetReleaseNotes(currentVersion, options.NoColour)
+	releaseNotes := getReleaseNotesFunc(currentVersion, options.NoColour)
 	term.Println(releaseNotes)
 	return nil
 }
+
+// getReleaseNotesFunc is a package-level indirection so tests can stub
+// the GitHub release-notes fetch. Follows the hook-override pattern from
+// internal/operatingsystem/os_linux.go (readOsReleaseFile) and
+// internal/commands/task_wrapper.go (runTaskFunc).
+var getReleaseNotesFunc = github.GetReleaseNotes

@@ -6,6 +6,20 @@ import (
 	"testing"
 )
 
+func TestSyso_Default(t *testing.T) {
+	opts := (&SysoOptions{}).Default()
+	if opts == nil {
+		t.Fatal("Default() returned nil")
+	}
+	if opts.Arch != runtime.GOARCH {
+		t.Errorf("Arch = %q, want %q (runtime.GOARCH)", opts.Arch, runtime.GOARCH)
+	}
+	// Other fields should be empty (manifest/icon/info/out unset by default).
+	if opts.Manifest != "" || opts.Icon != "" || opts.Info != "" || opts.Out != "" {
+		t.Errorf("Default populated unexpected fields: %+v", opts)
+	}
+}
+
 func TestGenerateSyso(t *testing.T) {
 	tests := []struct {
 		name    string

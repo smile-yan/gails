@@ -186,3 +186,50 @@ func findEquals(s string) int {
 	}
 	return -1
 }
+
+func TestParseCLIVars(t *testing.T) {
+	cases := []struct {
+		name string
+		in   []string
+		want map[string]string
+	}{
+		{name: "empty", in: nil, want: map[string]string{}},
+		{name: "single", in: []string{"KEY=value"}, want: map[string]string{"KEY": "value"}},
+		{name: "multi", in: []string{"A=1", "B=2", "C=three"}, want: map[string]string{"A": "1", "B": "2", "C": "three"}},
+		{name: "value contains equals", in: []string{"K=a=b=c"}, want: map[string]string{"K": "a=b=c"}},
+		{name: "empty value", in: []string{"K="}, want: map[string]string{"K": ""}},
+		{name: "no equals (skipped)", in: []string{"standalone", "KEY=val"}, want: map[string]string{"KEY": "val"}},
+	}
+	for _, tc := range cases {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			assert.Equal(t, tc.want, parseCLIVars(tc.in))
+		})
+	}
+}
+
+func TestWakeRoutableInvocation(t *testing.T) {
+	cases := []struct {
+		name string
+		opts *RunTaskOptions
+		want bool
+	}{
+		{name: "empty options", opts: &RunTaskOptions{}, want: true},
+		{name: "with task name", opts: &RunTaskOptions{Name: "build"}, want: true},
+		{name: "List blocks", opts: &RunTaskOptions{List: true}, want: false},
+		{name: "ListAll blocks", opts: &RunTaskOptions{ListAll: true}, want: false},
+		{name: "ListJSON blocks", opts: &RunTaskOptions{ListJSON: true}, want: false},
+		{name: "Status blocks", opts: &RunTaskOptions{Status: true}, want: false},
+		{name: "Watch blocks", opts: &RunTaskOptions{Watch: true}, want: false},
+		{name: "Dry blocks", opts: &RunTaskOptions{Dry: true}, want: false},
+		{name: "Summary blocks", opts: &RunTaskOptions{Summary: true}, want: false},
+		{name: "Dir blocks", opts: &RunTaskOptions{Dir: "/tmp"}, want: false},
+		{name: "EntryPoint blocks", opts: &RunTaskOptions{EntryPoint: "Taskfile.yml"}, want: false},
+	}
+	for _, tc := range cases {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			assert.Equal(t, tc.want, wakeRoutableInvocation(tc.opts))
+		})
+	}
+}

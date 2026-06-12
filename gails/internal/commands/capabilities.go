@@ -59,6 +59,14 @@ func detectLinuxCapabilities() *LinuxCapabilities {
 }
 
 func pkgConfigExists(pkg string) bool {
+	return pkgConfigExistsFunc(pkg)
+}
+
+// pkgConfigExistsFunc is a package-level indirection so tests can stub
+// out the pkg-config probe. Follows the hook-override pattern from
+// internal/operatingsystem/os_linux.go (readOsReleaseFile) and
+// internal/commands/task_wrapper.go (runTaskFunc).
+var pkgConfigExistsFunc = func(pkg string) bool {
 	cmd := exec.Command("pkg-config", "--exists", pkg)
 	return cmd.Run() == nil
 }

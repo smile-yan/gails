@@ -98,8 +98,14 @@ func repoRoot() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	return repoRootFrom(self)
+}
+
+// repoRootFrom is the pure-logic probe that IOSOverlayGen uses internally;
+// split out from repoRoot so tests can drive it with a fixture directory
+// without touching the real cwd.
+func repoRootFrom(probe string) (string, error) {
 	// Walk up until we find a directory containing v3/internal/commands
-	probe := self
 	for i := 0; i < 10; i++ {
 		p := filepath.Join(probe, "v3", "internal", "commands")
 		if st, err := os.Stat(p); err == nil && st.IsDir() {
