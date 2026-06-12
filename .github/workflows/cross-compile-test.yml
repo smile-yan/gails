@@ -8,6 +8,9 @@ on:
     paths:
       - 'gails/**'
       - '.github/workflows/cross-compile-test.yml'
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       pr_number:
@@ -19,7 +22,7 @@ jobs:
   check_approval:
     name: Check PR Approval
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event.review.state == 'approved'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.review.state == 'approved'
     outputs:
       approved: ${{ steps.check.outputs.approved }}
     steps:

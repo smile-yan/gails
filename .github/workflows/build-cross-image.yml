@@ -29,6 +29,8 @@ on:
       - main
     paths:
       - 'gails/internal/commands/build_assets/docker/Dockerfile.cross'
+    tags:
+      - 'v*'
 
 env:
   REGISTRY: ghcr.io
