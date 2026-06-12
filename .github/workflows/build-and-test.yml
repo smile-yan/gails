@@ -147,6 +147,17 @@ jobs:
           name: runtime-build-artifacts
           path: gails/internal/runtime/desktop/@gailsio/runtime/
 
+      - name: Prepare example frontend dist stubs
+        working-directory: gails
+        shell: bash
+        run: |
+          # Some examples embed frontend/dist but are not built during go test ./....
+          # Create empty dist directories so Go's embed directive can compile them.
+          find examples -type d -name frontend | while read -r dir; do
+            mkdir -p "$dir/dist"
+            touch "$dir/dist/.gitkeep"
+          done
+
       - name: Build Examples (GTK4 default)
         working-directory: gails
         run: |
