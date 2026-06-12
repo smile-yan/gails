@@ -2,7 +2,7 @@ name: Changelog Validation
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - 'docs/src/content/docs/changelog.mdx'
   workflow_dispatch:
@@ -30,11 +30,11 @@ jobs:
         fetch-depth: 0
         token: ${{ secrets.GITHUB_TOKEN || github.token }}
         
-    - name: Get REAL validation script from master
+    - name: Get REAL validation script from main
       run: |
-        echo "Fetching the REAL validation script from master branch..."
-        git fetch origin master
-        git checkout origin/master -- gails/scripts/validate-changelog.go
+        echo "Fetching the REAL validation script from main branch..."
+        git fetch origin main
+        git checkout origin/main -- gails/scripts/validate-changelog.go
 
         echo "Validation script fetched successfully:"
         ls -la gails/scripts/
@@ -52,7 +52,7 @@ jobs:
           echo "base_ref=${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
         else
           echo "pr_number=${{ github.event.inputs.pr_number }}" >> $GITHUB_OUTPUT
-          echo "base_ref=master" >> $GITHUB_OUTPUT
+          echo "base_ref=main" >> $GITHUB_OUTPUT
         fi
         
     - name: Check changelog modifications
@@ -121,9 +121,9 @@ jobs:
             echo "🔍 PR source branch: $BRANCH_NAME"
             echo "🔍 Head repository: $HEAD_REPO"
             
-            # Don't push if this is from a fork or if branch is master (main branch)
-            if [ "$HEAD_REPO" != "gails" ] || [ "$BRANCH_NAME" = "master" ]; then
-              echo "⚠️ Cannot push - either fork or direct master branch. Manual fix required."
+            # Don't push if this is from a fork or if branch is main (main branch)
+            if [ "$HEAD_REPO" != "gails" ] || [ "$BRANCH_NAME" = "main" ]; then
+              echo "⚠️ Cannot push - either fork or direct main branch. Manual fix required."
               echo "committed=false" >> $GITHUB_OUTPUT
               exit 0
             fi

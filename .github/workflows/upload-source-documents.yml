@@ -2,7 +2,7 @@ name: Upload Source Documents
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - 'website/docs/**'
       - '.github/workflows/upload-source-documents.yml'
