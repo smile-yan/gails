@@ -128,7 +128,7 @@ jobs:
           cp ${{ github.workspace }}/gails/internal/runtime/desktop/@gailsio/runtime/*.tgz crosstest/frontend/
           cd crosstest/frontend
           RUNTIME_TGZ=$(ls *.tgz | xargs basename)
-          npm pkg set dependencies.@gailsio/runtime="file://$RUNTIME_TGZ"
+          npm pkg set dependencies.@gailsio/runtime="file:./$RUNTIME_TGZ"
 
       - name: Setup Docker cross-compile image
         working-directory: test-cross-compile/crosstest
