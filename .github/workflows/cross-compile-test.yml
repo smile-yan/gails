@@ -1,4 +1,4 @@
-name: Cross-Compile Test v3
+name: Cross-Compile Test
 
 on:
   pull_request_review:
@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - 'gails/**'
-      - '.github/workflows/cross-compile-test-v3.yml'
+      - '.github/workflows/cross-compile-test.yml'
   workflow_dispatch:
     inputs:
       pr_number:
