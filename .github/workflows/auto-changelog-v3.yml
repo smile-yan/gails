@@ -57,6 +57,14 @@ jobs:
           echo "ℹ️ Changelog not updated — auto-filling."
         fi
 
+    - name: Check required secrets
+      if: steps.check.outputs.skip == 'false'
+      run: |
+        if [ -z "${{ secrets.OPENROUTER_API_KEY }}" ]; then
+          echo "::error::OPENROUTER_API_KEY secret is not configured. Add it at Settings > Secrets and variables > Actions to enable auto-changelog."
+          exit 1
+        fi
+
     - name: Setup Go
       if: steps.check.outputs.skip == 'false'
       uses: actions/setup-go@v5

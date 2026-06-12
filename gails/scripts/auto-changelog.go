@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-const changelogPath = "v3/UNRELEASED_CHANGELOG.md"
+const changelogPath = "gails/UNRELEASED_CHANGELOG.md"
 
 var validSections = map[string]bool{
 	"Added": true, "Changed": true, "Fixed": true,
@@ -27,7 +27,20 @@ func main() {
 	repo := os.Getenv("GITHUB_REPOSITORY")
 
 	if prNumber == "" || githubToken == "" || openrouterKey == "" || repo == "" {
-		fmt.Fprintln(os.Stderr, "❌ Required env vars: PR_NUMBER, GITHUB_TOKEN, OPENROUTER_API_KEY, GITHUB_REPOSITORY")
+		missing := []string{}
+		if prNumber == "" {
+			missing = append(missing, "PR_NUMBER")
+		}
+		if githubToken == "" {
+			missing = append(missing, "GITHUB_TOKEN")
+		}
+		if openrouterKey == "" {
+			missing = append(missing, "OPENROUTER_API_KEY")
+		}
+		if repo == "" {
+			missing = append(missing, "GITHUB_REPOSITORY")
+		}
+		fmt.Fprintf(os.Stderr, "❌ Missing required env var(s): %s\n", strings.Join(missing, ", "))
 		os.Exit(1)
 	}
 
