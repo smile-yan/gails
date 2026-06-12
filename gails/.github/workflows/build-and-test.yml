@@ -1,13 +1,19 @@
 name: Build + Test
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'gails/**'
+      - '.github/workflows/build-and-test.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - main
     paths:
       - 'gails/**'
-      - '.github/workflows/build-and-test-v3.yml'
+      - '.github/workflows/build-and-test.yml'
   pull_request_review:
     types: [submitted]
     branches:

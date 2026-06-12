@@ -1,13 +1,19 @@
 name: Cross-Compile Test
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'gails/**'
+      - '.github/workflows/cross-compile-test.yml'
   pull_request_review:
     types: [submitted]
     branches:
       - main
     paths:
       - 'gails/**'
-      - '.github/workflows/cross-compile-test-v3.yml'
+      - '.github/workflows/cross-compile-test.yml'
   workflow_dispatch:
     inputs:
       pr_number:
