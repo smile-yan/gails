@@ -208,13 +208,19 @@ func (o *ComObject[T]) Ref() uintptr {
 
 // Close releases the native COM object. The underlying object is
 // only destroyed when the ref count hits zero. After Close, Ref
-// will panic.
+// will panic. Calling Close on a zero-value ComObject is a no-op.
 func (o *ComObject[T]) Close() error {
 	o.close(false)
 	return nil
 }
 
 func (o *ComObject[T]) close(asyncRelease bool) {
+	// Zero-value ComObject (e.g. `var c ComObject[T]`) has a nil
+	// inner comObject. Treat it as already released so callers
+	// that probe via reflection / generic code don't panic.
+	if o == nil || o.obj == nil {
+		return
+	}
 	if atomic.CompareAndSwapInt32(&o.closed, 0, 1) {
 		runtime.SetFinalizer(o, nil)
 		if asyncRelease {

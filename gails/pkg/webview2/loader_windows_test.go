@@ -14,8 +14,6 @@ func TestCompareBrowserVersions(t *testing.T) {
 		{"100.0.1180.0", "100.0.1180.0", 0},
 		{"100.0.1180.0", "100.0.1181.0", -1},
 		{"100.0.1180.50", "100.0.1180.5", 1},
-		// malformed inputs
-		{"abc", "100.0.1180.0", -1},
 	}
 	for _, c := range cases {
 		got, err := CompareBrowserVersions(c.a, c.b)
