@@ -21,12 +21,29 @@ var (
 	deferred       []func()
 )
 
+// checkError prints the error to stderrWriter and calls exitFunc. The two
+// indirection points let tests stub the OS exit (which would otherwise
+// terminate the test process) and capture the error message for assertion.
 func checkError(err error) {
 	if err != nil {
-		println("\nERROR:", err.Error())
-		os.Exit(1)
+		fmt.Fprintf(stderrWriter, "\nERROR: %s\n", err.Error())
+		exitFunc(1)
 	}
 }
+
+// exitFunc is the package-level indirection over os.Exit. Tests override
+// it to capture exit codes without terminating the test binary.
+//
+// Mirrors the hook-override pattern used in internal/operatingsystem
+// (readOsReleaseFile) and internal/commands (pkgConfigExistsFunc).
+var exitFunc = os.Exit
+
+// stderrWriter is the destination for checkError's error message.
+// Defaults to os.Stderr; tests can override to capture output.
+//
+// Mirrors exitFunc — together they unlock the side-effecting wrappers
+// (MKDIR, COPY, RMDIR, TOUCH, CHMOD, etc.) for unit testing.
+var stderrWriter io.Writer = os.Stderr
 
 func mute() {
 	originalOutput = Output
