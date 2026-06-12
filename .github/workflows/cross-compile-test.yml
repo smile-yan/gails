@@ -103,11 +103,26 @@ jobs:
           go install ./cmd/gails
           gails version
 
+      - name: Build and pack runtime
+        run: |
+          cd gails/internal/runtime/desktop/@gailsio/runtime
+          npm ci
+          npm run clean
+          cd ${{ github.workspace }}/gails
+          task runtime:build
+          cd internal/runtime/desktop/@gailsio/runtime
+          npm run build:code
+          npm pack
+
       - name: Create test project
         run: |
           mkdir -p test-cross-compile
           cd test-cross-compile
           gails init -n crosstest -t vanilla
+          cp ${{ github.workspace }}/gails/internal/runtime/desktop/@gailsio/runtime/*.tgz crosstest/frontend/
+          cd crosstest/frontend
+          RUNTIME_TGZ=$(ls *.tgz | xargs basename)
+          npm pkg set dependencies.@gailsio/runtime="file://$RUNTIME_TGZ"
 
       - name: Setup Docker cross-compile image
         working-directory: test-cross-compile/crosstest
