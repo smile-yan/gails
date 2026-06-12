@@ -88,4 +88,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           event-type: bump-webview2
           client-payload:
-            version: ${{ steps.version.outputs.version }}
+            version: "${{ steps.version.outputs.version }}"
