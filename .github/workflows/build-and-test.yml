@@ -1,4 +1,4 @@
-name: Build + Test v3
+name: Build + Test
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - 'gails/**'
-      - '.github/workflows/build-and-test-v3.yml'
+      - '.github/workflows/build-and-test.yml'
   pull_request_review:
     types: [submitted]
     branches:
@@ -90,7 +90,7 @@ jobs:
           path: gails/internal/runtime/desktop/@gailsio/runtime/*.tgz
 
   test_go:
-    name: Run Go Tests v3
+    name: Run Go Tests
     needs: [test_js]
     runs-on: ${{ matrix.os }}
     if: github.base_ref == 'main'
@@ -286,7 +286,7 @@ jobs:
   build_results:
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    name: v3 Build Results
+    name: Build Results
     needs: [test_go, test_js, test_templates]
     steps:
       - run: |
