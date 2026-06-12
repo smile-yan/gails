@@ -151,11 +151,19 @@ jobs:
         working-directory: gails
         shell: bash
         run: |
-          # Some examples embed frontend/dist but are not built during go test ./....
-          # Create empty dist directories so Go's embed directive can compile them.
+          # Some examples embed frontend/dist or frontend/* but are not built
+          # during go test ./.... Create an empty file inside frontend so Go's
+          # embed directive can resolve them. For examples embedding `frontend/dist`
+          # the empty file is in dist/; for those embedding `frontend/*` it is in
+          # the frontend root so the wildcard matches at least one file.
           find examples -type d -name frontend | while read -r dir; do
-            mkdir -p "$dir/dist"
-            touch "$dir/dist/.gitkeep"
+            if [ ! -d "$dir/dist" ]; then
+              mkdir -p "$dir/dist"
+              touch "$dir/dist/.gitkeep"
+            fi
+            if [ ! -f "$dir/.gitkeep" ]; then
+              touch "$dir/.gitkeep"
+            fi
           done
 
       - name: Build Examples (GTK4 default)
