@@ -13,7 +13,11 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    # webview2 is a Windows COM binding — every file has
+    # //go:build windows. The build/test step must run on a
+    # Windows runner or Go's package loader will exclude the
+    # entire tree and ./... matches nothing.
+    runs-on: windows-latest
     env:
       GOWORK: "off"
 
@@ -32,6 +36,7 @@ jobs:
 
       - name: Determine next version
         id: version
+        shell: bash
         run: |
           if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
@@ -57,12 +62,14 @@ jobs:
 
       - name: Build and test webview2
         working-directory: gails
+        shell: bash
         run: |
           echo "Building webview2..."
           go build ./internal/webview2/... ./pkg/webview2/...
           go test ./internal/webview2/... ./pkg/webview2/...
 
       - name: Create and push tag
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
