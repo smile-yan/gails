@@ -35,6 +35,6 @@ jobs:
             
             [skip ci] [skip actions]
           branch: update-sponsors
-          base: master
+          base: main
           delete-branch: true
           draft: false

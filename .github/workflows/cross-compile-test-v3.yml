@@ -4,7 +4,7 @@ on:
   pull_request_review:
     types: [submitted]
     branches:
-      - master
+      - main
     paths:
       - 'gails/**'
       - '.github/workflows/cross-compile-test-v3.yml'
