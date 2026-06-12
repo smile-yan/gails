@@ -112,6 +112,9 @@ jobs:
     needs: build
     if: ${{ inputs.skip_tests != 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     env:
       GOWORK: "off"
     strategy:
@@ -146,7 +149,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.26'
+          go-version: '1.25'
           cache: false
 
       - name: Set up Node.js
@@ -263,6 +266,8 @@ jobs:
     needs: [build, test-cross-compile]
     if: always() && inputs.skip_tests != 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check test results
         run: |

@@ -12,6 +12,10 @@ on:
     types: [submitted]
     branches:
       - main
+
+permissions:
+  contents: read
+
 jobs:
   test_js:
     name: Run JS Tests
