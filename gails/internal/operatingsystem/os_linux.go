@@ -5,8 +5,14 @@ package operatingsystem
 import (
 	"fmt"
 	"os"
-	"strings"
 )
+
+// readOsReleaseFile is a package-level indirection over os.ReadFile so tests
+// can inject a fixture without touching the real /etc/os-release. Follows the
+// hook-override pattern used in internal/gosod/gosod_test.go.
+var readOsReleaseFile = func() ([]byte, error) {
+	return os.ReadFile("/etc/os-release")
+}
 
 // platformInfo is the platform specific method to get system information
 func platformInfo() (*OS, error) {
@@ -15,38 +21,6 @@ func platformInfo() (*OS, error) {
 		return nil, fmt.Errorf("unable to read system information")
 	}
 
-	osRelease, _ := os.ReadFile("/etc/os-release")
+	osRelease, _ := readOsReleaseFile()
 	return parseOsRelease(string(osRelease)), nil
-}
-
-func parseOsRelease(osRelease string) *OS {
-
-	// Default value
-	var result OS
-	result.ID = "Unknown"
-	result.Name = "Unknown"
-	result.Version = "Unknown"
-
-	// Split into lines
-	lines := strings.Split(osRelease, "\n")
-	// Iterate lines
-	for _, line := range lines {
-		// Split each line by the equals char
-		splitLine := strings.SplitN(line, "=", 2)
-		// Check we have
-		if len(splitLine) != 2 {
-			continue
-		}
-		switch splitLine[0] {
-		case "ID":
-			result.ID = strings.ToLower(strings.Trim(splitLine[1], `"`))
-		case "NAME":
-			result.Name = strings.Trim(splitLine[1], `"`)
-		case "VERSION_ID":
-			result.Version = strings.Trim(splitLine[1], `"`)
-		case "VERSION":
-			result.Branding = strings.Trim(splitLine[1], `"`)
-		}
-	}
-	return &result
 }
