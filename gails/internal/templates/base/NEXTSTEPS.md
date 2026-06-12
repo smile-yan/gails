@@ -35,7 +35,7 @@ The following variables are available inside `.tmpl` files:
 |---------------------|--------------------------------------------------|
 | `{{.ProjectName}}`  | The project name supplied by the user (`-n`)     |
 | `{{.ModulePath}}`   | The Go module path (`-mod` or derived from `-git`) |
-| `{{.WailsVersion}}` | The Gails version used to initialise the project |
+| `{{.GailsVersion}}` | The Gails version used to initialise the project |
 | `{{.ProductName}}`  | Product display name                             |
 | `{{.ProductDescription}}` | Product description                        |
 | `{{.ProductVersion}}` | Product version string                         |
