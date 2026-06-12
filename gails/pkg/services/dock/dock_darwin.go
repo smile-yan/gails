@@ -6,20 +6,30 @@ package dock
 #cgo CFLAGS: -x objective-c
 #cgo LDFLAGS: -framework Cocoa
 #import <Cocoa/Cocoa.h>
+#include <stdlib.h>
 
 void hideDockIcon() {
+    if (getenv("WAILS_TESTING")) {
+        return;
+    }
     dispatch_sync(dispatch_get_main_queue(), ^{
         [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
     });
 }
 
 void showDockIcon() {
+    if (getenv("WAILS_TESTING")) {
+        return;
+    }
     dispatch_sync(dispatch_get_main_queue(), ^{
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
     });
 }
 
 bool setBadge(const char *label) {
+    if (getenv("WAILS_TESTING")) {
+        return true;
+    }
     __block bool success = false;
     dispatch_sync(dispatch_get_main_queue(), ^{
         // Ensure the app is in Regular activation policy (dock icon visible)
@@ -41,6 +51,7 @@ bool setBadge(const char *label) {
 }
 */
 import "C"
+
 import (
 	"context"
 	"fmt"
@@ -48,6 +59,19 @@ import (
 	"unsafe"
 
 	"github.com/gailsapp/gails/pkg/application"
+)
+
+var (
+	cHideDockIcon = func() { C.hideDockIcon() }
+	cShowDockIcon = func() { C.showDockIcon() }
+	cSetBadge     = func(label *string) bool {
+		var cLabel *C.char
+		if label != nil {
+			cLabel = C.CString(*label)
+			defer C.free(unsafe.Pointer(cLabel))
+		}
+		return bool(C.setBadge(cLabel))
+	}
 )
 
 type darwinDock struct {
@@ -80,25 +104,19 @@ func (d *darwinDock) Shutdown() error {
 
 // HideAppIcon hides the app icon in the macOS Dock.
 func (d *darwinDock) HideAppIcon() {
-	C.hideDockIcon()
+	cHideDockIcon()
 }
 
 // ShowAppIcon shows the app icon in the macOS Dock.
 // Note: After showing the dock icon, you may need to call SetBadge again
 // to reapply any previously set badge, as changing activation policies clears the badge.
 func (d *darwinDock) ShowAppIcon() {
-	C.showDockIcon()
+	cShowDockIcon()
 }
 
 // setBadge handles the C call and updates the internal badge state with locking.
 func (d *darwinDock) setBadge(label *string) error {
-	var cLabel *C.char
-	if label != nil {
-		cLabel = C.CString(*label)
-		defer C.free(unsafe.Pointer(cLabel))
-	}
-
-	success := C.setBadge(cLabel)
+	success := cSetBadge(label)
 	if !success {
 		return fmt.Errorf("failed to set badge")
 	}

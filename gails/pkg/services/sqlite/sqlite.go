@@ -14,6 +14,22 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+// Injected dependencies to allow error paths to be exercised in tests.
+var (
+	sqlOpen = sql.Open
+	dbPing  = (*sql.DB).Ping
+	dbClose = (*sql.DB).Close
+
+	stmtExecContext  = (*sql.Stmt).ExecContext
+	stmtQueryContext = (*sql.Stmt).QueryContext
+	stmtClose        = (*sql.Stmt).Close
+
+	rowsNextFunc = (*sql.Rows).Next
+	rowsScanFunc = (*sql.Rows).Scan
+
+	fmtFprintf = fmt.Fprintf
+)
+
 type Config struct {
 	// DBSource is the database URI to use.
 	// The string ":memory:" can be used to create an in-memory database.
@@ -141,14 +157,14 @@ func (s *SQLiteService) Open() error {
 		return err
 	}
 
-	conn, err := sql.Open("sqlite", s.config.DBSource)
+	conn, err := sqlOpen("sqlite", s.config.DBSource)
 	if err != nil {
 		return fmt.Errorf("error opening database connection: %w", err)
 	}
 
 	// Test connection
-	if err := conn.Ping(); err != nil {
-		_ = conn.Close()
+	if err := dbPing(conn); err != nil {
+		_ = dbClose(conn)
 		return fmt.Errorf("error opening database connection: %w", err)
 	}
 
@@ -184,11 +200,11 @@ func (s *SQLiteService) closeImpl() error {
 		if stmt, ok := stmts.Load(id); ok {
 			// WARN: do not delegate to [Stmt.Close], it would cause a deadlock.
 			// Ignore errors, closing the connection should free up all resources.
-			_ = stmt.(*Stmt).sqlStmt.Close()
+			_ = stmtClose(stmt.(*Stmt).sqlStmt)
 		}
 	}
 
-	err := s.conn.Close()
+	err := dbClose(s.conn)
 
 	// Clear the connection even in case of errors:
 	// if [sql.DB.Close] returns an error,
@@ -292,11 +308,15 @@ func (s *SQLiteService) PrepareContext(ctx context.Context, query string) (*Stmt
 		return nil, errors.New("no open database connection")
 	}
 
-	id := nextId.Load()
-	for id != 0 && !nextId.CompareAndSwap(id, id+1) {
-	}
-	if id == 0 {
-		return nil, errors.New("prepared statement ids exhausted")
+	var id uint64
+	for {
+		id = nextId.Load()
+		if id == 0 {
+			return nil, errors.New("prepared statement ids exhausted")
+		}
+		if nextId.CompareAndSwap(id, id+1) {
+			break
+		}
 	}
 
 	stmt, err := conn.PrepareContext(ctx, query)
@@ -348,7 +368,7 @@ func (s *SQLiteService) ExecPrepared(ctx context.Context, stmt *Stmt, args ...an
 		return errors.New("prepared statement is not valid")
 	}
 
-	_, err := stmt.ExecContext(ctx, args...)
+	_, err := stmtExecContext(stmt.sqlStmt, ctx, args...)
 	if err != nil && !errors.Is(err, context.Canceled) {
 		return err
 	}
@@ -369,7 +389,7 @@ func (s *SQLiteService) QueryPrepared(ctx context.Context, stmt *Stmt, args ...a
 		return nil, errors.New("prepared statement is not valid")
 	}
 
-	rows, err := stmt.sqlStmt.QueryContext(ctx, args...)
+	rows, err := stmtQueryContext(stmt.sqlStmt, ctx, args...)
 	if err != nil {
 		if errors.Is(err, context.Canceled) {
 			return Rows{}, nil
@@ -399,7 +419,7 @@ func parseRows(ctx context.Context, rows *sql.Rows) (Rows, error) {
 	pointers := make([]any, len(columns))
 	results := []map[string]any{}
 
-	for rows.Next() {
+	for rowsNextFunc(rows) {
 		select {
 		default:
 		case <-ctx.Done():
@@ -410,7 +430,7 @@ func parseRows(ctx context.Context, rows *sql.Rows) (Rows, error) {
 			pointers[i] = &values[i]
 		}
 
-		if err := rows.Scan(pointers...); err != nil {
+		if err := rowsScanFunc(rows, pointers...); err != nil {
 			return nil, err
 		}
 
@@ -460,7 +480,7 @@ func (s *Stmt) Close() error {
 		return nil
 	}
 
-	err := s.sqlStmt.Close()
+	err := stmtClose(s.sqlStmt)
 	stmts.Delete(s.id)
 
 	func() {
@@ -480,7 +500,7 @@ func (s *Stmt) MarshalText() ([]byte, error) {
 	var buf bytes.Buffer
 	buf.Grow(16)
 
-	if _, err := fmt.Fprintf(&buf, "%016x", s.id); err != nil {
+	if _, err := fmtFprintf(&buf, "%016x", s.id); err != nil {
 		return nil, err
 	}
 

@@ -15,14 +15,105 @@ package notifications
 import "C"
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"sync"
 	"time"
 	"unsafe"
 
-	"encoding/json"
-
 	"github.com/gailsapp/gails/pkg/application"
+)
+
+var (
+	cIsNotificationAvailable     = func() bool { return bool(C.isNotificationAvailable()) }
+	cCheckBundleIdentifier       = func() bool { return bool(C.checkBundleIdentifier()) }
+	cEnsureDelegateInitialized   = func() bool { return bool(C.ensureDelegateInitialized()) }
+	cRequestNotificationAuthorization = func(id int) { C.requestNotificationAuthorization(C.int(id)) }
+	cCheckNotificationAuthorization   = func(id int) { C.checkNotificationAuthorization(C.int(id)) }
+
+	requestNotificationAuthorizationTimeout = 180 * time.Second
+	checkNotificationAuthorizationTimeout   = 15 * time.Second
+	notificationTimeout                     = 5 * time.Second
+	categoryTimeout                         = 5 * time.Second
+
+	jsonMarshal = json.Marshal
+
+	cSendNotification = func(id int, identifier, title, subtitle, body, dataJSON string) {
+		cIdentifier := C.CString(identifier)
+		cTitle := C.CString(title)
+		cSubtitle := C.CString(subtitle)
+		cBody := C.CString(body)
+		defer C.free(unsafe.Pointer(cIdentifier))
+		defer C.free(unsafe.Pointer(cTitle))
+		defer C.free(unsafe.Pointer(cSubtitle))
+		defer C.free(unsafe.Pointer(cBody))
+
+		var cDataJSON *C.char
+		if dataJSON != "" {
+			cDataJSON = C.CString(dataJSON)
+			defer C.free(unsafe.Pointer(cDataJSON))
+		}
+
+		C.sendNotification(C.int(id), cIdentifier, cTitle, cSubtitle, cBody, cDataJSON)
+	}
+
+	cSendNotificationWithActions = func(id int, identifier, title, subtitle, body, categoryID, dataJSON string) {
+		cIdentifier := C.CString(identifier)
+		cTitle := C.CString(title)
+		cSubtitle := C.CString(subtitle)
+		cBody := C.CString(body)
+		cCategoryID := C.CString(categoryID)
+		defer C.free(unsafe.Pointer(cIdentifier))
+		defer C.free(unsafe.Pointer(cTitle))
+		defer C.free(unsafe.Pointer(cSubtitle))
+		defer C.free(unsafe.Pointer(cBody))
+		defer C.free(unsafe.Pointer(cCategoryID))
+
+		var cDataJSON *C.char
+		if dataJSON != "" {
+			cDataJSON = C.CString(dataJSON)
+			defer C.free(unsafe.Pointer(cDataJSON))
+		}
+
+		C.sendNotificationWithActions(C.int(id), cIdentifier, cTitle, cSubtitle, cBody, cCategoryID, cDataJSON)
+	}
+
+	cRegisterNotificationCategory = func(id int, categoryID, actionsJSON string, hasReplyField bool, replyPlaceholder, replyButtonTitle string) {
+		cCategoryID := C.CString(categoryID)
+		cActionsJSON := C.CString(actionsJSON)
+		defer C.free(unsafe.Pointer(cCategoryID))
+		defer C.free(unsafe.Pointer(cActionsJSON))
+
+		var cReplyPlaceholder, cReplyButtonTitle *C.char
+		if hasReplyField {
+			cReplyPlaceholder = C.CString(replyPlaceholder)
+			cReplyButtonTitle = C.CString(replyButtonTitle)
+			defer C.free(unsafe.Pointer(cReplyPlaceholder))
+			defer C.free(unsafe.Pointer(cReplyButtonTitle))
+		}
+
+		C.registerNotificationCategory(C.int(id), cCategoryID, cActionsJSON, C.bool(hasReplyField),
+			cReplyPlaceholder, cReplyButtonTitle)
+	}
+
+	cRemoveNotificationCategory = func(id int, categoryID string) {
+		cCategoryID := C.CString(categoryID)
+		defer C.free(unsafe.Pointer(cCategoryID))
+		C.removeNotificationCategory(C.int(id), cCategoryID)
+	}
+
+	cRemoveAllPendingNotifications = func() { C.removeAllPendingNotifications() }
+	cRemovePendingNotification       = func(identifier string) {
+		cIdentifier := C.CString(identifier)
+		defer C.free(unsafe.Pointer(cIdentifier))
+		C.removePendingNotification(cIdentifier)
+	}
+	cRemoveAllDeliveredNotifications = func() { C.removeAllDeliveredNotifications() }
+	cRemoveDeliveredNotification     = func(identifier string) {
+		cIdentifier := C.CString(identifier)
+		defer C.free(unsafe.Pointer(cIdentifier))
+		C.removeDeliveredNotification(cIdentifier)
+	}
 )
 
 type darwinNotifier struct {
@@ -60,13 +151,13 @@ func New() *NotificationService {
 }
 
 func (dn *darwinNotifier) Startup(ctx context.Context, options application.ServiceOptions) error {
-	if !isNotificationAvailable() {
+	if !cIsNotificationAvailable() {
 		return fmt.Errorf("notifications are not available on this system")
 	}
-	if !checkBundleIdentifier() {
+	if !cCheckBundleIdentifier() {
 		return fmt.Errorf("notifications require a valid bundle identifier")
 	}
-	if !bool(C.ensureDelegateInitialized()) {
+	if !cEnsureDelegateInitialized() {
 		return fmt.Errorf("failed to initialize notification center delegate")
 	}
 	return nil
@@ -78,22 +169,22 @@ func (dn *darwinNotifier) Shutdown() error {
 
 // isNotificationAvailable checks if notifications are available on the system.
 func isNotificationAvailable() bool {
-	return bool(C.isNotificationAvailable())
+	return cIsNotificationAvailable()
 }
 
 func checkBundleIdentifier() bool {
-	return bool(C.checkBundleIdentifier())
+	return cCheckBundleIdentifier()
 }
 
 // RequestNotificationAuthorization requests permission for notifications.
 // Default timeout is 3 minutes
 func (dn *darwinNotifier) RequestNotificationAuthorization() (bool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), requestNotificationAuthorizationTimeout)
 	defer cancel()
 
 	id, resultCh := dn.registerChannel()
 
-	C.requestNotificationAuthorization(C.int(id))
+	cRequestNotificationAuthorization(id)
 
 	select {
 	case result := <-resultCh:
@@ -106,12 +197,12 @@ func (dn *darwinNotifier) RequestNotificationAuthorization() (bool, error) {
 
 // CheckNotificationAuthorization checks current notification permission status.
 func (dn *darwinNotifier) CheckNotificationAuthorization() (bool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), checkNotificationAuthorizationTimeout)
 	defer cancel()
 
 	id, resultCh := dn.registerChannel()
 
-	C.checkNotificationAuthorization(C.int(id))
+	cCheckNotificationAuthorization(id)
 
 	select {
 	case result := <-resultCh:
@@ -124,30 +215,20 @@ func (dn *darwinNotifier) CheckNotificationAuthorization() (bool, error) {
 
 // SendNotification sends a basic notification with a unique identifier, title, subtitle, and body.
 func (dn *darwinNotifier) SendNotification(options NotificationOptions) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), notificationTimeout)
 	defer cancel()
 
-	cIdentifier := C.CString(options.ID)
-	cTitle := C.CString(options.Title)
-	cSubtitle := C.CString(options.Subtitle)
-	cBody := C.CString(options.Body)
-	defer C.free(unsafe.Pointer(cIdentifier))
-	defer C.free(unsafe.Pointer(cTitle))
-	defer C.free(unsafe.Pointer(cSubtitle))
-	defer C.free(unsafe.Pointer(cBody))
-
-	var cDataJSON *C.char
+	var dataJSON string
 	if options.Data != nil {
-		jsonData, err := json.Marshal(options.Data)
+		jsonData, err := jsonMarshal(options.Data)
 		if err != nil {
 			return fmt.Errorf("failed to marshal notification data: %w", err)
 		}
-		cDataJSON = C.CString(string(jsonData))
-		defer C.free(unsafe.Pointer(cDataJSON))
+		dataJSON = string(jsonData)
 	}
 
 	id, resultCh := dn.registerChannel()
-	C.sendNotification(C.int(id), cIdentifier, cTitle, cSubtitle, cBody, cDataJSON)
+	cSendNotification(id, options.ID, options.Title, options.Subtitle, options.Body, dataJSON)
 
 	select {
 	case result := <-resultCh:
@@ -168,32 +249,20 @@ func (dn *darwinNotifier) SendNotification(options NotificationOptions) error {
 // A NotificationCategory must be registered with RegisterNotificationCategory first. The `CategoryID` must match the registered category.
 // If a NotificationCategory is not registered a basic notification will be sent.
 func (dn *darwinNotifier) SendNotificationWithActions(options NotificationOptions) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), notificationTimeout)
 	defer cancel()
 
-	cIdentifier := C.CString(options.ID)
-	cTitle := C.CString(options.Title)
-	cSubtitle := C.CString(options.Subtitle)
-	cBody := C.CString(options.Body)
-	cCategoryID := C.CString(options.CategoryID)
-	defer C.free(unsafe.Pointer(cIdentifier))
-	defer C.free(unsafe.Pointer(cTitle))
-	defer C.free(unsafe.Pointer(cSubtitle))
-	defer C.free(unsafe.Pointer(cBody))
-	defer C.free(unsafe.Pointer(cCategoryID))
-
-	var cDataJSON *C.char
+	var dataJSON string
 	if options.Data != nil {
-		jsonData, err := json.Marshal(options.Data)
+		jsonData, err := jsonMarshal(options.Data)
 		if err != nil {
 			return fmt.Errorf("failed to marshal notification data: %w", err)
 		}
-		cDataJSON = C.CString(string(jsonData))
-		defer C.free(unsafe.Pointer(cDataJSON))
+		dataJSON = string(jsonData)
 	}
 
 	id, resultCh := dn.registerChannel()
-	C.sendNotificationWithActions(C.int(id), cIdentifier, cTitle, cSubtitle, cBody, cCategoryID, cDataJSON)
+	cSendNotificationWithActions(id, options.ID, options.Title, options.Subtitle, options.Body, options.CategoryID, dataJSON)
 
 	select {
 	case result := <-resultCh:
@@ -213,30 +282,17 @@ func (dn *darwinNotifier) SendNotificationWithActions(options NotificationOption
 // RegisterNotificationCategory registers a new NotificationCategory to be used with SendNotificationWithActions.
 // Registering a category with the same name as a previously registered NotificationCategory will override it.
 func (dn *darwinNotifier) RegisterNotificationCategory(category NotificationCategory) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), categoryTimeout)
 	defer cancel()
 
-	cCategoryID := C.CString(category.ID)
-	defer C.free(unsafe.Pointer(cCategoryID))
-
-	actionsJSON, err := json.Marshal(category.Actions)
+	actionsJSON, err := jsonMarshal(category.Actions)
 	if err != nil {
 		return fmt.Errorf("failed to marshal notification category: %w", err)
 	}
-	cActionsJSON := C.CString(string(actionsJSON))
-	defer C.free(unsafe.Pointer(cActionsJSON))
-
-	var cReplyPlaceholder, cReplyButtonTitle *C.char
-	if category.HasReplyField {
-		cReplyPlaceholder = C.CString(category.ReplyPlaceholder)
-		cReplyButtonTitle = C.CString(category.ReplyButtonTitle)
-		defer C.free(unsafe.Pointer(cReplyPlaceholder))
-		defer C.free(unsafe.Pointer(cReplyButtonTitle))
-	}
 
 	id, resultCh := dn.registerChannel()
-	C.registerNotificationCategory(C.int(id), cCategoryID, cActionsJSON, C.bool(category.HasReplyField),
-		cReplyPlaceholder, cReplyButtonTitle)
+	cRegisterNotificationCategory(id, category.ID, string(actionsJSON), category.HasReplyField,
+		category.ReplyPlaceholder, category.ReplyButtonTitle)
 
 	select {
 	case result := <-resultCh:
@@ -255,14 +311,11 @@ func (dn *darwinNotifier) RegisterNotificationCategory(category NotificationCate
 
 // RemoveNotificationCategory remove a previously registered NotificationCategory.
 func (dn *darwinNotifier) RemoveNotificationCategory(categoryId string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), categoryTimeout)
 	defer cancel()
 
-	cCategoryID := C.CString(categoryId)
-	defer C.free(unsafe.Pointer(cCategoryID))
-
 	id, resultCh := dn.registerChannel()
-	C.removeNotificationCategory(C.int(id), cCategoryID)
+	cRemoveNotificationCategory(id, categoryId)
 
 	select {
 	case result := <-resultCh:
@@ -281,29 +334,25 @@ func (dn *darwinNotifier) RemoveNotificationCategory(categoryId string) error {
 
 // RemoveAllPendingNotifications removes all pending notifications.
 func (dn *darwinNotifier) RemoveAllPendingNotifications() error {
-	C.removeAllPendingNotifications()
+	cRemoveAllPendingNotifications()
 	return nil
 }
 
 // RemovePendingNotification removes a pending notification matching the unique identifier.
 func (dn *darwinNotifier) RemovePendingNotification(identifier string) error {
-	cIdentifier := C.CString(identifier)
-	defer C.free(unsafe.Pointer(cIdentifier))
-	C.removePendingNotification(cIdentifier)
+	cRemovePendingNotification(identifier)
 	return nil
 }
 
 // RemoveAllDeliveredNotifications removes all delivered notifications.
 func (dn *darwinNotifier) RemoveAllDeliveredNotifications() error {
-	C.removeAllDeliveredNotifications()
+	cRemoveAllDeliveredNotifications()
 	return nil
 }
 
 // RemoveDeliveredNotification removes a delivered notification matching the unique identifier.
 func (dn *darwinNotifier) RemoveDeliveredNotification(identifier string) error {
-	cIdentifier := C.CString(identifier)
-	defer C.free(unsafe.Pointer(cIdentifier))
-	C.removeDeliveredNotification(cIdentifier)
+	cRemoveDeliveredNotification(identifier)
 	return nil
 }
 
@@ -316,6 +365,30 @@ func (dn *darwinNotifier) RemoveDeliveredNotification(identifier string) error {
 // (Linux-specific)
 func (dn *darwinNotifier) RemoveNotification(identifier string) error {
 	return nil
+}
+
+// testCaptureResult exposes captureResult to tests without requiring cgo in test files.
+func testCaptureResult(id int, success bool, errorMsg string) {
+	var cErr *C.char
+	if errorMsg != "" {
+		cErr = C.CString(errorMsg)
+		defer C.free(unsafe.Pointer(cErr))
+	}
+	captureResult(C.int(id), C.bool(success), cErr)
+}
+
+// testDidReceiveNotificationResponse exposes didReceiveNotificationResponse to tests.
+func testDidReceiveNotificationResponse(payload *string, err *string) {
+	var cPayload, cErr *C.char
+	if payload != nil {
+		cPayload = C.CString(*payload)
+		defer C.free(unsafe.Pointer(cPayload))
+	}
+	if err != nil {
+		cErr = C.CString(*err)
+		defer C.free(unsafe.Pointer(cErr))
+	}
+	didReceiveNotificationResponse(cPayload, cErr)
 }
 
 //export captureResult

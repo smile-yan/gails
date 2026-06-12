@@ -112,6 +112,12 @@ func (ns *NotificationService) ServiceName() string {
 	return "github.com/gailsapp/gails/services/notifications"
 }
 
+// resetNotificationService resets the singleton state for tests only.
+func resetNotificationService() {
+	notificationServiceOnce = sync.Once{}
+	NotificationService_ = nil
+}
+
 // OnNotificationResponse registers a callback function that will be called when
 // a notification response is received from the user.
 //

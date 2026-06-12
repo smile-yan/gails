@@ -1,5 +1,6 @@
 #import "notifications_darwin.h"
 #include <Foundation/Foundation.h>
+#include <stdlib.h>
 #import <Cocoa/Cocoa.h>
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 110000
@@ -92,6 +93,10 @@ static NotificationsDelegate *delegateInstance = nil;
 static dispatch_once_t onceToken;
 
 bool ensureDelegateInitialized(void) {
+    if (getenv("WAILS_TESTING")) {
+        return YES;
+    }
+
     __block BOOL success = YES;
 
     dispatch_once(&onceToken, ^{
@@ -108,6 +113,11 @@ bool ensureDelegateInitialized(void) {
 }
 
 void requestNotificationAuthorization(int channelID) {
+    if (getenv("WAILS_TESTING")) {
+        captureResult(channelID, true, NULL);
+        return;
+    }
+
     if (!ensureDelegateInitialized()) {
         NSString *errorMsg = @"Notification delegate has been lost. Reinitialize the notification service.";
         captureResult(channelID, false, [errorMsg UTF8String]);
@@ -128,6 +138,11 @@ void requestNotificationAuthorization(int channelID) {
 }
 
 void checkNotificationAuthorization(int channelID) {
+    if (getenv("WAILS_TESTING")) {
+        captureResult(channelID, true, NULL);
+        return;
+    }
+
     if (!ensureDelegateInitialized()) {
         NSString *errorMsg = @"Notification delegate has been lost. Reinitialize the notification service.";
         captureResult(channelID, false, [errorMsg UTF8String]);
@@ -173,6 +188,11 @@ UNMutableNotificationContent* createNotificationContent(const char *title, const
 }
 
 void sendNotification(int channelID, const char *identifier, const char *title, const char *subtitle, const char *body, const char *data_json) {
+    if (getenv("WAILS_TESTING")) {
+        captureResult(channelID, true, NULL);
+        return;
+    }
+
     if (!ensureDelegateInitialized()) {
         NSString *errorMsg = @"Notification delegate has been lost. Reinitialize the notification service.";
         captureResult(channelID, false, [errorMsg UTF8String]);
@@ -206,8 +226,13 @@ void sendNotification(int channelID, const char *identifier, const char *title, 
     }];
 }
 
-void sendNotificationWithActions(int channelID, const char *identifier, const char *title, const char *subtitle, 
+void sendNotificationWithActions(int channelID, const char *identifier, const char *title, const char *subtitle,
                              const char *body, const char *categoryId, const char *data_json) {
+    if (getenv("WAILS_TESTING")) {
+        captureResult(channelID, true, NULL);
+        return;
+    }
+
     if (!ensureDelegateInitialized()) {
         NSString *errorMsg = @"Notification delegate has been lost. Reinitialize the notification service.";
         captureResult(channelID, false, [errorMsg UTF8String]);
@@ -244,8 +269,13 @@ void sendNotificationWithActions(int channelID, const char *identifier, const ch
     }];
 }
 
-void registerNotificationCategory(int channelID, const char *categoryId, const char *actions_json, bool hasReplyField, 
+void registerNotificationCategory(int channelID, const char *categoryId, const char *actions_json, bool hasReplyField,
                                 const char *replyPlaceholder, const char *replyButtonTitle) {
+    if (getenv("WAILS_TESTING")) {
+        captureResult(channelID, true, NULL);
+        return;
+    }
+
     if (!ensureDelegateInitialized()) {
         NSString *errorMsg = @"Notification delegate has been lost. Reinitialize the notification service.";
         captureResult(channelID, false, [errorMsg UTF8String]);
@@ -328,6 +358,11 @@ void registerNotificationCategory(int channelID, const char *categoryId, const c
 }
 
 void removeNotificationCategory(int channelID, const char *categoryId) {
+    if (getenv("WAILS_TESTING")) {
+        captureResult(channelID, true, NULL);
+        return;
+    }
+
     NSString *nsCategoryId = [NSString stringWithUTF8String:categoryId];
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     
@@ -355,22 +390,34 @@ void removeNotificationCategory(int channelID, const char *categoryId) {
 }
 
 void removeAllPendingNotifications(void) {
+    if (getenv("WAILS_TESTING")) {
+        return;
+    }
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center removeAllPendingNotificationRequests];
 }
 
 void removePendingNotification(const char *identifier) {
+    if (getenv("WAILS_TESTING")) {
+        return;
+    }
     NSString *nsIdentifier = [NSString stringWithUTF8String:identifier];
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center removePendingNotificationRequestsWithIdentifiers:@[nsIdentifier]];
 }
 
 void removeAllDeliveredNotifications(void) {
+    if (getenv("WAILS_TESTING")) {
+        return;
+    }
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center removeAllDeliveredNotifications];
 }
 
 void removeDeliveredNotification(const char *identifier) {
+    if (getenv("WAILS_TESTING")) {
+        return;
+    }
     NSString *nsIdentifier = [NSString stringWithUTF8String:identifier];
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center removeDeliveredNotificationsWithIdentifiers:@[nsIdentifier]];
